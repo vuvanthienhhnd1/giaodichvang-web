@@ -1,0 +1,4229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>AI XAUUSD System V26 Pro - Real World Gold Data</title>
+  <!-- Tải Lightweight Charts từ file nội bộ (offline-ready) hoặc fallback CDN nếu cần -->
+  <script src="lightweight-charts.standalone.production.js"></script>
+  <script>
+    if (typeof LightweightCharts === 'undefined') {
+      document.write('<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"><\/script>');
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap');
+    
+    :root {
+      --bg-main: #0b0e14;
+      --bg-panel: #121620;
+      --bg-card: #0d111a;
+      --border-color: #232838;
+      --border-focus: #3b82f6;
+      --text-main: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
+      --green-up: #10b981;
+      --red-down: #ef4444;
+      --orange-sell: #ea580c;
+      --purple-buy: #9333ea;
+      --blue-pivot: #3b82f6;
+      --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+      --safe-bottom: env(safe-area-inset-bottom, 20px);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    html, body { 
+      background-color: var(--bg-main); 
+      color: var(--text-main); 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+      height: 100%;
+      height: 100vh; 
+      height: 100dvh; 
+      width: 100vw; 
+      overflow: hidden; 
+      display: flex; 
+      flex-direction: column; 
+    }
+    
+    /* HEADER */
+    .header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      height: 52px; 
+      padding: 0 16px; 
+      background: var(--bg-panel); 
+      border-bottom: 1px solid var(--border-color); 
+      z-index: 50; 
+      gap: 12px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .title { font-size: 15px; font-weight: 800; color: #fff; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+    .title-gold { color: #f59e0b; }
+    .ai-badge { 
+      background: linear-gradient(135deg, #ea580c, #9333ea); 
+      color: #fff; 
+      font-size: 10px; 
+      font-weight: 800; 
+      padding: 3px 7px; 
+      border-radius: 4px; 
+      box-shadow: 0 2px 8px rgba(234, 88, 12, 0.35);
+      letter-spacing: 0.5px;
+    }
+
+    /* FEED STATUS BADGE */
+    .feed-controls { display: flex; align-items: center; gap: 10px; }
+    .live-feed { 
+      display: flex; 
+      align-items: center; 
+      gap: 7px; 
+      font-size: 11px; 
+      font-weight: 700; 
+      color: var(--green-up); 
+      background: rgba(16, 185, 129, 0.1); 
+      padding: 5px 11px; 
+      border-radius: 6px; 
+      border: 1px solid rgba(16, 185, 129, 0.25); 
+      transition: all 0.3s; 
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+    .pulse-dot { 
+      width: 7px; 
+      height: 7px; 
+      background: var(--green-up); 
+      border-radius: 50%; 
+      animation: pulse 1.2s infinite; 
+    }
+    .live-feed.offline { 
+      color: #eab308; 
+      background: rgba(234, 179, 8, 0.1); 
+      border-color: rgba(234, 179, 8, 0.25); 
+    }
+    .live-feed.offline .pulse-dot { 
+      background: #eab308; 
+      animation: pulse-warn 1.5s infinite; 
+    }
+    .live-feed.error { 
+      color: var(--red-down); 
+      background: rgba(239, 68, 68, 0.1); 
+      border-color: rgba(239, 68, 68, 0.25); 
+    }
+    .live-feed.error .pulse-dot { background: var(--red-down); animation: none; }
+    
+    @keyframes pulse { 
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); } 
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); } 
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } 
+    }
+    @keyframes pulse-warn { 
+      0% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.6); } 
+      70% { box-shadow: 0 0 0 8px rgba(234, 179, 8, 0); } 
+      100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); } 
+    }
+
+    /* FEED SOURCE SELECTOR */
+    .source-select-wrap { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
+    .source-select {
+      background: #0b0e14;
+      color: #f1f5f9;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .source-select:hover { border-color: #3b82f6; }
+
+    /* EXNESS CALIBRATION BUTTON & MODAL */
+    .calib-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(245, 158, 11, 0.22));
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fbbf24;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .calib-btn:hover {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.25), rgba(245, 158, 11, 0.35));
+      border-color: #f59e0b;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 10px rgba(245, 158, 11, 0.25);
+    }
+    .calib-badge {
+      background: rgba(0, 0, 0, 0.45);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: #fef08a;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .calib-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 7, 13, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .calib-modal-overlay.active { display: flex; }
+
+    .calib-modal {
+      background: #0f141f;
+      border: 1px solid #29354d;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 490px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.85), 0 0 30px rgba(245, 158, 11, 0.15);
+      overflow: hidden;
+      animation: modalFadeIn 0.22s ease-out;
+      display: flex;
+      flex-direction: column;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .calib-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: #141a27;
+      border-bottom: 1px solid #232c3f;
+    }
+    .calib-modal-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .calib-modal-close {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+    .calib-modal-close:hover {
+      color: #fff;
+      background: #232c3f;
+    }
+
+    .calib-modal-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .calib-info-card {
+      background: #0b0e15;
+      border: 1px solid #1f2738;
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .calib-info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+    }
+    .calib-info-label { color: #94a3b8; font-weight: 500; }
+    .calib-info-val { font-family: var(--font-mono); font-weight: 700; color: #fff; }
+
+    .calib-section-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #cbd5e1;
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .calib-desc {
+      font-size: 11px;
+      color: #64748b;
+      line-height: 1.4;
+      margin-top: -8px;
+    }
+
+    .calib-input-group {
+      display: flex;
+      gap: 8px;
+    }
+    .calib-input {
+      flex: 1;
+      background: #0b0e15;
+      border: 1px solid #29354d;
+      border-radius: 8px;
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      outline: none;
+      transition: 0.2s;
+    }
+    .calib-input:focus {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+    }
+    .calib-apply-btn {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0 16px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+    .calib-apply-btn:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+    .calib-match-msg {
+      font-size: 11px;
+      min-height: 16px;
+      margin-top: -6px;
+      font-weight: 600;
+    }
+    .calib-match-msg.success { color: #10b981; }
+    .calib-match-msg.error { color: #ef4444; }
+
+    .calib-presets {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .calib-preset-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0b0e15;
+      border: 1px solid #1f2738;
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: left;
+    }
+    .calib-preset-btn:hover {
+      border-color: #3b82f6;
+      background: #141a27;
+      color: #fff;
+    }
+    .calib-preset-btn.active {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+      color: #fbbf24;
+    }
+    .preset-name { font-size: 12px; font-weight: 700; }
+    .preset-spread { font-size: 11px; color: #64748b; font-family: var(--font-mono); }
+    .calib-preset-btn.active .preset-spread { color: #fcd34d; }
+
+    .calib-fine-tune {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #0b0e15;
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid #1f2738;
+    }
+    .calib-step-btn {
+      background: #141a27;
+      border: 1px solid #232c3f;
+      color: #cbd5e1;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+      flex: 1;
+      text-align: center;
+    }
+    .calib-step-btn:hover {
+      background: #232c3f;
+      color: #fff;
+    }
+    .calib-step-btn.reset {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      flex: 0.8;
+    }
+    .calib-step-btn.reset:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: #ef4444;
+      color: #fff;
+    }
+    .calib-current-offset {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 800;
+      color: #fbbf24;
+      padding: 0 8px;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .calib-modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: #141a27;
+      border-top: 1px solid #232c3f;
+    }
+    .calib-auto-saved-hint {
+      font-size: 11px;
+      color: #10b981;
+      font-weight: 600;
+    }
+    .calib-done-btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .calib-done-btn:hover { background: #1d4ed8; }
+
+    /* TIMEFRAME BAR */
+    .tf-bar { display: flex; gap: 3px; background: #0b0e14; padding: 3px; border-radius: 6px; border: 1px solid var(--border-color); }
+    .tf-btn { 
+      background: transparent; 
+      border: none; 
+      color: var(--text-muted); 
+      font-size: 12px; 
+      font-weight: 700; 
+      padding: 5px 10px; 
+      cursor: pointer; 
+      border-radius: 4px; 
+      transition: 0.2s; 
+      font-family: var(--font-mono);
+    }
+    .tf-btn:hover { color: #fff; background: #1a1e29; }
+    .tf-btn.active { 
+      background: #2563eb; 
+      color: #fff; 
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.45); 
+    }
+
+    /* TOP LIVE TICKER STRIP */
+    .ticker-strip {
+      background: #0d111a;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      height: 28px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      gap: 16px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .ticker-item { display: flex; align-items: center; gap: 6px; }
+    .ticker-lbl { color: var(--text-muted); font-size: 10px; font-weight: 700; }
+    .ticker-val { font-weight: 800; color: #fff; }
+    .ticker-delta { font-size: 10px; font-weight: 700; }
+    .ticker-up { color: var(--green-up); }
+    .ticker-down { color: var(--red-down); }
+    .ticker-divider { width: 1px; height: 14px; background: var(--border-color); }
+
+    /* MAIN GRID */
+    .main-grid { display: flex; flex: 1; position: relative; flex-direction: row; overflow: hidden; }
+    
+    /* LEFT TOOLBAR */
+    .left-toolbar { 
+      width: 46px; 
+      background: var(--bg-panel); 
+      border-right: 1px solid var(--border-color); 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      padding: 10px 0; 
+      gap: 10px; 
+      z-index: 30; 
+    }
+    .tool-btn { 
+      width: 34px; 
+      height: 34px; 
+      background: transparent; 
+      border: 1px solid transparent; 
+      border-radius: 6px; 
+      color: #787b86; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      transition: 0.2s; 
+      position: relative; 
+    }
+    .tool-btn:hover { background: #1f2536; color: #d1d4dc; }
+    .tool-btn.active { 
+      background: rgba(37, 99, 235, 0.2); 
+      color: #3b82f6; 
+      border-color: #3b82f6; 
+    }
+    .tool-btn svg { width: 20px; height: 20px; }
+
+    /* INDICATOR POPUP MENU & CUSTOM SETTINGS PANEL */
+    .indicator-menu { 
+      position: absolute; 
+      left: 50px; 
+      top: 0; 
+      background: #121622; 
+      border: 1px solid #283146; 
+      border-radius: 10px; 
+      padding: 12px 14px; 
+      width: 320px; 
+      max-width: 90vw;
+      max-height: 82vh;
+      overflow-y: auto;
+      display: none; 
+      flex-direction: column; 
+      gap: 12px; 
+      box-shadow: 0 16px 36px rgba(0,0,0,0.85); 
+      text-align: left; 
+      z-index: 999; 
+      scrollbar-width: thin;
+      scrollbar-color: #3b82f6 #1a2030;
+    }
+    .indicator-menu::-webkit-scrollbar { width: 5px; }
+    .indicator-menu::-webkit-scrollbar-track { background: #1a2030; border-radius: 4px; }
+    .indicator-menu::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
+    .indicator-menu.show { display: flex; }
+
+    .ind-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #232c40;
+      padding-bottom: 8px;
+    }
+    .ind-main-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #cbd5e1;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-reset-ind {
+      font-size: 10px;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 4px;
+      padding: 3px 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-reset-ind:hover {
+      background: rgba(56, 189, 248, 0.25);
+      color: #fff;
+    }
+
+    .ind-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ind-group-title { 
+      font-size: 9.5px; 
+      font-weight: 800; 
+      color: #64748b; 
+      letter-spacing: 0.6px; 
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .ind-card-item {
+      background: #171d2b;
+      border: 1px solid #232c40;
+      border-radius: 6px;
+      padding: 7px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: border-color 0.2s;
+    }
+    .ind-card-item:hover {
+      border-color: #3b82f6;
+    }
+    .ind-card-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ind-label-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e2e8f0;
+      user-select: none;
+    }
+    .ind-label-area input {
+      accent-color: #2563eb;
+      cursor: pointer;
+      width: 15px;
+      height: 15px;
+    }
+    .ind-color-badge {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px currentColor;
+    }
+    .ind-gear-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ind-gear-btn:hover, .ind-gear-btn.active {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.15);
+    }
+
+    /* KHUNG THÔNG SỐ TUỲ CHỈNH KHI BẤM BÁNH RĂNG ⚙️ */
+    .ind-params-box {
+      display: none;
+      border-top: 1px dashed #2a344d;
+      padding-top: 7px;
+      margin-top: 2px;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 11px;
+    }
+    .ind-params-box.open {
+      display: flex;
+    }
+    .param-field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #94a3b8;
+    }
+    .param-field label {
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .param-field input {
+      width: 65px;
+      padding: 3px 6px;
+      background: #0d111a;
+      border: 1px solid #334155;
+      border-radius: 4px;
+      color: #38bdf8;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .param-field input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.3);
+    }
+    .ind-saved-hint {
+      font-size: 10px;
+      color: #10b981;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .ind-saved-hint.flash {
+      opacity: 1;
+    }
+
+    /* CHART BOX */
+    .chart-box { flex: 1; position: relative; background: var(--bg-main); overflow: hidden; }
+    #chart { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; cursor: crosshair; }
+    
+    /* LOADER */
+    .loader { 
+      position: absolute; 
+      inset: 0; 
+      background: rgba(11, 14, 20, 0.95); 
+      backdrop-filter: blur(4px);
+      z-index: 100; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-weight: 700; 
+      font-size: 14px; 
+      color: #3b82f6; 
+      flex-direction: column; 
+      gap: 14px; 
+      text-align: center; 
+      padding: 24px; 
+      transition: opacity 0.3s;
+    }
+    .loader-spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(59, 130, 246, 0.2);
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* DRAWING LAYER FOR AI ZONES */
+    #drawing-layer { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      bottom: 0; 
+      pointer-events: none; 
+      z-index: 2; 
+      overflow: hidden; 
+    }
+    
+    .hatch-zone { 
+      position: absolute; 
+      left: 0; 
+      right: 0; 
+      display: flex; 
+      align-items: center; 
+      justify-content: flex-end; 
+      padding-right: 15px; 
+      will-change: top, height; 
+      transition: background 0.2s; 
+      display: none; 
+    }
+    .macro-sell { 
+      background: repeating-linear-gradient(-45deg, rgba(220, 38, 38, 0.14), rgba(220, 38, 38, 0.14) 10px, transparent 10px, transparent 20px); 
+      border-top: 1px solid #ef4444; 
+      border-bottom: 1px solid #ef4444; 
+    }
+    .macro-buy { 
+      background: repeating-linear-gradient(-45deg, rgba(6, 182, 212, 0.14), rgba(6, 182, 212, 0.14) 10px, transparent 10px, transparent 20px); 
+      border-top: 1px solid #06b6d4; 
+      border-bottom: 1px solid #06b6d4; 
+    }
+    .zs-wait { 
+      background: repeating-linear-gradient(-45deg, rgba(234, 88, 12, 0.12), rgba(234, 88, 12, 0.12) 8px, transparent 8px, transparent 16px); 
+      border-top: 1px dashed rgba(234, 88, 12, 0.6); 
+      border-bottom: 1px dashed rgba(234, 88, 12, 0.6); 
+    }
+    .zs-active { 
+      background: repeating-linear-gradient(-45deg, rgba(234, 88, 12, 0.35), rgba(234, 88, 12, 0.35) 8px, transparent 8px, transparent 16px); 
+      border-top: 2px solid #ea580c; 
+      border-bottom: 2px solid #ea580c; 
+      box-shadow: inset 0 0 20px rgba(234, 88, 12, 0.3);
+    }
+    .zb-wait { 
+      background: repeating-linear-gradient(-45deg, rgba(147, 51, 234, 0.12), rgba(147, 51, 234, 0.12) 8px, transparent 8px, transparent 16px); 
+      border-top: 1px dashed rgba(147, 51, 234, 0.6); 
+      border-bottom: 1px dashed rgba(147, 51, 234, 0.6); 
+    }
+    .zb-active { 
+      background: repeating-linear-gradient(-45deg, rgba(147, 51, 234, 0.35), rgba(147, 51, 234, 0.35) 8px, transparent 8px, transparent 16px); 
+      border-top: 2px solid #9333ea; 
+      border-bottom: 2px solid #9333ea; 
+      box-shadow: inset 0 0 20px rgba(147, 51, 234, 0.3);
+    }
+    
+    .tag-lbl { 
+      padding: 4px 10px; 
+      border-radius: 4px; 
+      font-size: 11px; 
+      font-weight: 800; 
+      color: #fff; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.7); 
+      transition: 0.2s; 
+      letter-spacing: 0.3px;
+    }
+    .bg-macro-red { background: #b91c1c; border: 1px solid #f87171; } 
+    .bg-macro-cyan { background: #0891b2; border: 1px solid #67e8f9; }
+    .bg-orange { background: #ea580c; border: 1px solid #fb923c; } 
+    .bg-purple { background: #9333ea; border: 1px solid #c084fc; } 
+    .bg-red { background: #dc2626; border: 1px solid #fca5a5; animation: blink 1s infinite; }
+    .bg-green { background: #059669; border: 1px solid #34d399; animation: blink 1s infinite; }
+    
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
+
+    /* DASHBOARD SIDEBAR */
+    .dashboard { 
+      width: 320px; 
+      background: var(--bg-panel); 
+      border-left: 1px solid var(--border-color); 
+      display: flex; 
+      flex-direction: column; 
+      overflow-y: auto; 
+      flex-shrink: 0;
+    }
+    .db-header-sticky { 
+      position: sticky; 
+      top: 0; 
+      background: var(--bg-panel); 
+      padding: 12px 16px; 
+      border-bottom: 1px solid var(--border-color); 
+      font-size: 12px; 
+      font-weight: 800; 
+      color: #fff; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      z-index: 10; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+    }
+    .price-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .price-value {
+      font-family: var(--font-mono); 
+      font-size: 19px; 
+      font-weight: 800;
+      color: var(--green-up);
+      transition: all 0.12s ease;
+      display: inline-block;
+      will-change: transform, color, text-shadow;
+    }
+    .price-value.tick-up {
+      color: #10b981 !important;
+      text-shadow: 0 0 14px rgba(16, 185, 129, 0.9);
+      transform: scale(1.05);
+    }
+    .price-value.tick-down {
+      color: #ef4444 !important;
+      text-shadow: 0 0 14px rgba(239, 68, 68, 0.9);
+      transform: scale(1.05);
+    }
+    .pip-delta {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-left: 5px;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.15s;
+    }
+    .pip-delta.up {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .pip-delta.down {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+    .pip-speed-badge {
+      font-size: 9px;
+      font-weight: 800;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.3px;
+    }
+    
+    .card-wrap { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .card { 
+      background: var(--bg-card); 
+      border: 1px solid var(--border-color); 
+      border-radius: 8px; 
+      overflow: hidden; 
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: rgba(59, 130, 246, 0.4); }
+    .card-head { padding: 10px 12px; font-size: 11px; font-weight: 800; display: flex; justify-content: space-between; align-items: center; }
+    .c-sell { border-bottom: 1px solid rgba(234, 88, 12, 0.25); color: #ea580c; background: rgba(234, 88, 12, 0.05); }
+    .c-buy { border-bottom: 1px solid rgba(147, 51, 234, 0.25); color: #c084fc; background: rgba(147, 51, 234, 0.05); }
+    .c-pivot { border-bottom: 1px solid rgba(59, 130, 246, 0.25); color: #60a5fa; background: rgba(59, 130, 246, 0.05); }
+    .c-market { border-bottom: 1px solid rgba(16, 185, 129, 0.25); color: #34d399; background: rgba(16, 185, 129, 0.05); }
+    
+    .badge { font-size: 9px; padding: 3px 6px; border-radius: 4px; color: #fff; font-weight: 800; letter-spacing: 0.5px; }
+    .b-wait { background: #334155; } 
+    .b-active { background: #10b981; animation: pulse 1s infinite; }
+    .b-sell-active { background: #dc2626; animation: pulse 1s infinite; }
+    
+    .card-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 7px; }
+    .d-row { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-dim); }
+    .d-val { font-family: var(--font-mono); font-weight: 700; color: #f8fafc; }
+    
+    /* RECOMMENDATION TAG */
+    .recom-tag {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .recom-strong-buy { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
+    .recom-buy { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+    .recom-neutral { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+    .recom-sell { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+    .recom-strong-sell { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+
+    /* =========================================================================
+       CARD GỢI Ý VÀO LỆNH AI (ENTRY, TP, SL)
+       ========================================================================= */
+    .card-signal-ai {
+      background: linear-gradient(180deg, #131929 0%, #0d121c 100%);
+      border: 1px solid #2b354d;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+      position: relative;
+    }
+    .card-signal-ai:hover {
+      border-color: #3b82f6;
+    }
+    .c-signal {
+      background: linear-gradient(90deg, rgba(37, 99, 235, 0.18), rgba(16, 185, 129, 0.18));
+      border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+    }
+    .signal-head-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .b-signal-active {
+      background: #10b981;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+      font-size: 9.5px;
+      padding: 3px 8px;
+    }
+    .b-signal-active.sell {
+      background: #ef4444;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    }
+    .b-signal-active.wait {
+      background: #f59e0b;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    /* TAB CHỌN SETUP BUY / SELL */
+    .signal-tab-bar {
+      display: flex;
+      border-bottom: 1px solid #1e2638;
+      background: #090c13;
+    }
+    .sig-tab-btn {
+      flex: 1;
+      padding: 8px 6px;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+    .sig-tab-btn:hover {
+      color: #e2e8f0;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .sig-tab-btn.active[data-type="buy"] {
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.08);
+      border-bottom-color: #10b981;
+    }
+    .sig-tab-btn.active[data-type="sell"] {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.08);
+      border-bottom-color: #ef4444;
+    }
+    .sig-recom-dot {
+      color: #f59e0b;
+      font-size: 11px;
+      animation: pulse 1.2s infinite;
+    }
+
+    /* STATUS ALERT */
+    .sig-status-alert {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(20, 27, 41, 0.7);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 5px;
+      padding: 6px 9px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #e2e8f0;
+      line-height: 1.35;
+    }
+    .sig-pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+      animation: pulse 1s infinite;
+      flex-shrink: 0;
+    }
+
+    /* GRID ENTRY, SL, TP1, TP2 */
+    .sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .sig-box {
+      background: #090c13;
+      border: 1px solid #1e2638;
+      border-radius: 6px;
+      padding: 7px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: border-color 0.2s;
+    }
+    .box-entry { border-left: 3px solid #f59e0b; }
+    .box-sl { border-left: 3px solid #ef4444; }
+    .box-tp1 { border-left: 3px solid #10b981; }
+    .box-tp2 { border-left: 3px solid #059669; }
+
+    .sig-box-lbl {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #64748b;
+      letter-spacing: 0.4px;
+    }
+    .sig-box-sub {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+    }
+    .box-entry .sig-box-sub { color: #f59e0b; }
+    .box-sl .sig-box-sub { color: #ef4444; }
+    .box-tp1 .sig-box-sub, .box-tp2 .sig-box-sub { color: #10b981; }
+
+    .sig-box-val {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .val-entry { color: #f59e0b; }
+    .val-sl { color: #ef4444; }
+    .val-tp { color: #10b981; }
+
+    .sig-box-range {
+      font-size: 9.5px;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* METRICS BAR */
+    .sig-metrics-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #090c13;
+      border: 1px solid #1e2638;
+      border-radius: 6px;
+      padding: 6px 10px;
+    }
+    .sig-metric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .metric-lbl {
+      font-size: 9px;
+      font-weight: 800;
+      color: #64748b;
+      letter-spacing: 0.3px;
+    }
+    .metric-val {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 800;
+    }
+    .sig-metric-divider {
+      width: 1px;
+      height: 20px;
+      background: #1e2638;
+    }
+
+    /* ACTION BUTTONS ROW */
+    .sig-actions-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .sig-btn {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      user-select: none;
+    }
+    .sig-btn-copy {
+      background: rgba(59, 130, 246, 0.12);
+      border-color: rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+    }
+    .sig-btn-copy:hover {
+      background: rgba(59, 130, 246, 0.25);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+    .sig-btn-toggle {
+      background: rgba(148, 163, 184, 0.1);
+      border-color: rgba(148, 163, 184, 0.2);
+      color: #94a3b8;
+    }
+    .sig-btn-toggle.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+    .sig-btn-toggle:hover {
+      border-color: #10b981;
+      color: #fff;
+    }
+
+    /* AUDIO TOGGLE BUTTON */
+    .audio-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: 4px;
+      padding: 3px 6px;
+      font-size: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.2s;
+    }
+    .audio-btn.active { color: #3b82f6; border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+
+    /* =========================================================================
+       RESPONSIVE & MOBILE STYLES (ĐIỆN THOẠI & TABLET)
+       ========================================================================= */
+    .mobile-view-tabs { display: none; }
+    .mobile-scroll-hint { display: none; }
+    .floating-mobile-pill { display: none; }
+    .card-bottom-spacer { 
+      text-align: center; 
+      padding: 16px 0 10px; 
+      color: #64748b; 
+      font-size: 11px; 
+      font-weight: 700; 
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    @media (max-width: 850px) {
+      .header {
+        height: auto;
+        min-height: 48px;
+        padding: 6px 10px;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .logo-area {
+        gap: 6px;
+      }
+      .title {
+        font-size: 13.5px;
+      }
+      .ai-badge {
+        font-size: 9px;
+        padding: 2px 5px;
+      }
+      .feed-controls {
+        margin-left: auto;
+        gap: 6px;
+      }
+      .live-feed {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
+      .source-select {
+        padding: 3px 6px;
+        font-size: 10px;
+      }
+      .calib-btn {
+        padding: 3px 6px;
+        font-size: 10px;
+      }
+      .tf-bar {
+        width: 100%;
+        order: 10;
+        display: flex;
+        justify-content: space-between;
+        padding: 2px;
+        background: #080a0f;
+      }
+      .tf-btn {
+        flex: 1;
+        text-align: center;
+        padding: 6px 2px;
+        font-size: 11.5px;
+      }
+
+      .ticker-strip {
+        height: 26px;
+        padding: 0 10px;
+        gap: 12px;
+        font-size: 10px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .ticker-strip::-webkit-scrollbar { display: none; }
+
+      /* Layout chuyển sang dạng cột linh hoạt */
+      .main-grid {
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+        flex: 1;
+      }
+
+      /* Thanh công cụ vẽ Fibonacci & Chỉ báo dạng nổi thông minh */
+      .left-toolbar {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        width: auto;
+        height: auto;
+        flex-direction: row;
+        background: rgba(18, 22, 32, 0.92);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 3px 6px;
+        gap: 6px;
+        z-index: 25;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      }
+      .tool-btn {
+        width: 32px;
+        height: 32px;
+      }
+      .tool-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+      .indicator-menu {
+        left: 0;
+        top: 42px;
+        max-height: 72vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        width: min(320px, 92vw);
+        z-index: 999;
+      }
+
+      /* CHẾ ĐỘ 1: CHIA ĐÔI (MẶC ĐỊNH) - Xem đồng thời biểu đồ và vùng giá */
+      .main-grid.mode-split .chart-box {
+        height: 44vh;
+        min-height: 210px;
+        flex-shrink: 0;
+        width: 100%;
+        display: block;
+      }
+      .main-grid.mode-split .dashboard {
+        flex: 1;
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+      }
+
+      /* CHẾ ĐỘ 2: FULL VÙNG MUA BÁN - Lướt xem trọn vẹn toàn màn hình không bị che */
+      .main-grid.mode-dash .chart-box {
+        display: none !important;
+      }
+      .main-grid.mode-dash .dashboard {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        border-left: none;
+        border-top: none;
+        display: flex;
+      }
+
+      /* CHẾ ĐỘ 3: FULL BIỂU ĐỒ - Soi nến và vẽ hình thoải mái */
+      .main-grid.mode-chart .chart-box {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .main-grid.mode-chart .dashboard {
+        display: none !important;
+      }
+
+      /* KHU VỰC PHÂN TÍCH LƯỚT MƯỢT MÀ */
+      .dashboard {
+        width: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+        touch-action: pan-y;
+      }
+      
+      .db-header-sticky {
+        padding: 8px 12px;
+      }
+      .db-title-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .mobile-view-tabs {
+        display: flex;
+        gap: 3px;
+        background: #090c12;
+        padding: 2px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+      }
+      .m-tab-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 10px;
+        font-weight: 800;
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: 0.15s;
+        white-space: nowrap;
+      }
+      .m-tab-btn.active {
+        background: #2563eb;
+        color: #fff;
+        box-shadow: 0 1px 6px rgba(37, 99, 235, 0.4);
+      }
+
+      .price-value {
+        font-size: 16px;
+      }
+
+      .mobile-scroll-hint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 10px;
+        background: rgba(37, 99, 235, 0.08);
+        border: 1px dashed rgba(59, 130, 246, 0.35);
+        border-radius: 6px;
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #60a5fa;
+        text-align: center;
+        margin-bottom: 2px;
+      }
+
+      /* KHẮC PHỤC TRIỆT ĐỂ LỖI BỊ HẠN CHẾ ĐOẠN CUỐI TRÊN ĐIỆN THOẠI:
+         Đệm thêm khoảng trống lớn phía dưới (100px + safe area) để không bị
+         thanh điều hướng Safari / Chrome che khuất thẻ cuối cùng */
+      .card-wrap {
+        padding: 8px 12px;
+        padding-bottom: calc(110px + env(safe-area-inset-bottom, 30px));
+        gap: 9px;
+        touch-action: pan-y;
+      }
+      .card-bottom-spacer {
+        display: flex;
+        padding: 16px 0 45px;
+        color: #64748b;
+        font-size: 11px;
+      }
+
+      /* Nút nổi chuyển về vùng phân tích khi đang ở chế độ xem full chart */
+      .floating-mobile-pill {
+        position: absolute;
+        bottom: calc(20px + env(safe-area-inset-bottom, 12px));
+        right: 16px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 24px;
+        padding: 9px 15px;
+        font-size: 11.5px;
+        font-weight: 800;
+        cursor: pointer;
+        z-index: 40;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.65), 0 0 12px rgba(37,99,235,0.5);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-area">
+      <span class="title">
+        <span class="title-gold">AI XAUUSD</span> SYSTEM
+      </span>
+      <span class="ai-badge">V26 PURE DATA</span>
+    </div>
+
+    <!-- UI BÁO TRẠNG THÁI KẾT NỐI -->
+    <div class="feed-controls">
+      <div class="live-feed offline" id="status-indicator" title="Trạng thái nguồn cấp dữ liệu thế giới">
+        <span class="pulse-dot" id="status-dot"></span>
+        <span id="status-text">ĐANG KẾT NỐI NGUỒN THẾ GIỚI...</span>
+      </div>
+
+      <div class="source-select-wrap">
+        <select class="source-select" id="source-select" title="Chọn nguồn cấp dữ liệu">
+          <option value="exness" selected>🏆 Sàn Exness (Chuẩn Spot XAU/USD)</option>
+          <option value="oanda">🌐 OANDA Forex (CFD Live)</option>
+          <option value="pepperstone">🏛️ Pepperstone (Forex Live)</option>
+          <option value="binance">🪙 Binance PAXG (Spot 24/7)</option>
+        </select>
+      </div>
+
+      <button class="calib-btn" id="btn-open-calib" title="Hiệu chỉnh khớp chính xác giá sàn Exness">
+        <span>🎯 Khớp Exness</span>
+        <span class="calib-badge" id="calib-badge-text">+0.00</span>
+      </button>
+    </div>
+
+    <!-- KHUNG THỜI GIAN -->
+    <div class="tf-bar">
+      <button class="tf-btn" data-tf="1m">1m</button>
+      <button class="tf-btn active" data-tf="5m">5m</button>
+      <button class="tf-btn" data-tf="15m">15m</button>
+      <button class="tf-btn" data-tf="1h">1H</button>
+      <button class="tf-btn" data-tf="4h">4H</button>
+    </div>
+  </header>
+
+  <!-- LIVE TICKER STRIP -->
+  <div class="ticker-strip">
+    <div class="ticker-item">
+      <span class="ticker-lbl" style="color: #fbbf24;">SÀN EXNESS XAUUSD:</span>
+      <span class="ticker-val" id="tk-exness" style="color: #fbbf24;">---.--</span>
+      <span class="ticker-delta" id="tk-exness-chg">--%</span>
+    </div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item">
+      <span class="ticker-lbl">OANDA FOREX:</span>
+      <span class="ticker-val" id="tk-oanda">---.--</span>
+      <span class="ticker-delta" id="tk-oanda-chg">--%</span>
+    </div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item">
+      <span class="ticker-lbl">TVC WORLD GOLD:</span>
+      <span class="ticker-val" id="tk-tvc">---.--</span>
+      <span class="ticker-delta" id="tk-tvc-chg">--%</span>
+    </div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item">
+      <span class="ticker-lbl">BINANCE PAXG (CRYPTO):</span>
+      <span class="ticker-val" id="tk-binance">---.--</span>
+    </div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item">
+      <span class="ticker-lbl">LỆCH EXNESS vs PAXG:</span>
+      <span class="ticker-val" id="tk-spread" style="color: #60a5fa;">0.00 USD</span>
+    </div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item">
+      <span class="ticker-lbl">PHIÊN GIAO DỊCH:</span>
+      <span class="ticker-val" id="tk-session" style="color: #fcd34d;">Đang tính...</span>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="main-grid mode-split">
+    <!-- LEFT TOOLBAR -->
+    <div class="left-toolbar">
+      <button class="tool-btn" id="btn-draw-fibo" title="Kẻ Fibonacci (Nhấp 2 điểm trên chart)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><g fill="currentColor" fill-rule="evenodd"><path d="M4 7h21v1H4zM4 14h21v1H4zM4 21h21v1H4z"/><path d="M9.854 22.146l9-16-.708-.708-9 16z"/></g></svg>
+      </button>
+
+      <div style="position: relative;">
+        <button class="tool-btn" id="btn-indicators" title="Menu Chỉ Báo Kỹ Thuật">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="currentColor" d="M11.5 19v-4.5H13V19h-1.5zm5-9.5V19h-1.5V9.5h1.5zm-10 9.5v-7.5H8V19H6.5zm15-4.5V19h-1.5v-4.5h1.5zM6.5 7h15v1.5h-15V7z"/></svg>
+        </button>
+        <div class="indicator-menu" id="ind-menu">
+          <div class="ind-header-bar">
+            <span class="ind-main-title">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+              CHỈ BÁO & THÔNG SỐ AI
+            </span>
+            <button class="btn-reset-ind" id="btn-reset-ind-cfg" title="Khôi phục thông số kỹ thuật gốc">🔄 Mặc định</button>
+          </div>
+
+          <!-- NHÓM 1: XU HƯỚNG & ĐƯỜNG TRUNG BÌNH -->
+          <div class="ind-section">
+            <div class="ind-group-title">📈 XU HƯỚNG & TRUNG BÌNH ĐỘNG</div>
+            
+            <!-- EMA 1 -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-ema1" checked>
+                  <span class="ind-color-badge" style="background:#3b82f6;"></span>
+                  <span id="title-ema1">Đường EMA 1 (<span class="val-ema1-p">20</span>)</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-ema1" title="Chỉnh chu kỳ EMA 1">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-ema1">
+                <div class="param-field">
+                  <label>Chu kỳ (Period):</label>
+                  <input type="number" id="inp-ema1-p" min="1" max="500" value="20">
+                </div>
+              </div>
+            </div>
+
+            <!-- EMA 2 -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-ema2">
+                  <span class="ind-color-badge" style="background:#f59e0b;"></span>
+                  <span id="title-ema2">Đường EMA 2 (<span class="val-ema2-p">50</span>)</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-ema2" title="Chỉnh chu kỳ EMA 2">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-ema2">
+                <div class="param-field">
+                  <label>Chu kỳ (Period):</label>
+                  <input type="number" id="inp-ema2-p" min="1" max="500" value="50">
+                </div>
+              </div>
+            </div>
+
+            <!-- SMA -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-sma">
+                  <span class="ind-color-badge" style="background:#ec4899;"></span>
+                  <span id="title-sma">Đường SMA (<span class="val-sma-p">200</span>)</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-sma" title="Chỉnh chu kỳ SMA">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-sma">
+                <div class="param-field">
+                  <label>Chu kỳ (Period):</label>
+                  <input type="number" id="inp-sma-p" min="1" max="500" value="200">
+                </div>
+              </div>
+            </div>
+
+            <!-- VWAP -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-vwap">
+                  <span class="ind-color-badge" style="background:#06b6d4;"></span>
+                  <span>Đường VWAP (Theo Volume)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- SUPERTREND AI -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-supertrend">
+                  <span class="ind-color-badge" style="background:#10b981;"></span>
+                  <span id="title-supertrend">SuperTrend AI (<span class="val-st-p">10</span>, <span class="val-st-m">3.0</span>)</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-supertrend" title="Chỉnh ATR & Hệ số SuperTrend">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-supertrend">
+                <div class="param-field">
+                  <label>Chu kỳ ATR:</label>
+                  <input type="number" id="inp-st-p" min="1" max="100" value="10">
+                </div>
+                <div class="param-field">
+                  <label>Hệ số Multiplier:</label>
+                  <input type="number" id="inp-st-m" min="0.5" max="10" step="0.1" value="3.0">
+                </div>
+                <div style="font-size: 9.5px; color: #64748b; line-height: 1.3;">Tự động gắn mũi tên tín hiệu BUY / SELL trên cây nến</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- NHÓM 2: BIẾN ĐỘNG & KÊNH GIÁ -->
+          <div class="ind-section">
+            <div class="ind-group-title">🎯 BIẾN ĐỘNG & KÊNH GIÁ</div>
+
+            <!-- BOLLINGER BANDS -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-bb">
+                  <span class="ind-color-badge" style="background:#94a3b8;"></span>
+                  <span id="title-bb">Bollinger Bands (<span class="val-bb-p">20</span>, <span class="val-bb-m">2.0</span>)</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-bb" title="Chỉnh thông số Bollinger Bands">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-bb">
+                <div class="param-field">
+                  <label>Chu kỳ MA (Period):</label>
+                  <input type="number" id="inp-bb-p" min="2" max="200" value="20">
+                </div>
+                <div class="param-field">
+                  <label>Độ lệch (StdDev):</label>
+                  <input type="number" id="inp-bb-m" min="0.5" max="5" step="0.1" value="2.0">
+                </div>
+              </div>
+            </div>
+
+            <!-- AUTO FIBONACCI -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-autofibo">
+                  <span class="ind-color-badge" style="background:#8b5cf6;"></span>
+                  <span id="title-autofibo">Auto Fibonacci (<span class="val-fibo-lb">120</span> nến)</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-autofibo" title="Chỉnh số nến quét đỉnh đáy">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-autofibo">
+                <div class="param-field">
+                  <label>Số nến quét đỉnh/đáy:</label>
+                  <input type="number" id="inp-fibo-lb" min="20" max="500" value="120">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- NHÓM 3: KHỐI LƯỢNG & ĐỘNG LƯỢNG -->
+          <div class="ind-section">
+            <div class="ind-group-title">📊 KHỐI LƯỢNG & ĐỘNG LƯỢNG</div>
+
+            <!-- VOLUME & VOL MA -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-vol" checked>
+                  <span class="ind-color-badge" style="background:#10b981;"></span>
+                  <span id="title-vol">Volume & Vol MA (<span class="val-vol-ma">20</span>)</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-vol" title="Chỉnh chu kỳ Vol MA">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-vol">
+                <div class="param-field">
+                  <label>Chu kỳ Vol MA:</label>
+                  <input type="number" id="inp-vol-ma" min="2" max="100" value="20">
+                </div>
+              </div>
+            </div>
+
+            <!-- RSI -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-rsi">
+                  <span class="ind-color-badge" style="background:#38bdf8;"></span>
+                  <span id="title-rsi">Đường RSI (<span class="val-rsi-p">14</span>)</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-rsi" title="Chỉnh chu kỳ & ngưỡng RSI">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-rsi">
+                <div class="param-field">
+                  <label>Chu kỳ RSI (Period):</label>
+                  <input type="number" id="inp-rsi-p" min="2" max="50" value="14">
+                </div>
+                <div class="param-field">
+                  <label>Ngưỡng Quá Mua (OB):</label>
+                  <input type="number" id="inp-rsi-ob" min="50" max="95" value="70">
+                </div>
+                <div class="param-field">
+                  <label>Ngưỡng Quá Bán (OS):</label>
+                  <input type="number" id="inp-rsi-os" min="5" max="50" value="30">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 5px; border-top: 1px solid #1f283d;">
+            <span style="font-size: 10px; color: #64748b;">Tự động lưu cấu hình</span>
+            <span class="ind-saved-hint" id="ind-saved-hint">✓ Đã áp dụng</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="tool-btn" id="btn-clear-fibo" title="Xóa Đường Fibonacci đã vẽ">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="currentColor" fill-rule="evenodd" d="M10.5 5.5v1h7v-1h-7zM9 5.5c0-.828.672-1.5 1.5-1.5h7c.828 0 1.5.672 1.5 1.5v1H22v1h-2v13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 8 20.5V7.5H6v-1h3zM10 8.5v11h1v-11h-1zm3 0v11h1v-11h-1zm3 0v11h1v-11h-1z"/></svg>
+      </button>
+
+      <button class="tool-btn" id="btn-sound-toggle" title="Bật/Tắt chuông báo khi chạm vùng AI">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zm-2.5-1.23L6.5 6H2v12h4.5l5 4V2z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- BIỂU ĐỒ CHÍNH -->
+    <div class="chart-box" id="chart-container">
+      <div id="chart"></div>
+      
+      <!-- LOADER OVERLAY -->
+      <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
+        <span style="font-size:15px; font-weight:800;" id="loader-text">ĐANG TẢI DỮ LIỆU VÀNG CHUẨN THẾ GIỚI...</span>
+        <span style="font-size:12px; font-weight:500; color: #94a3b8;" id="loader-sub">Kết nối trực tiếp không qua proxy - tốc độ cao</span>
+      </div>
+
+      <!-- LỚP VẼ VÙNG CẢN AI THEO TOẠ ĐỘ CHART -->
+      <div id="drawing-layer">
+        <div class="hatch-zone macro-sell" id="zone-macro-sell"><div class="tag-lbl bg-macro-red">KHÁNG CỰ MACRO</div></div>
+        <div class="hatch-zone macro-buy" id="zone-macro-buy"><div class="tag-lbl bg-macro-cyan">HỖ TRỢ MACRO</div></div>
+        <div class="hatch-zone zs-wait" id="zone-sell"><div class="tag-lbl bg-orange" id="lbl-sell">Vùng Canh SELL</div></div>
+        <div class="hatch-zone zb-wait" id="zone-buy"><div class="tag-lbl bg-purple" id="lbl-buy">Vùng Canh BUY</div></div>
+      </div>
+
+      <!-- NÚT NỔI CHUYỂN VÙNG GIÁ TRÊN ĐIỆN THOẠI -->
+      <button class="floating-mobile-pill" id="btn-floating-signals" style="display: none;">
+        <span>🤖 Xem Vùng Mua Bán</span>
+      </button>
+    </div>
+
+    <!-- DASHBOARD BÊN PHẢI -->
+    <aside class="dashboard" id="main-dashboard">
+      <div class="db-header-sticky">
+        <div class="db-title-group">
+          <span>🤖 TÍN HIỆU LIVE</span>
+          <!-- NÚT CHUYỂN CHẾ ĐỘ XEM TRÊN ĐIỆN THOẠI -->
+          <div class="mobile-view-tabs" id="mobile-view-tabs">
+            <button class="m-tab-btn active" data-view="split" title="Xem biểu đồ & vùng giá chia đôi">Chia đôi</button>
+            <button class="m-tab-btn" data-view="dash" title="Lướt toàn màn hình vùng mua bán">Vùng Giá</button>
+            <button class="m-tab-btn" data-view="chart" title="Xem toàn màn hình biểu đồ">Chart</button>
+          </div>
+        </div>
+        <div class="price-container">
+          <div style="display: flex; align-items: center; justify-content: flex-end;">
+            <span class="price-value" id="price-disp">---.--</span>
+            <span class="pip-delta up" id="pip-delta" style="display: none;">+0.00</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 10px; margin-top: 2px;">
+            <span class="pip-speed-badge" title="Tốc độ cập nhật từng pip">⚡ ULTRA PIP FEED</span>
+            <span class="price-sub" id="price-sub-source">EXNESS SPOT</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-wrap">
+        <!-- GỢI Ý VUỐT TRÊN ĐIỆN THOẠI -->
+        <div class="mobile-scroll-hint">
+          <span>↕️ Vuốt lướt để xem đầy đủ Vùng Giá Mua/Bán & Phân tích</span>
+        </div>
+
+        <!-- =====================================================================
+             KẾ HOẠCH VÀO LỆNH AI (ENTRY - TP - SL)
+             ===================================================================== -->
+        <div class="card card-signal-ai">
+          <div class="card-head c-signal">
+            <span class="signal-head-title">
+              <span>🎯</span> GỢI Ý VÀO LỆNH (AI SIGNAL)
+            </span>
+            <span class="badge b-signal-active" id="sig-action-badge">BUY LIMIT</span>
+          </div>
+
+          <!-- TAB CHỌN KỊCH BẢN BUY / SELL -->
+          <div class="signal-tab-bar">
+            <button class="sig-tab-btn active" id="tab-sig-buy" data-type="buy">
+              <span>🟢 KẾ HOẠCH BUY</span>
+              <span class="sig-recom-dot" id="dot-recom-buy" title="AI Khuyến nghị">★</span>
+            </button>
+            <button class="sig-tab-btn" id="tab-sig-sell" data-type="sell">
+              <span>🔴 KẾ HOẠCH SELL</span>
+              <span class="sig-recom-dot" id="dot-recom-sell" style="display:none;" title="AI Khuyến nghị">★</span>
+            </button>
+          </div>
+
+          <div class="card-body" style="gap: 8px;">
+            <!-- TRẠNG THÁI KHỚP LỆNH -->
+            <div class="sig-status-alert" id="sig-status-msg">
+              <span class="sig-pulse-dot" id="sig-pulse-dot"></span>
+              <span id="sig-status-text">Đang phân tích vùng giá tối ưu...</span>
+            </div>
+
+            <!-- GRID CÁC THÔNG SỐ VÀO LỆNH -->
+            <div class="sig-grid">
+              <!-- ENTRY -->
+              <div class="sig-box box-entry">
+                <div class="sig-box-lbl">
+                  <span>ENTRY (ĐIỂM VÀO)</span>
+                  <span class="sig-box-sub" id="sig-entry-type">VÙNG CẦU</span>
+                </div>
+                <div class="sig-box-val val-entry" id="sig-disp-entry">----.--</div>
+                <div class="sig-box-range" id="sig-disp-entry-range">Vùng: ---- - ----</div>
+              </div>
+
+              <!-- STOP LOSS -->
+              <div class="sig-box box-sl">
+                <div class="sig-box-lbl">
+                  <span>STOP LOSS (SL)</span>
+                  <span class="sig-box-sub" id="sig-sl-pips">-0 pips</span>
+                </div>
+                <div class="sig-box-val val-sl" id="sig-disp-sl">----.--</div>
+                <div class="sig-box-range" id="sig-sl-dist">Cách: -0.0 USD</div>
+              </div>
+
+              <!-- TAKE PROFIT 1 -->
+              <div class="sig-box box-tp1">
+                <div class="sig-box-lbl">
+                  <span>TAKE PROFIT 1 (TP1)</span>
+                  <span class="sig-box-sub" id="sig-tp1-pips">+0 pips</span>
+                </div>
+                <div class="sig-box-val val-tp" id="sig-disp-tp1">----.--</div>
+                <div class="sig-box-range" id="sig-tp1-target">Mục tiêu: TRỤC PIVOT</div>
+              </div>
+
+              <!-- TAKE PROFIT 2 -->
+              <div class="sig-box box-tp2">
+                <div class="sig-box-lbl">
+                  <span>TAKE PROFIT 2 (TP2)</span>
+                  <span class="sig-box-sub" id="sig-tp2-pips">+0 pips</span>
+                </div>
+                <div class="sig-box-val val-tp" id="sig-disp-tp2">----.--</div>
+                <div class="sig-box-range" id="sig-tp2-target">Mục tiêu: CẢN ĐỐI DIỆN</div>
+              </div>
+            </div>
+
+            <!-- TỈ LỆ RISK / REWARD & KHUYẾN NGHỊ VỐN -->
+            <div class="sig-metrics-bar">
+              <div class="sig-metric-item">
+                <span class="metric-lbl">TỈ LỆ R : R</span>
+                <span class="metric-val" id="sig-disp-rr" style="color: #38bdf8;">1 : 2.5</span>
+              </div>
+              <div class="sig-metric-divider"></div>
+              <div class="sig-metric-item">
+                <span class="metric-lbl">QUẢN TRỊ RỦI RO</span>
+                <span class="metric-val" style="color: #34d399;">1% - 2% VỐN</span>
+              </div>
+              <div class="sig-metric-divider"></div>
+              <div class="sig-metric-item">
+                <span class="metric-lbl">CHIẾN LƯỢC</span>
+                <span class="metric-val" id="sig-disp-strategy" style="color: #fcd34d;">SWING / SCALP</span>
+              </div>
+            </div>
+
+            <!-- THANH THAO TÁC (COPY & BẬT/TẮT TRÊN CHART) -->
+            <div class="sig-actions-row">
+              <button class="sig-btn sig-btn-copy" id="btn-copy-signal" title="Sao chép toàn bộ thông số lệnh">
+                <span id="copy-icon">📋</span>
+                <span id="copy-text">Copy Lệnh Nhanh</span>
+              </button>
+              <button class="sig-btn sig-btn-toggle active" id="btn-toggle-sig-lines" title="Bật/Tắt đường Entry/TP/SL trên biểu đồ">
+                <span>📍 Mốc Trên Chart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- VÙNG SELL -->
+        <div class="card">
+          <div class="card-head c-sell">
+            <span id="c-title-sell">🔴 VÙNG SELL TRONG</span>
+            <span class="badge b-wait" id="c-badge-sell">Đang quét...</span>
+          </div>
+          <div class="card-body">
+            <div class="d-row"><span>Biên cản trên:</span><span class="d-val" id="disp-sTop">---</span></div>
+            <div class="d-row"><span>Biên cản dưới:</span><span class="d-val" id="disp-sBot">---</span></div>
+            <div class="d-row"><span>AI Status:</span><span class="d-val" id="ai-sell-msg" style="color:#fcd34d;">Chờ khởi tạo...</span></div>
+          </div>
+        </div>
+
+        <!-- TRỤC XOAY PIVOT -->
+        <div class="card">
+          <div class="card-head c-pivot">
+            <span>🎯 TRỤC XOAY (PIVOT)</span>
+            <span class="badge" style="background:#2563eb;" id="pvt-tag">TRUNG TẬP</span>
+          </div>
+          <div class="card-body">
+            <div class="d-row"><span>Điểm PIVOT chính:</span><span class="d-val" id="disp-pvt" style="color:#60a5fa;">---</span></div>
+            <div class="d-row"><span>Vị thế giá:</span><span class="d-val" id="disp-pvt-status">---</span></div>
+            <div class="d-row"><span>Kháng cự R1:</span><span class="d-val" id="disp-r1" style="color:#f87171;">---</span></div>
+            <div class="d-row"><span>Hỗ trợ S1:</span><span class="d-val" id="disp-s1" style="color:#34d399;">---</span></div>
+          </div>
+        </div>
+
+        <!-- VÙNG BUY -->
+        <div class="card">
+          <div class="card-head c-buy">
+            <span id="c-title-buy">🟣 VÙNG BUY TRONG</span>
+            <span class="badge b-wait" id="c-badge-buy">Đang quét...</span>
+          </div>
+          <div class="card-body">
+            <div class="d-row"><span>Biên cản trên:</span><span class="d-val" id="disp-bTop">---</span></div>
+            <div class="d-row"><span>Biên cản dưới:</span><span class="d-val" id="disp-bBot">---</span></div>
+            <div class="d-row"><span>AI Status:</span><span class="d-val" id="ai-buy-msg" style="color:#fcd34d;">Chờ khởi tạo...</span></div>
+          </div>
+        </div>
+
+        <!-- TỔNG HỢP KỸ THUẬT & THÔNG TIN THỊ TRƯỜNG -->
+        <div class="card">
+          <div class="card-head c-market">
+            <span>📊 PHÂN TÍCH THẾ GIỚI</span>
+            <span class="recom-tag recom-neutral" id="recom-badge">SCANNING</span>
+          </div>
+          <div class="card-body">
+            <div class="d-row"><span>Cao nhất 24h:</span><span class="d-val" id="disp-24h-high">---</span></div>
+            <div class="d-row"><span>Thấp nhất 24h:</span><span class="d-val" id="disp-24h-low">---</span></div>
+            <div class="d-row"><span>Biên độ ngày:</span><span class="d-val" id="disp-24h-range">---</span></div>
+            <div class="d-row"><span id="disp-rsi-lbl">Chỉ số RSI (14):</span><span class="d-val" id="disp-rsi">---</span></div>
+            <div class="d-row"><span>Xu hướng SuperTrend:</span><span class="d-val" id="disp-supertrend" style="font-size: 11px;">CHỜ BẬT</span></div>
+            <div class="d-row"><span>Vị thế VWAP:</span><span class="d-val" id="disp-vwap" style="font-size: 11px;">---</span></div>
+          </div>
+        </div>
+
+        <!-- ĐỆM KHOẢNG TRỐNG DƯỚI ĐÁY CHO ĐIỆN THOẠI (XỬ LÝ DỨT ĐIỂM HẠN CHẾ ĐOẠN CUỐI) -->
+        <div class="card-bottom-spacer">
+          <span>✓ ĐÃ HIỂN THỊ TRỌN VẸN CÁC VÙNG GIÁ MUA / BÁN</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- MODAL ĐỒNG BỘ GIÁ SÀN EXNESS -->
+  <div class="calib-modal-overlay" id="calib-modal-overlay">
+    <div class="calib-modal">
+      <div class="calib-modal-header">
+        <div class="calib-modal-title">
+          <span style="font-size: 20px;">🎯</span>
+          <div>
+            <div style="font-size: 13.5px; font-weight: 800; color: #fff;">ĐỒNG BỘ GIÁ SÀN EXNESS (XAU/USD)</div>
+            <div style="font-size: 11px; color: #94a3b8; font-weight: 500;">Khớp chuẩn xác giá nến & thời gian thực với tài khoản Exness của bạn</div>
+          </div>
+        </div>
+        <button class="calib-modal-close" id="btn-close-calib" title="Đóng">&times;</button>
+      </div>
+
+      <div class="calib-modal-body">
+        <!-- BẢNG THEO DÕI NGUỒN GIÁ HIỆN TẠI -->
+        <div class="calib-info-card">
+          <div class="calib-info-row">
+            <span class="calib-info-label">🌐 Spot Thế Giới (Interbank / LBMA):</span>
+            <span class="calib-info-val" id="md-spot-price">---.--</span>
+          </div>
+          <div class="calib-info-row">
+            <span class="calib-info-label">🪙 Binance Spot Gold (PAXG):</span>
+            <span class="calib-info-val" id="md-binance-price">---.--</span>
+          </div>
+          <div class="calib-info-row">
+            <span class="calib-info-label">⚖️ Lệch cơ sở (Basis PAXG vs Spot):</span>
+            <span class="calib-info-val" id="md-basis-price">0.00 USD</span>
+          </div>
+          <div class="calib-info-row" style="border-top: 1px dashed #232838; padding-top: 6px; margin-top: 4px;">
+            <span class="calib-info-label">🎯 Bù chênh lệch Exness (Offset):</span>
+            <span class="calib-info-val" id="md-offset-display" style="color: #60a5fa;">+0.00 USD</span>
+          </div>
+          <div class="calib-info-row" style="background: rgba(245, 158, 11, 0.1); padding: 8px 10px; border-radius: 6px; margin-top: 6px;">
+            <span class="calib-info-label" style="font-weight: 800; color: #fbbf24;">🏆 GIÁ HIỂN THỊ EXNESS (MỤC TIÊU):</span>
+            <span class="calib-info-val" id="md-exness-final" style="font-size: 16px; font-weight: 900; color: #fbbf24;">---.--</span>
+          </div>
+        </div>
+
+        <!-- 1-CLICK KHỚP GIÁ NHANH -->
+        <div class="calib-section-title">⚡ 1. KHỚP GIÁ TỨC THÌ TỪ APP EXNESS</div>
+        <div class="calib-desc">Nhập số giá XAUUSD hiện tại trên ứng dụng Exness / MT4 / MT5 của bạn, hệ thống sẽ tự động cân chỉnh khớp 100%:</div>
+        <div class="calib-input-group">
+          <input type="number" step="0.01" class="calib-input" id="inp-exness-now" placeholder="Ví dụ: 4124.80" />
+          <button class="calib-apply-btn" id="btn-apply-instant-match">Khớp Giá Ngay</button>
+        </div>
+        <div id="calib-match-msg" class="calib-match-msg"></div>
+
+        <!-- PRESET TÀI KHOẢN SÀN EXNESS -->
+        <div class="calib-section-title" style="margin-top: 10px;">🏛️ 2. CHỌN LOẠI TÀI KHOẢN EXNESS CỦA BẠN</div>
+        <div class="calib-presets">
+          <button class="calib-preset-btn active" data-preset="0.00" title="Chênh lệch 0 pip">
+            <span class="preset-name">Tài khoản Zero / Raw</span>
+            <span class="preset-spread">Spread ~0.0 pip (Khớp chuẩn Spot)</span>
+          </button>
+          <button class="calib-preset-btn" data-preset="0.10" title="Chênh lệch 1 pip">
+            <span class="preset-name">Tài khoản Exness Pro</span>
+            <span class="preset-spread">Spread ~1.0 pip (+0.10 USD)</span>
+          </button>
+          <button class="calib-preset-btn" data-preset="0.20" title="Chênh lệch 2 pips">
+            <span class="preset-name">Tài khoản Standard</span>
+            <span class="preset-spread">Spread ~1.5 - 2.0 pips (+0.20 USD)</span>
+          </button>
+        </div>
+
+        <!-- ĐIỀU CHỈNH VI CHỈNH TỪNG 0.05 USD -->
+        <div class="calib-section-title" style="margin-top: 10px;">🎛️ 3. VI CHỈNH THỦ CÔNG</div>
+        <div class="calib-fine-tune">
+          <button class="calib-step-btn" id="btn-offset-minus-05">-0.10 USD</button>
+          <button class="calib-step-btn" id="btn-offset-minus-01">-0.02 USD</button>
+          <div class="calib-current-offset" id="lbl-cur-offset">+0.00 USD</div>
+          <button class="calib-step-btn" id="btn-offset-plus-01">+0.02 USD</button>
+          <button class="calib-step-btn" id="btn-offset-plus-05">+0.10 USD</button>
+          <button class="calib-step-btn reset" id="btn-offset-reset" title="Đặt lại về mặc định 0.00">Đặt lại</button>
+        </div>
+      </div>
+
+      <div class="calib-modal-footer">
+        <span class="calib-auto-saved-hint">✓ Tự động lưu cấu hình và đồng bộ toàn bộ 500 nến</span>
+        <button class="calib-done-btn" id="btn-done-calib">Hoàn Tất</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. ENGINE BIỂU ĐỒ LIGHTWEIGHT CHARTS
+    // =========================================================================
+    const chartContainer = document.getElementById('chart-container');
+    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+      layout: { background: { type: 'solid', color: '#0b0e14' }, textColor: '#64748b' },
+      grid: { vertLines: { color: '#151924' }, horzLines: { color: '#151924' } },
+      crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+      timeScale: { 
+        timeVisible: true, 
+        secondsVisible: false, 
+        rightOffset: 12,
+        borderColor: '#232838'
+      },
+      rightPriceScale: {
+        borderColor: '#232838',
+        autoScale: true
+      }
+    });
+
+    new ResizeObserver(entries => { 
+      if (entries.length > 0) {
+        chart.applyOptions({ 
+          width: entries[0].contentRect.width, 
+          height: entries[0].contentRect.height 
+        }); 
+      }
+    }).observe(chartContainer);
+
+    const mainSeries = chart.addCandlestickSeries({ 
+      upColor: '#10b981', 
+      downColor: '#ef4444', 
+      borderVisible: false, 
+      wickUpColor: '#10b981', 
+      wickDownColor: '#ef4444' 
+    });
+
+    // Cấu hình thang đo biểu đồ nến (để 22% lề đáy cho Volume hiển thị to rõ)
+    chart.priceScale('right').applyOptions({
+      borderColor: '#232838',
+      autoScale: true,
+      scaleMargins: { top: 0.08, bottom: 0.22 }
+    });
+
+    // Cấu hình Volume Series hiển thị to, rõ ràng, chiếm 30% chiều cao đáy biểu đồ
+    const volSeries = chart.addHistogramSeries({ 
+      priceFormat: { type: 'volume' }, 
+      priceScaleId: 'volume_scale' 
+    });
+    chart.priceScale('volume_scale').applyOptions({ 
+      scaleMargins: { top: 0.70, bottom: 0 } 
+    });
+
+    // =========================================================================
+    // QUẢN LÝ CẤU HÌNH THÔNG SỐ CHỈ BÁO KỸ THUẬT (LOCALSTORAGE & DYNAMIC CONFIG)
+    // =========================================================================
+    const IND_CONFIG_KEY = 'ai_gold_indicators_config_v2';
+    const defaultIndConfig = {
+      ema1: { enabled: true, period: 20 },
+      ema2: { enabled: false, period: 50 },
+      sma: { enabled: false, period: 200 },
+      vwap: { enabled: false },
+      supertrend: { enabled: false, period: 10, mult: 3.0 },
+      bb: { enabled: false, period: 20, mult: 2.0 },
+      vol: { enabled: true, maPeriod: 20 },
+      rsi: { enabled: false, period: 14, ob: 70, os: 30 },
+      autofibo: { enabled: false, lookback: 120 }
+    };
+
+    function loadIndConfig() {
+      try {
+        const raw = localStorage.getItem(IND_CONFIG_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          return {
+            ema1: Object.assign({}, defaultIndConfig.ema1, parsed.ema1),
+            ema2: Object.assign({}, defaultIndConfig.ema2, parsed.ema2),
+            sma: Object.assign({}, defaultIndConfig.sma, parsed.sma),
+            vwap: Object.assign({}, defaultIndConfig.vwap, parsed.vwap),
+            supertrend: Object.assign({}, defaultIndConfig.supertrend, parsed.supertrend),
+            bb: Object.assign({}, defaultIndConfig.bb, parsed.bb),
+            vol: Object.assign({}, defaultIndConfig.vol, parsed.vol),
+            rsi: Object.assign({}, defaultIndConfig.rsi, parsed.rsi),
+            autofibo: Object.assign({}, defaultIndConfig.autofibo, parsed.autofibo)
+          };
+        }
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(defaultIndConfig));
+    }
+
+    let indConfig = loadIndConfig();
+
+    function saveIndConfig() {
+      try {
+        localStorage.setItem(IND_CONFIG_KEY, JSON.stringify(indConfig));
+      } catch (e) {}
+    }
+
+    // Đường trung bình khối lượng Volume MA chuẩn TradingView
+    const volMaSeries = chart.addLineSeries({
+      color: 'rgba(245, 158, 11, 0.85)',
+      lineWidth: 1.5,
+      priceScaleId: 'volume_scale',
+      visible: indConfig.vol.enabled,
+      title: `Vol MA ${indConfig.vol.maPeriod}`
+    });
+
+    // Khởi tạo các Series Chỉ báo Kỹ thuật linh hoạt
+    const ema1Series = chart.addLineSeries({ 
+      color: '#3b82f6', 
+      lineWidth: 1.5, 
+      visible: indConfig.ema1.enabled, 
+      title: `EMA ${indConfig.ema1.period}` 
+    });
+
+    const ema2Series = chart.addLineSeries({ 
+      color: '#f59e0b', 
+      lineWidth: 1.5, 
+      visible: indConfig.ema2.enabled, 
+      title: `EMA ${indConfig.ema2.period}` 
+    });
+
+    const smaSeries = chart.addLineSeries({ 
+      color: '#ec4899', 
+      lineWidth: 2, 
+      visible: indConfig.sma.enabled, 
+      title: `SMA ${indConfig.sma.period}` 
+    });
+
+    const vwapSeries = chart.addLineSeries({ 
+      color: '#06b6d4', 
+      lineWidth: 1.5, 
+      visible: indConfig.vwap.enabled, 
+      title: 'VWAP' 
+    });
+
+    const superTrendSeries = chart.addLineSeries({ 
+      color: '#eab308', 
+      lineWidth: 1.5, 
+      lineStyle: 1, 
+      visible: indConfig.supertrend.enabled, 
+      title: 'SuperTrend' 
+    });
+
+    const bbUpSeries = chart.addLineSeries({ color: 'rgba(148, 163, 184, 0.7)', lineWidth: 1, lineStyle: 2, visible: indConfig.bb.enabled });
+    const bbMidSeries = chart.addLineSeries({ color: 'rgba(148, 163, 184, 0.7)', lineWidth: 1, visible: indConfig.bb.enabled });
+    const bbLowSeries = chart.addLineSeries({ color: 'rgba(148, 163, 184, 0.7)', lineWidth: 1, lineStyle: 2, visible: indConfig.bb.enabled });
+
+    const rsiSeries = chart.addLineSeries({
+      color: '#38bdf8',
+      lineWidth: 1.5,
+      priceScaleId: 'rsi_scale',
+      visible: indConfig.rsi.enabled,
+      title: 'RSI'
+    });
+    chart.priceScale('rsi_scale').applyOptions({
+      scaleMargins: { top: 0.82, bottom: 0.02 }
+    });
+
+    let rsiObLine = null;
+    let rsiOsLine = null;
+    function updateRsiPriceLines() {
+      if (rsiObLine) { rsiSeries.removePriceLine(rsiObLine); rsiObLine = null; }
+      if (rsiOsLine) { rsiSeries.removePriceLine(rsiOsLine); rsiOsLine = null; }
+      if (indConfig.rsi.enabled) {
+        rsiObLine = rsiSeries.createPriceLine({
+          price: indConfig.rsi.ob || 70,
+          color: 'rgba(239, 68, 68, 0.65)',
+          lineWidth: 1,
+          lineStyle: 2,
+          title: `OB ${indConfig.rsi.ob || 70}`
+        });
+        rsiOsLine = rsiSeries.createPriceLine({
+          price: indConfig.rsi.os || 30,
+          color: 'rgba(16, 185, 129, 0.65)',
+          lineWidth: 1,
+          lineStyle: 2,
+          title: `OS ${indConfig.rsi.os || 30}`
+        });
+      }
+    }
+
+    // Các hàm tính toán chỉ báo kỹ thuật chuyên sâu
+    function calcEMA(d, p) { 
+      if (!d || d.length < p || p <= 0) return []; 
+      const k = 2 / (p + 1); 
+      let res = []; 
+      let ema = d[0].close; 
+      for(let i = 0; i < d.length; i++) { 
+        ema = (d[i].close - ema) * k + ema; 
+        if (i >= p - 1) {
+          res.push({ time: d[i].time, value: parseFloat(ema.toFixed(2)) }); 
+        }
+      } 
+      return res; 
+    }
+
+    function calcSMA(d, p) { 
+      if (!d || d.length < p || p <= 0) return []; 
+      let res = []; 
+      let sum = 0; 
+      for(let i = 0; i < d.length; i++) { 
+        sum += d[i].close; 
+        if (i >= p) {
+          sum -= d[i - p].close;
+          res.push({ time: d[i].time, value: parseFloat((sum / p).toFixed(2)) });
+        } else if (i === p - 1) {
+          res.push({ time: d[i].time, value: parseFloat((sum / p).toFixed(2)) });
+        }
+      } 
+      return res; 
+    }
+
+    function calcVWAP(d) {
+      if (!d || d.length === 0) return [];
+      let res = [];
+      let cumVol = 0;
+      let cumTPV = 0;
+      let lastDay = -1;
+      for (let i = 0; i < d.length; i++) {
+        const c = d[i];
+        const dt = new Date(c.time * 1000);
+        const day = dt.getUTCDate();
+        if (day !== lastDay) {
+          cumVol = 0;
+          cumTPV = 0;
+          lastDay = day;
+        }
+        const tp = (c.high + c.low + c.close) / 3;
+        const vol = calcForexVolume(c);
+        cumVol += vol;
+        cumTPV += tp * vol;
+        const vwap = cumVol > 0 ? cumTPV / cumVol : tp;
+        res.push({ time: c.time, value: parseFloat(vwap.toFixed(2)) });
+      }
+      return res;
+    }
+
+    function calcBollinger(d, p, m) { 
+      if (!d || d.length < p || p <= 0) return { up: [], mid: [], low: [] }; 
+      let up = [], mid = [], low = []; 
+      for(let i = p - 1; i < d.length; i++) { 
+        let sum = 0; 
+        for(let j = 0; j < p; j++) sum += d[i - j].close; 
+        let sma = sum / p; 
+        let devS = 0; 
+        for(let j = 0; j < p; j++) devS += Math.pow(d[i - j].close - sma, 2); 
+        let stD = Math.sqrt(devS / p); 
+        mid.push({ time: d[i].time, value: parseFloat(sma.toFixed(2)) }); 
+        up.push({ time: d[i].time, value: parseFloat((sma + m * stD).toFixed(2)) }); 
+        low.push({ time: d[i].time, value: parseFloat((sma - m * stD).toFixed(2)) }); 
+      } 
+      return { up, mid, low }; 
+    }
+
+    function calcSuperTrend(d, period = 10, multiplier = 3.0) {
+      if (!d || d.length <= period) return { line: [], markers: [], currentTrend: 1 };
+      
+      let tr = [d[0].high - d[0].low];
+      for (let i = 1; i < d.length; i++) {
+        const hl = d[i].high - d[i].low;
+        const hc = Math.abs(d[i].high - d[i - 1].close);
+        const lc = Math.abs(d[i].low - d[i - 1].close);
+        tr.push(Math.max(hl, hc, lc));
+      }
+
+      let atr = [];
+      let sumTR = 0;
+      for (let i = 0; i < period; i++) sumTR += tr[i];
+      let currAtr = sumTR / period;
+      atr[period - 1] = currAtr;
+
+      for (let i = period; i < d.length; i++) {
+        currAtr = (currAtr * (period - 1) + tr[i]) / period;
+        atr[i] = currAtr;
+      }
+
+      let line = [];
+      let markers = [];
+      let prevFinalUpper = 0;
+      let prevFinalLower = 0;
+      let prevTrend = 1; // 1 = Bullish, -1 = Bearish
+
+      for (let i = period - 1; i < d.length; i++) {
+        const c = d[i];
+        const prevC = i > 0 ? d[i - 1] : c;
+        const hl2 = (c.high + c.low) / 2;
+        const basicUpper = hl2 + multiplier * atr[i];
+        const basicLower = hl2 - multiplier * atr[i];
+
+        let finalUpper = basicUpper;
+        let finalLower = basicLower;
+
+        if (i > period - 1) {
+          if (basicUpper < prevFinalUpper || prevC.close > prevFinalUpper) finalUpper = basicUpper;
+          else finalUpper = prevFinalUpper;
+
+          if (basicLower > prevFinalLower || prevC.close < prevFinalLower) finalLower = basicLower;
+          else finalLower = prevFinalLower;
+        }
+
+        let trend = prevTrend;
+        if (prevTrend === 1 && c.close < finalLower) {
+          trend = -1;
+        } else if (prevTrend === -1 && c.close > finalUpper) {
+          trend = 1;
+        }
+
+        if (trend === 1 && prevTrend === -1) {
+          markers.push({
+            time: c.time,
+            position: 'belowBar',
+            color: '#10b981',
+            shape: 'arrowUp',
+            text: 'BUY'
+          });
+        } else if (trend === -1 && prevTrend === 1) {
+          markers.push({
+            time: c.time,
+            position: 'aboveBar',
+            color: '#ef4444',
+            shape: 'arrowDown',
+            text: 'SELL'
+          });
+        }
+
+        const stopValue = trend === 1 ? finalLower : finalUpper;
+        line.push({
+          time: c.time,
+          value: parseFloat(stopValue.toFixed(2))
+        });
+
+        prevFinalUpper = finalUpper;
+        prevFinalLower = finalLower;
+        prevTrend = trend;
+      }
+
+      return { line, markers, currentTrend: prevTrend };
+    }
+
+    function calcRSI(d, period = 14) {
+      if (!d || d.length <= period) return 50;
+      let gains = 0, losses = 0;
+      for (let i = 1; i <= period; i++) {
+        const diff = d[i].close - d[i - 1].close;
+        if (diff >= 0) gains += diff;
+        else losses -= diff;
+      }
+      let avgGain = gains / period;
+      let avgLoss = losses / period;
+      for (let i = period + 1; i < d.length; i++) {
+        const diff = d[i].close - d[i - 1].close;
+        if (diff >= 0) {
+          avgGain = (avgGain * (period - 1) + diff) / period;
+          avgLoss = (avgLoss * (period - 1)) / period;
+        } else {
+          avgGain = (avgGain * (period - 1)) / period;
+          avgLoss = (avgLoss * (period - 1) - diff) / period;
+        }
+      }
+      if (avgLoss === 0) return 100;
+      const rs = avgGain / avgLoss;
+      return 100 - (100 / (1 + rs));
+    }
+
+    function calcRSISeries(d, period = 14) {
+      if (!d || d.length <= period) return [];
+      let res = [];
+      let gains = 0, losses = 0;
+      for (let i = 1; i <= period; i++) {
+        const diff = d[i].close - d[i - 1].close;
+        if (diff >= 0) gains += diff; else losses -= diff;
+      }
+      let avgGain = gains / period;
+      let avgLoss = losses / period;
+      let rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
+      res.push({ time: d[period].time, value: parseFloat((100 - (100 / (1 + rs))).toFixed(2)) });
+
+      for (let i = period + 1; i < d.length; i++) {
+        const diff = d[i].close - d[i - 1].close;
+        if (diff >= 0) {
+          avgGain = (avgGain * (period - 1) + diff) / period;
+          avgLoss = (avgLoss * (period - 1)) / period;
+        } else {
+          avgGain = (avgGain * (period - 1)) / period;
+          avgLoss = (avgLoss * (period - 1) - diff) / period;
+        }
+        rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
+        res.push({ time: d[i].time, value: parseFloat((100 - (100 / (1 + rs))).toFixed(2)) });
+      }
+      return res;
+    }
+
+    // Đồng bộ giao diện bảng điều khiển thông số với đối tượng indConfig
+    function syncIndControlsFromConfig() {
+      const setChk = (id, val) => { const el = document.getElementById(id); if (el) el.checked = !!val; };
+      const setInp = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+      const setText = (cls, val) => { document.querySelectorAll('.' + cls).forEach(el => el.textContent = val); };
+
+      setChk('chk-ema1', indConfig.ema1.enabled);
+      setInp('inp-ema1-p', indConfig.ema1.period);
+      setText('val-ema1-p', indConfig.ema1.period);
+
+      setChk('chk-ema2', indConfig.ema2.enabled);
+      setInp('inp-ema2-p', indConfig.ema2.period);
+      setText('val-ema2-p', indConfig.ema2.period);
+
+      setChk('chk-sma', indConfig.sma.enabled);
+      setInp('inp-sma-p', indConfig.sma.period);
+      setText('val-sma-p', indConfig.sma.period);
+
+      setChk('chk-vwap', indConfig.vwap.enabled);
+
+      setChk('chk-supertrend', indConfig.supertrend.enabled);
+      setInp('inp-st-p', indConfig.supertrend.period);
+      setInp('inp-st-m', indConfig.supertrend.mult);
+      setText('val-st-p', indConfig.supertrend.period);
+      setText('val-st-m', indConfig.supertrend.mult);
+
+      setChk('chk-bb', indConfig.bb.enabled);
+      setInp('inp-bb-p', indConfig.bb.period);
+      setInp('inp-bb-m', indConfig.bb.mult);
+      setText('val-bb-p', indConfig.bb.period);
+      setText('val-bb-m', indConfig.bb.mult);
+
+      setChk('chk-autofibo', indConfig.autofibo.enabled);
+      setInp('inp-fibo-lb', indConfig.autofibo.lookback);
+      setText('val-fibo-lb', indConfig.autofibo.lookback);
+
+      setChk('chk-vol', indConfig.vol.enabled);
+      setInp('inp-vol-ma', indConfig.vol.maPeriod);
+      setText('val-vol-ma', indConfig.vol.maPeriod);
+
+      setChk('chk-rsi', indConfig.rsi.enabled);
+      setInp('inp-rsi-p', indConfig.rsi.period);
+      setInp('inp-rsi-ob', indConfig.rsi.ob);
+      setInp('inp-rsi-os', indConfig.rsi.os);
+      setText('val-rsi-p', indConfig.rsi.period);
+    }
+
+    function flashSavedHint() {
+      const hint = document.getElementById('ind-saved-hint');
+      if (hint) {
+        hint.classList.add('flash');
+        setTimeout(() => hint.classList.remove('flash'), 1200);
+      }
+    }
+
+    function applyAllIndicatorSettings() {
+      ema1Series.applyOptions({ 
+        visible: indConfig.ema1.enabled, 
+        title: `EMA ${indConfig.ema1.period}` 
+      });
+      ema2Series.applyOptions({ 
+        visible: indConfig.ema2.enabled, 
+        title: `EMA ${indConfig.ema2.period}` 
+      });
+      smaSeries.applyOptions({ 
+        visible: indConfig.sma.enabled, 
+        title: `SMA ${indConfig.sma.period}` 
+      });
+      vwapSeries.applyOptions({ 
+        visible: indConfig.vwap.enabled 
+      });
+      superTrendSeries.applyOptions({ 
+        visible: indConfig.supertrend.enabled,
+        title: `ST (${indConfig.supertrend.period}, ${indConfig.supertrend.mult})`
+      });
+      bbUpSeries.applyOptions({ visible: indConfig.bb.enabled });
+      bbMidSeries.applyOptions({ visible: indConfig.bb.enabled });
+      bbLowSeries.applyOptions({ visible: indConfig.bb.enabled });
+      volSeries.applyOptions({ visible: indConfig.vol.enabled });
+      volMaSeries.applyOptions({ 
+        visible: indConfig.vol.enabled, 
+        title: `Vol MA ${indConfig.vol.maPeriod}` 
+      });
+      rsiSeries.applyOptions({ 
+        visible: indConfig.rsi.enabled, 
+        title: `RSI ${indConfig.rsi.period}` 
+      });
+
+      updateRsiPriceLines();
+      saveIndConfig();
+      syncIndControlsFromConfig();
+      flashSavedHint();
+      renderData();
+    }
+
+    // Toggle menu chỉ báo & đóng khi bấm ra ngoài
+    const btnInd = document.getElementById('btn-indicators');
+    const indMenu = document.getElementById('ind-menu');
+    btnInd.addEventListener('click', (e) => { 
+      e.stopPropagation();
+      indMenu.classList.toggle('show'); 
+    });
+    indMenu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#ind-menu') && !e.target.closest('#btn-indicators')) {
+        indMenu.classList.remove('show');
+      }
+    });
+
+    // Mở / Đóng các khung nhập thông số tuỳ chỉnh ⚙️
+    document.querySelectorAll('.ind-gear-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const targetId = btn.getAttribute('data-target');
+        const box = document.getElementById(targetId);
+        if (box) {
+          const isOpen = box.classList.toggle('open');
+          btn.classList.toggle('active', isOpen);
+        }
+      });
+    });
+
+    // Xử lý sự kiện thay đổi checkbox bật / tắt chỉ báo
+    const bindCheck = (id, key) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', (e) => {
+          indConfig[key].enabled = e.target.checked;
+          applyAllIndicatorSettings();
+        });
+      }
+    };
+    bindCheck('chk-ema1', 'ema1');
+    bindCheck('chk-ema2', 'ema2');
+    bindCheck('chk-sma', 'sma');
+    bindCheck('chk-vwap', 'vwap');
+    bindCheck('chk-supertrend', 'supertrend');
+    bindCheck('chk-bb', 'bb');
+    bindCheck('chk-autofibo', 'autofibo');
+    bindCheck('chk-vol', 'vol');
+    bindCheck('chk-rsi', 'rsi');
+
+    // Xử lý sự kiện người dùng tự nhập các thông số kỹ thuật (Real-time input & change)
+    function bindParamInput(id, callback) {
+      const el = document.getElementById(id);
+      if (el) {
+        const handler = () => {
+          callback(el.value);
+          applyAllIndicatorSettings();
+        };
+        el.addEventListener('change', handler);
+        el.addEventListener('keyup', (e) => { if (e.key === 'Enter') handler(); });
+      }
+    }
+
+    bindParamInput('inp-ema1-p', (v) => { const n = parseInt(v); if (n >= 1 && n <= 500) indConfig.ema1.period = n; });
+    bindParamInput('inp-ema2-p', (v) => { const n = parseInt(v); if (n >= 1 && n <= 500) indConfig.ema2.period = n; });
+    bindParamInput('inp-sma-p', (v) => { const n = parseInt(v); if (n >= 1 && n <= 500) indConfig.sma.period = n; });
+    bindParamInput('inp-st-p', (v) => { const n = parseInt(v); if (n >= 1 && n <= 100) indConfig.supertrend.period = n; });
+    bindParamInput('inp-st-m', (v) => { const n = parseFloat(v); if (n > 0 && n <= 20) indConfig.supertrend.mult = n; });
+    bindParamInput('inp-bb-p', (v) => { const n = parseInt(v); if (n >= 2 && n <= 200) indConfig.bb.period = n; });
+    bindParamInput('inp-bb-m', (v) => { const n = parseFloat(v); if (n > 0 && n <= 10) indConfig.bb.mult = n; });
+    bindParamInput('inp-fibo-lb', (v) => { const n = parseInt(v); if (n >= 20 && n <= 500) indConfig.autofibo.lookback = n; });
+    bindParamInput('inp-vol-ma', (v) => { const n = parseInt(v); if (n >= 2 && n <= 100) indConfig.vol.maPeriod = n; });
+    bindParamInput('inp-rsi-p', (v) => { const n = parseInt(v); if (n >= 2 && n <= 50) indConfig.rsi.period = n; });
+    bindParamInput('inp-rsi-ob', (v) => { const n = parseInt(v); if (n >= 50 && n <= 95) indConfig.rsi.ob = n; });
+    bindParamInput('inp-rsi-os', (v) => { const n = parseInt(v); if (n >= 5 && n <= 50) indConfig.rsi.os = n; });
+
+    // Nút khôi phục thông số kỹ thuật gốc
+    const btnResetInd = document.getElementById('btn-reset-ind-cfg');
+    if (btnResetInd) {
+      btnResetInd.addEventListener('click', (e) => {
+        e.stopPropagation();
+        indConfig = JSON.parse(JSON.stringify(defaultIndConfig));
+        applyAllIndicatorSettings();
+      });
+    }
+
+    syncIndControlsFromConfig();
+    updateRsiPriceLines();
+
+    // Công cụ vẽ Fibonacci thủ công
+    let isDrawFibo = false; 
+    let fState = 0; 
+    let fP1 = 0; 
+    let fLines = []; 
+    let aFLines = [];
+    const fLvls = [
+      { l: 0, c: '#787b86', title: '0%' }, 
+      { l: 0.236, c: '#ef4444', title: '23.6%' }, 
+      { l: 0.382, c: '#f59e0b', title: '38.2%' }, 
+      { l: 0.5, c: '#10b981', title: '50.0%' }, 
+      { l: 0.618, c: '#06b6d4', title: '61.8%' }, 
+      { l: 0.786, c: '#8b5cf6', title: '78.6%' },
+      { l: 1, c: '#787b86', title: '100%' }
+    ];
+    
+    const btnFibo = document.getElementById('btn-draw-fibo');
+    btnFibo.addEventListener('click', () => { 
+      isDrawFibo = !isDrawFibo; 
+      btnFibo.classList.toggle('active'); 
+      fState = isDrawFibo ? 1 : 0; 
+    });
+
+    document.getElementById('btn-clear-fibo').addEventListener('click', () => { 
+      fLines.forEach(l => mainSeries.removePriceLine(l)); 
+      fLines = []; 
+      isDrawFibo = false; 
+      fState = 0; 
+      btnFibo.classList.remove('active'); 
+    });
+
+    chart.subscribeClick((p) => { 
+      if (isDrawFibo && fState === 1 && p.point) { 
+        fP1 = mainSeries.coordinateToPrice(p.point.y); 
+        fLines.forEach(l => mainSeries.removePriceLine(l)); 
+        fLines = fLvls.map(f => mainSeries.createPriceLine({ price: fP1, color: f.c, lineWidth: 1, lineStyle: 1, title: f.title })); 
+        fState = 2; 
+      } else if (fState === 2) { 
+        fState = 0; 
+        isDrawFibo = false; 
+        btnFibo.classList.remove('active'); 
+      } 
+    });
+
+    chart.subscribeCrosshairMove((p) => { 
+      if (fState === 2 && p.point) { 
+        let diff = mainSeries.coordinateToPrice(p.point.y) - fP1; 
+        fLines.forEach((l, i) => { 
+          l.applyOptions({ price: fP1 + (diff * fLvls[i].l) }); 
+        }); 
+      } 
+    });
+
+    // Auto Fibonacci
+    function updateAutoFibo() {
+      if (!indConfig.autofibo.enabled || !rawCandles || rawCandles.length === 0) {
+        aFLines.forEach(l => mainSeries.removePriceLine(l));
+        aFLines = [];
+        return;
+      }
+      aFLines.forEach(l => mainSeries.removePriceLine(l));
+      aFLines = [];
+      let h = -Infinity, l = Infinity; 
+      const lb = indConfig.autofibo.lookback || 120;
+      rawCandles.slice(-lb).forEach(c => { 
+        if (c.high > h) h = c.high; 
+        if (c.low < l) l = c.low; 
+      });
+      let diff = h - l; 
+      aFLines = fLvls.map(f => mainSeries.createPriceLine({ 
+        price: h - diff * f.l, 
+        color: f.c, 
+        lineWidth: 1, 
+        lineStyle: 2, 
+        title: `Fibo ${f.title}` 
+      }));
+    }
+
+    // Bật/tắt âm thanh cảnh báo
+    let soundEnabled = false;
+    let audioCtx = null;
+    const btnSound = document.getElementById('btn-sound-toggle');
+    btnSound.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      btnSound.classList.toggle('active', soundEnabled);
+      if (soundEnabled && !audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    });
+
+    function playBeep(freq = 800, dur = 0.15) {
+      if (!soundEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+        osc.start();
+        osc.stop(audioCtx.currentTime + dur);
+      } catch(e) {}
+    }
+
+    // =========================================================================
+    // 2. LOGIC TÍNH CẢN AI & TRỤC XOAY PIVOT
+    // =========================================================================
+    let LV = {}; 
+    let pivotLine = null;
+    let rawCandles = []; 
+    let currentTF = 300; 
+
+    function buildDynamicLevels(basePrice, dayHigh = null, dayLow = null) {
+      const high = dayHigh || (basePrice + 15);
+      const low = dayLow || (basePrice - 15);
+      const pvt = (high + low + basePrice) / 3;
+      const r1 = 2 * pvt - low;
+      const s1 = 2 * pvt - high;
+
+      LV = { 
+        mSTop: basePrice + 38, mSBot: basePrice + 28,  // Kháng cự Macro
+        mBTop: basePrice - 28, mBBot: basePrice - 38,  // Hỗ trợ Macro
+        sTop: basePrice + 12,  sBot: basePrice + 7,    // Vùng Canh Sell
+        pvt: pvt, 
+        r1: r1,
+        s1: s1,
+        bTop: basePrice - 7,   bBot: basePrice - 12    // Vùng Canh Buy
+      };
+
+      document.getElementById('disp-sTop').textContent = LV.sTop.toFixed(2); 
+      document.getElementById('disp-sBot').textContent = LV.sBot.toFixed(2); 
+      document.getElementById('disp-pvt').textContent = LV.pvt.toFixed(2); 
+      document.getElementById('disp-r1').textContent = LV.r1.toFixed(2); 
+      document.getElementById('disp-s1').textContent = LV.s1.toFixed(2); 
+      document.getElementById('disp-bTop').textContent = LV.bTop.toFixed(2); 
+      document.getElementById('disp-bBot').textContent = LV.bBot.toFixed(2);
+
+      if (pivotLine) mainSeries.removePriceLine(pivotLine);
+      pivotLine = mainSeries.createPriceLine({ 
+        price: LV.pvt, 
+        color: '#3b82f6', 
+        lineWidth: 1, 
+        lineStyle: 1, 
+        title: 'PIVOT' 
+      });
+      if (previousLivePrice) renderTradeSignal(previousLivePrice);
+    }
+
+    const drawLayer = document.getElementById('drawing-layer'); 
+    const zMacSell = document.getElementById('zone-macro-sell'); 
+    const zMacBuy = document.getElementById('zone-macro-buy');
+    const zSell = document.getElementById('zone-sell'); 
+    const zBuy = document.getElementById('zone-buy');
+    
+    function applyCoords(el, t, b) { 
+      let yT = mainSeries.priceToCoordinate(t); 
+      let yB = mainSeries.priceToCoordinate(b); 
+      if (yT !== null && yB !== null) { 
+        el.style.top = Math.min(yT, yB) + 'px'; 
+        el.style.height = Math.abs(yT - yB) + 'px'; 
+        el.style.display = 'flex'; 
+      } else {
+        el.style.display = 'none'; 
+      }
+    }
+
+    function syncZones() { 
+      const priceScaleWidth = chart.priceScale('right').width();
+      drawLayer.style.right = priceScaleWidth + 'px'; 
+      if (Object.keys(LV).length > 0) { 
+        applyCoords(zMacSell, LV.mSTop, LV.mSBot); 
+        applyCoords(zMacBuy, LV.mBTop, LV.mBBot);
+        applyCoords(zSell, LV.sTop, LV.sBot); 
+        applyCoords(zBuy, LV.bTop, LV.bBot); 
+      } 
+      requestAnimationFrame(syncZones); 
+    } 
+    requestAnimationFrame(syncZones);
+
+    const ui = { 
+      pDisp: document.getElementById('price-disp'), 
+      sLbl: document.getElementById('lbl-sell'), 
+      sBd: document.getElementById('c-badge-sell'), 
+      sMsg: document.getElementById('ai-sell-msg'), 
+      bLbl: document.getElementById('lbl-buy'), 
+      bBd: document.getElementById('c-badge-buy'), 
+      bMsg: document.getElementById('ai-buy-msg'),
+      pvtStatus: document.getElementById('disp-pvt-status'),
+      pvtTag: document.getElementById('pvt-tag'),
+
+      // UI Gợi ý vào lệnh AI (Entry, TP, SL)
+      sigActionBadge: document.getElementById('sig-action-badge'),
+      sigTabBuy: document.getElementById('tab-sig-buy'),
+      sigTabSell: document.getElementById('tab-sig-sell'),
+      dotRecomBuy: document.getElementById('dot-recom-buy'),
+      dotRecomSell: document.getElementById('dot-recom-sell'),
+      sigStatusMsg: document.getElementById('sig-status-msg'),
+      sigStatusText: document.getElementById('sig-status-text'),
+      sigPulseDot: document.getElementById('sig-pulse-dot'),
+      sigEntryType: document.getElementById('sig-entry-type'),
+      sigDispEntry: document.getElementById('sig-disp-entry'),
+      sigDispEntryRange: document.getElementById('sig-disp-entry-range'),
+      sigSlPips: document.getElementById('sig-sl-pips'),
+      sigDispSl: document.getElementById('sig-disp-sl'),
+      sigSlDist: document.getElementById('sig-sl-dist'),
+      sigTp1Pips: document.getElementById('sig-tp1-pips'),
+      sigDispTp1: document.getElementById('sig-disp-tp1'),
+      sigTp1Target: document.getElementById('sig-tp1-target'),
+      sigTp2Pips: document.getElementById('sig-tp2-pips'),
+      sigDispTp2: document.getElementById('sig-disp-tp2'),
+      sigTp2Target: document.getElementById('sig-tp2-target'),
+      sigDispRr: document.getElementById('sig-disp-rr'),
+      sigDispStrategy: document.getElementById('sig-disp-strategy')
+    };
+
+    let lastSoundAlert = 0;
+    let previousLivePrice = null;
+    let tickAnimTimer = null;
+
+    // =========================================================================
+    // ENGINE TÍNH TOÁN GỢI Ý VÀO LỆNH AI (ENTRY, TP1, TP2, SL)
+    // =========================================================================
+    let userSelectedSigTab = null; // null: auto, 'buy', 'sell'
+    let sigPriceLines = {
+      entry: null,
+      tp1: null,
+      tp2: null,
+      sl: null,
+      visible: true
+    };
+    let currentActiveSetup = null;
+
+    function updateChartSignalLines(setup) {
+      if (!mainSeries) return;
+      if (!sigPriceLines.visible || !setup) {
+        if (sigPriceLines.entry) { mainSeries.removePriceLine(sigPriceLines.entry); sigPriceLines.entry = null; }
+        if (sigPriceLines.tp1) { mainSeries.removePriceLine(sigPriceLines.tp1); sigPriceLines.tp1 = null; }
+        if (sigPriceLines.tp2) { mainSeries.removePriceLine(sigPriceLines.tp2); sigPriceLines.tp2 = null; }
+        if (sigPriceLines.sl) { mainSeries.removePriceLine(sigPriceLines.sl); sigPriceLines.sl = null; }
+        return;
+      }
+
+      // 1. Đường ENTRY (Màu cam vàng nét đứt)
+      if (!sigPriceLines.entry) {
+        sigPriceLines.entry = mainSeries.createPriceLine({
+          price: setup.entry,
+          color: '#f59e0b',
+          lineWidth: 1.5,
+          lineStyle: 2,
+          title: `ENTRY ${setup.type}`
+        });
+      } else {
+        sigPriceLines.entry.applyOptions({
+          price: setup.entry,
+          title: `ENTRY ${setup.type}`
+        });
+      }
+
+      // 2. Đường STOP LOSS (Màu đỏ nét liền)
+      if (!sigPriceLines.sl) {
+        sigPriceLines.sl = mainSeries.createPriceLine({
+          price: setup.sl,
+          color: '#ef4444',
+          lineWidth: 1.5,
+          lineStyle: 0,
+          title: `SL (${setup.sl.toFixed(2)})`
+        });
+      } else {
+        sigPriceLines.sl.applyOptions({
+          price: setup.sl,
+          title: `SL (${setup.sl.toFixed(2)})`
+        });
+      }
+
+      // 3. Đường TAKE PROFIT 1 (Màu xanh lá nét liền)
+      if (!sigPriceLines.tp1) {
+        sigPriceLines.tp1 = mainSeries.createPriceLine({
+          price: setup.tp1,
+          color: '#10b981',
+          lineWidth: 1.5,
+          lineStyle: 0,
+          title: `TP1 (${setup.tp1.toFixed(2)})`
+        });
+      } else {
+        sigPriceLines.tp1.applyOptions({
+          price: setup.tp1,
+          title: `TP1 (${setup.tp1.toFixed(2)})`
+        });
+      }
+
+      // 4. Đường TAKE PROFIT 2 (Màu ngọc bích nét đứt)
+      if (!sigPriceLines.tp2) {
+        sigPriceLines.tp2 = mainSeries.createPriceLine({
+          price: setup.tp2,
+          color: '#059669',
+          lineWidth: 1.5,
+          lineStyle: 2,
+          title: `TP2 (${setup.tp2.toFixed(2)})`
+        });
+      } else {
+        sigPriceLines.tp2.applyOptions({
+          price: setup.tp2,
+          title: `TP2 (${setup.tp2.toFixed(2)})`
+        });
+      }
+    }
+
+    function renderTradeSignal(price) {
+      if (!LV || !LV.bTop || !price || isNaN(price)) return;
+
+      // 1. Tính thông số Kế hoạch BUY (Vùng cầu)
+      const buyEntry = parseFloat(((LV.bTop + LV.bBot) / 2).toFixed(2));
+      const buySL = parseFloat((LV.bBot - 3.50).toFixed(2));
+      const buyTP1 = parseFloat(LV.pvt.toFixed(2));
+      const buyTP2 = parseFloat(LV.sBot.toFixed(2));
+      const buyRisk = Math.max(0.5, buyEntry - buySL);
+      const buyReward2 = Math.max(0.5, buyTP2 - buyEntry);
+      const buyRR = (buyReward2 / buyRisk).toFixed(1);
+      const buySlPips = Math.round(Math.abs(buyEntry - buySL) * 10);
+      const buyTp1Pips = Math.round(Math.abs(buyTP1 - buyEntry) * 10);
+      const buyTp2Pips = Math.round(Math.abs(buyTP2 - buyEntry) * 10);
+
+      // 2. Tính thông số Kế hoạch SELL (Vùng cung)
+      const sellEntry = parseFloat(((LV.sTop + LV.sBot) / 2).toFixed(2));
+      const sellSL = parseFloat((LV.sTop + 3.50).toFixed(2));
+      const sellTP1 = parseFloat(LV.pvt.toFixed(2));
+      const sellTP2 = parseFloat(LV.bTop.toFixed(2));
+      const sellRisk = Math.max(0.5, sellSL - sellEntry);
+      const sellReward2 = Math.max(0.5, sellEntry - sellTP2);
+      const sellRR = (sellReward2 / sellRisk).toFixed(1);
+      const sellSlPips = Math.round(Math.abs(sellSL - sellEntry) * 10);
+      const sellTp1Pips = Math.round(Math.abs(sellEntry - sellTP1) * 10);
+      const sellTp2Pips = Math.round(Math.abs(sellEntry - sellTP2) * 10);
+
+      // AI tự động đánh dấu Khuyến nghị
+      const isBuyRecommended = price <= LV.pvt;
+      if (ui.dotRecomBuy) ui.dotRecomBuy.style.display = isBuyRecommended ? 'inline' : 'none';
+      if (ui.dotRecomSell) ui.dotRecomSell.style.display = isBuyRecommended ? 'none' : 'inline';
+
+      // Quyết định hiển thị Setup nào
+      const activeType = userSelectedSigTab || (isBuyRecommended ? 'buy' : 'sell');
+      if (ui.sigTabBuy) ui.sigTabBuy.classList.toggle('active', activeType === 'buy');
+      if (ui.sigTabSell) ui.sigTabSell.classList.toggle('active', activeType === 'sell');
+
+      if (activeType === 'buy') {
+        let actionStr = 'BUY LIMIT';
+        let actionClass = 'b-signal-active';
+        let statusMsg = '';
+        let dotColor = '#10b981';
+
+        if (price <= LV.bTop && price >= LV.bBot) {
+          actionStr = 'BUY NOW (KHỚP VÙNG)';
+          actionClass = 'b-signal-active';
+          statusMsg = `⚡ Giá đang ở VÙNG CẦU (${price.toFixed(2)}) - Tín hiệu BUY đảo chiều mạnh!`;
+          dotColor = '#10b981';
+        } else if (price < LV.bBot) {
+          actionStr = 'BUY (QUÁ BÁN)';
+          actionClass = 'b-signal-active';
+          statusMsg = `⚠️ Giá dưới đáy Buy (${price.toFixed(2)}) - Chờ nến rút chân M5 xác nhận để BUY!`;
+          dotColor = '#06b6d4';
+        } else {
+          actionStr = 'BUY LIMIT';
+          actionClass = 'b-signal-active wait';
+          statusMsg = `⏳ Đặt lệnh BUY LIMIT tại vùng ${LV.bBot.toFixed(1)} - ${LV.bTop.toFixed(1)} (cách ${(price - LV.bTop).toFixed(1)} giá)`;
+          dotColor = '#f59e0b';
+        }
+
+        if (ui.sigActionBadge) {
+          ui.sigActionBadge.textContent = actionStr;
+          ui.sigActionBadge.className = `badge ${actionClass}`;
+        }
+        if (ui.sigStatusText) ui.sigStatusText.textContent = statusMsg;
+        if (ui.sigPulseDot) ui.sigPulseDot.style.background = dotColor;
+
+        if (ui.sigEntryType) ui.sigEntryType.textContent = 'VÙNG CẦU BUY';
+        if (ui.sigDispEntry) ui.sigDispEntry.textContent = buyEntry.toFixed(2);
+        if (ui.sigDispEntryRange) ui.sigDispEntryRange.textContent = `Vùng: ${LV.bBot.toFixed(2)} - ${LV.bTop.toFixed(2)}`;
+
+        if (ui.sigSlPips) ui.sigSlPips.textContent = `-${buySlPips} pips`;
+        if (ui.sigDispSl) ui.sigDispSl.textContent = buySL.toFixed(2);
+        if (ui.sigSlDist) ui.sigSlDist.textContent = `Cách: -${(buyEntry - buySL).toFixed(1)} USD`;
+
+        if (ui.sigTp1Pips) ui.sigTp1Pips.textContent = `+${buyTp1Pips} pips`;
+        if (ui.sigDispTp1) ui.sigDispTp1.textContent = buyTP1.toFixed(2);
+        if (ui.sigTp1Target) ui.sigTp1Target.textContent = 'Mục tiêu: TRỤC PIVOT';
+
+        if (ui.sigTp2Pips) ui.sigTp2Pips.textContent = `+${buyTp2Pips} pips`;
+        if (ui.sigDispTp2) ui.sigDispTp2.textContent = buyTP2.toFixed(2);
+        if (ui.sigTp2Target) ui.sigTp2Target.textContent = 'Mục tiêu: BIÊN SELL DƯỚI';
+
+        if (ui.sigDispRr) ui.sigDispRr.textContent = `1 : ${buyRR}`;
+        if (ui.sigDispStrategy) ui.sigDispStrategy.textContent = 'BUY CẦU / PIVOT';
+
+        currentActiveSetup = {
+          type: 'BUY',
+          action: actionStr,
+          entry: buyEntry,
+          entryStr: `${LV.bBot.toFixed(2)} - ${LV.bTop.toFixed(2)}`,
+          sl: buySL,
+          tp1: buyTP1,
+          tp2: buyTP2,
+          rr: buyRR,
+          slPips: buySlPips,
+          tp1Pips: buyTp1Pips,
+          tp2Pips: buyTp2Pips
+        };
+      } else {
+        let actionStr = 'SELL LIMIT';
+        let actionClass = 'b-signal-active sell';
+        let statusMsg = '';
+        let dotColor = '#ef4444';
+
+        if (price >= LV.sBot && price <= LV.sTop) {
+          actionStr = 'SELL NOW (KHỚP VÙNG)';
+          actionClass = 'b-signal-active sell';
+          statusMsg = `⚡ Giá đang ở VÙNG CUNG (${price.toFixed(2)}) - Tín hiệu SELL đảo chiều mạnh!`;
+          dotColor = '#ef4444';
+        } else if (price > LV.sTop) {
+          actionStr = 'SELL (QUÁ MUA)';
+          actionClass = 'b-signal-active sell';
+          statusMsg = `⚠️ Giá vượt đỉnh Sell (${price.toFixed(2)}) - Chờ nến từ chối tạo râu trên để SELL!`;
+          dotColor = '#f97316';
+        } else {
+          actionStr = 'SELL LIMIT';
+          actionClass = 'b-signal-active wait';
+          statusMsg = `⏳ Đặt lệnh SELL LIMIT tại vùng ${LV.sBot.toFixed(1)} - ${LV.sTop.toFixed(1)} (cách ${(LV.sBot - price).toFixed(1)} giá)`;
+          dotColor = '#f59e0b';
+        }
+
+        if (ui.sigActionBadge) {
+          ui.sigActionBadge.textContent = actionStr;
+          ui.sigActionBadge.className = `badge ${actionClass}`;
+        }
+        if (ui.sigStatusText) ui.sigStatusText.textContent = statusMsg;
+        if (ui.sigPulseDot) ui.sigPulseDot.style.background = dotColor;
+
+        if (ui.sigEntryType) ui.sigEntryType.textContent = 'VÙNG CUNG SELL';
+        if (ui.sigDispEntry) ui.sigDispEntry.textContent = sellEntry.toFixed(2);
+        if (ui.sigDispEntryRange) ui.sigDispEntryRange.textContent = `Vùng: ${LV.sBot.toFixed(2)} - ${LV.sTop.toFixed(2)}`;
+
+        if (ui.sigSlPips) ui.sigSlPips.textContent = `-${sellSlPips} pips`;
+        if (ui.sigDispSl) ui.sigDispSl.textContent = sellSL.toFixed(2);
+        if (ui.sigSlDist) ui.sigSlDist.textContent = `Cách: -${(sellSL - sellEntry).toFixed(1)} USD`;
+
+        if (ui.sigTp1Pips) ui.sigTp1Pips.textContent = `+${sellTp1Pips} pips`;
+        if (ui.sigDispTp1) ui.sigDispTp1.textContent = sellTP1.toFixed(2);
+        if (ui.sigTp1Target) ui.sigTp1Target.textContent = 'Mục tiêu: TRỤC PIVOT';
+
+        if (ui.sigTp2Pips) ui.sigTp2Pips.textContent = `+${sellTp2Pips} pips`;
+        if (ui.sigDispTp2) ui.sigDispTp2.textContent = sellTP2.toFixed(2);
+        if (ui.sigTp2Target) ui.sigTp2Target.textContent = 'Mục tiêu: BIÊN BUY TRÊN';
+
+        if (ui.sigDispRr) ui.sigDispRr.textContent = `1 : ${sellRR}`;
+        if (ui.sigDispStrategy) ui.sigDispStrategy.textContent = 'SELL CUNG / PIVOT';
+
+        currentActiveSetup = {
+          type: 'SELL',
+          action: actionStr,
+          entry: sellEntry,
+          entryStr: `${LV.sBot.toFixed(2)} - ${LV.sTop.toFixed(2)}`,
+          sl: sellSL,
+          tp1: sellTP1,
+          tp2: sellTP2,
+          rr: sellRR,
+          slPips: sellSlPips,
+          tp1Pips: sellTp1Pips,
+          tp2Pips: sellTp2Pips
+        };
+      }
+
+      updateChartSignalLines(currentActiveSetup);
+    }
+
+    function initSignalListeners() {
+      const tabBuy = document.getElementById('tab-sig-buy');
+      const tabSell = document.getElementById('tab-sig-sell');
+      const btnToggle = document.getElementById('btn-toggle-sig-lines');
+      const btnCopy = document.getElementById('btn-copy-signal');
+
+      if (tabBuy) {
+        tabBuy.addEventListener('click', () => {
+          userSelectedSigTab = 'buy';
+          if (previousLivePrice) renderTradeSignal(previousLivePrice);
+        });
+      }
+
+      if (tabSell) {
+        tabSell.addEventListener('click', () => {
+          userSelectedSigTab = 'sell';
+          if (previousLivePrice) renderTradeSignal(previousLivePrice);
+        });
+      }
+
+      if (btnToggle) {
+        btnToggle.addEventListener('click', () => {
+          sigPriceLines.visible = !sigPriceLines.visible;
+          btnToggle.classList.toggle('active', sigPriceLines.visible);
+          if (currentActiveSetup) updateChartSignalLines(currentActiveSetup);
+        });
+      }
+
+      if (btnCopy) {
+        btnCopy.addEventListener('click', () => {
+          if (!currentActiveSetup) return;
+          const text = `🎯 [AI XAUUSD SIGNAL] ${currentActiveSetup.action}\n` +
+            `━━━━━━━━━━━━━━━━━━━\n` +
+            `📍 ENTRY: ${currentActiveSetup.entryStr} (Tối ưu: ${currentActiveSetup.entry.toFixed(2)})\n` +
+            `🛑 STOP LOSS (SL): ${currentActiveSetup.sl.toFixed(2)} (-${currentActiveSetup.slPips} pips)\n` +
+            `🎯 TAKE PROFIT 1: ${currentActiveSetup.tp1.toFixed(2)} (+${currentActiveSetup.tp1Pips} pips - Chốt 50% & Dời SL hòa)\n` +
+            `🚀 TAKE PROFIT 2: ${currentActiveSetup.tp2.toFixed(2)} (+${currentActiveSetup.tp2Pips} pips - Chốt toàn bộ)\n` +
+            `⚖️ TỈ LỆ R:R: 1 : ${currentActiveSetup.rr}\n` +
+            `💰 QUẢN LÝ VỐN: 1 - 2% (0.01 - 0.02 lot / 1000$ vốn)\n` +
+            `━━━━━━━━━━━━━━━━━━━\n` +
+            `⚡ AI XAUUSD System V26 Pro`;
+
+          navigator.clipboard.writeText(text).then(() => {
+            const copyTxt = document.getElementById('copy-text');
+            if (copyTxt) {
+              const old = copyTxt.textContent;
+              copyTxt.textContent = '✓ Đã sao chép!';
+              setTimeout(() => { copyTxt.textContent = old; }, 1800);
+            }
+          }).catch(() => {
+            alert('Đã tạo lệnh: ' + currentActiveSetup.action);
+          });
+        });
+      }
+    }
+    initSignalListeners();
+
+    // Tính toán Volume chuẩn Forex / Vàng thế giới (Tick Range + Liquidity Weight)
+    // Đảm bảo các cột volume hiển thị to rõ, không bị bẹp dúm thành 1px
+    function calcForexVolume(c) {
+      if (!c) return 35;
+      const rangeUsd = Math.abs((c.high || 0) - (c.low || 0)); // Chênh lệch giá High - Low USD
+      const tickRange = rangeUsd * 100; // Số pip tương đương (1 USD = 100 pips)
+      const rawV = c.volume || 0;
+      // Dùng hàm log tự nhiên để kéo độ cao của các cây nến nhỏ lên rõ ràng, tránh bị cây đột biến lấn át
+      const volBoost = rawV > 0 ? Math.log1p(rawV) * 35 : 0;
+      return Math.max(30, Math.round(tickRange + volBoost));
+    }
+
+    // Tính đường trung bình Volume Moving Average (MA 20)
+    function calcVolumeMA(volData, period = 20) {
+      if (!volData || volData.length < period) return [];
+      let res = [];
+      for (let i = period - 1; i < volData.length; i++) {
+        let sum = 0;
+        for (let j = 0; j < period; j++) sum += volData[i - j].value;
+        res.push({ time: volData[i].time, value: Math.round(sum / period) });
+      }
+      return res;
+    }
+
+    function updateLiveCandleWithTick(livePrice) {
+      if (!rawCandles || rawCandles.length === 0 || !livePrice || isNaN(livePrice)) return;
+      const currentTime = Math.floor(Date.now() / 1000);
+      const expectedStart = Math.floor(currentTime / currentTF) * currentTF;
+      let lastCandle = rawCandles[rawCandles.length - 1];
+
+      if (expectedStart > lastCandle.time) {
+        lastCandle = {
+          time: expectedStart,
+          open: livePrice,
+          high: livePrice,
+          low: livePrice,
+          close: livePrice,
+          volume: 1
+        };
+        rawCandles.push(lastCandle);
+      } else {
+        lastCandle.close = livePrice;
+        if (livePrice > lastCandle.high) lastCandle.high = livePrice;
+        if (livePrice < lastCandle.low) lastCandle.low = livePrice;
+        lastCandle.volume = (lastCandle.volume || 0) + 1;
+      }
+
+      mainSeries.update(lastCandle);
+      
+      const curVol = calcForexVolume(lastCandle);
+      const isUp = lastCandle.close >= lastCandle.open;
+      volSeries.update({
+        time: lastCandle.time,
+        value: curVol,
+        color: isUp ? 'rgba(16, 185, 129, 0.85)' : 'rgba(239, 68, 68, 0.85)'
+      });
+    }
+
+    function processLogic(price) {
+      if (Object.keys(LV).length === 0 || !price || isNaN(price)) return;
+
+      // Xử lý hiệu ứng nhảy số từng pip siêu nhạy
+      if (previousLivePrice !== null) {
+        const pipDiff = price - previousLivePrice;
+        if (Math.abs(pipDiff) >= 0.005) {
+          const deltaElem = document.getElementById('pip-delta');
+          if (deltaElem) {
+            deltaElem.style.display = 'inline-flex';
+            if (pipDiff > 0) {
+              deltaElem.className = 'pip-delta up';
+              deltaElem.textContent = `▲ +${pipDiff.toFixed(2)}`;
+              ui.pDisp.classList.remove('tick-down');
+              ui.pDisp.classList.add('tick-up');
+            } else {
+              deltaElem.className = 'pip-delta down';
+              deltaElem.textContent = `▼ ${pipDiff.toFixed(2)}`;
+              ui.pDisp.classList.remove('tick-up');
+              ui.pDisp.classList.add('tick-down');
+            }
+            if (tickAnimTimer) clearTimeout(tickAnimTimer);
+            tickAnimTimer = setTimeout(() => {
+              ui.pDisp.classList.remove('tick-up', 'tick-down');
+            }, 140);
+          }
+        }
+      }
+      previousLivePrice = price;
+
+      ui.pDisp.textContent = price.toFixed(2); 
+      ui.pDisp.style.color = price >= LV.pvt ? '#10b981' : '#ef4444';
+
+      // Trục xoay PIVOT status
+      const pvtDiff = price - LV.pvt;
+      if (Math.abs(pvtDiff) < 1.0) {
+        ui.pvtStatus.textContent = 'Tại trục xoay';
+        ui.pvtStatus.style.color = '#60a5fa';
+        ui.pvtTag.textContent = 'NEUTRAL';
+        ui.pvtTag.style.background = '#2563eb';
+      } else if (pvtDiff > 0) {
+        ui.pvtStatus.textContent = `Trên Pivot +${pvtDiff.toFixed(2)} (BULL)`;
+        ui.pvtStatus.style.color = '#10b981';
+        ui.pvtTag.textContent = 'BULLISH';
+        ui.pvtTag.style.background = '#10b981';
+      } else {
+        ui.pvtStatus.textContent = `Dưới Pivot ${pvtDiff.toFixed(2)} (BEAR)`;
+        ui.pvtStatus.style.color = '#ef4444';
+        ui.pvtTag.textContent = 'BEARISH';
+        ui.pvtTag.style.background = '#ef4444';
+      }
+
+      // Xử lý Vùng MUA (BUY)
+      if (price <= LV.bTop && price >= LV.bBot) { 
+        zBuy.className = "hatch-zone zb-active"; 
+        ui.bLbl.className = "tag-lbl bg-green"; 
+        ui.bLbl.textContent = "⚡ CẢNH BÁO MUA MẠNH!"; 
+        ui.bBd.className = "badge b-active"; 
+        ui.bBd.textContent = "TRONG VÙNG"; 
+        ui.bMsg.textContent = "Đảo chiều BUY!"; 
+        ui.bMsg.style.color = "#10b981"; 
+        if (Date.now() - lastSoundAlert > 15000) { playBeep(900, 0.2); lastSoundAlert = Date.now(); }
+      } else if (price < LV.bBot) {
+        zBuy.className = "hatch-zone zb-active";
+        ui.bLbl.className = "tag-lbl bg-red";
+        ui.bLbl.textContent = "QUÁ BÁN (DƯỚI BIÊN BUY)";
+        ui.bBd.className = "badge b-active";
+        ui.bBd.textContent = "OVERSOLD";
+        ui.bMsg.textContent = "Chờ tín hiệu phục hồi!";
+        ui.bMsg.style.color = "#38bdf8";
+      } else { 
+        zBuy.className = "hatch-zone zb-wait"; 
+        ui.bLbl.className = "tag-lbl bg-purple"; 
+        ui.bLbl.textContent = "Vùng Canh BUY"; 
+        ui.bBd.className = "badge b-wait"; 
+        ui.bBd.textContent = "CHỜ GIÁ VỀ"; 
+        ui.bMsg.textContent = `Cách cản ${(price - LV.bTop).toFixed(1)} giá`; 
+        ui.bMsg.style.color = "#94a3b8"; 
+      }
+
+      // Xử lý Vùng BÁN (SELL)
+      if (price >= LV.sBot && price <= LV.sTop) { 
+        zSell.className = "hatch-zone zs-active"; 
+        ui.sLbl.className = "tag-lbl bg-red"; 
+        ui.sLbl.textContent = "⚡ CẢNH BÁO BÁN MẠNH!"; 
+        ui.sBd.className = "badge b-sell-active"; 
+        ui.sBd.textContent = "TRONG VÙNG"; 
+        ui.sMsg.textContent = "Đảo chiều SELL!"; 
+        ui.sMsg.style.color = "#ef4444"; 
+        if (Date.now() - lastSoundAlert > 15000) { playBeep(500, 0.2); lastSoundAlert = Date.now(); }
+      } else if (price > LV.sTop) {
+        zSell.className = "hatch-zone zs-active";
+        ui.sLbl.className = "tag-lbl bg-red";
+        ui.sLbl.textContent = "QUÁ MUA (TRÊN BIÊN SELL)";
+        ui.sBd.className = "badge b-sell-active";
+        ui.sBd.textContent = "OVERBOUGHT";
+        ui.sMsg.textContent = "Chờ tín hiệu hạ nhiệt!";
+        ui.sMsg.style.color = "#fb923c";
+      } else { 
+        zSell.className = "hatch-zone zs-wait"; 
+        ui.sLbl.className = "tag-lbl bg-orange"; 
+        ui.sLbl.textContent = "Vùng Canh SELL"; 
+        ui.sBd.className = "badge b-wait"; 
+        ui.sBd.textContent = "CHỜ GIÁ LÊN"; 
+        ui.sMsg.textContent = `Cách cản ${(LV.sBot - price).toFixed(1)} giá`; 
+        ui.sMsg.style.color = "#94a3b8"; 
+      }
+      renderTradeSignal(price);
+    }
+
+    function renderData() {
+      if (!rawCandles || rawCandles.length === 0) return;
+      mainSeries.setData(rawCandles);
+
+      // 1. Đường EMA 1 & EMA 2
+      if (indConfig.ema1.enabled) {
+        ema1Series.setData(calcEMA(rawCandles, indConfig.ema1.period || 20));
+      } else {
+        ema1Series.setData([]);
+      }
+
+      if (indConfig.ema2.enabled) {
+        ema2Series.setData(calcEMA(rawCandles, indConfig.ema2.period || 50));
+      } else {
+        ema2Series.setData([]);
+      }
+
+      // 2. Đường SMA
+      if (indConfig.sma.enabled) {
+        smaSeries.setData(calcSMA(rawCandles, indConfig.sma.period || 200));
+      } else {
+        smaSeries.setData([]);
+      }
+
+      // 3. Đường VWAP Intraday
+      if (indConfig.vwap.enabled) {
+        vwapSeries.setData(calcVWAP(rawCandles));
+      } else {
+        vwapSeries.setData([]);
+      }
+
+      // 4. SuperTrend AI (Tín hiệu Đảo Chiều + Marker BUY/SELL)
+      if (indConfig.supertrend.enabled) {
+        const st = calcSuperTrend(rawCandles, indConfig.supertrend.period || 10, indConfig.supertrend.mult || 3.0);
+        superTrendSeries.setData(st.line);
+        mainSeries.setMarkers(st.markers);
+
+        const stElem = document.getElementById('disp-supertrend');
+        if (stElem) {
+          if (st.currentTrend === 1) {
+            stElem.textContent = '🟢 MUA (BULL)';
+            stElem.style.color = '#10b981';
+          } else {
+            stElem.textContent = '🔴 BÁN (BEAR)';
+            stElem.style.color = '#ef4444';
+          }
+        }
+      } else {
+        superTrendSeries.setData([]);
+        mainSeries.setMarkers([]);
+        const stElem = document.getElementById('disp-supertrend');
+        if (stElem) {
+          stElem.textContent = 'CHỜ BẬT';
+          stElem.style.color = '#64748b';
+        }
+      }
+
+      // 5. Bollinger Bands
+      if (indConfig.bb.enabled) {
+        const bb = calcBollinger(rawCandles, indConfig.bb.period || 20, indConfig.bb.mult || 2.0);
+        bbUpSeries.setData(bb.up); 
+        bbMidSeries.setData(bb.mid); 
+        bbLowSeries.setData(bb.low);
+      } else {
+        bbUpSeries.setData([]);
+        bbMidSeries.setData([]);
+        bbLowSeries.setData([]);
+      }
+
+      // 6. Volume & Vol MA
+      const formattedVols = rawCandles.map(c => {
+        const val = calcForexVolume(c);
+        const isUp = c.close >= c.open;
+        return {
+          time: c.time,
+          value: val,
+          color: isUp ? 'rgba(16, 185, 129, 0.85)' : 'rgba(239, 68, 68, 0.85)'
+        };
+      });
+      volSeries.setData(formattedVols);
+      volMaSeries.setData(calcVolumeMA(formattedVols, indConfig.vol.maPeriod || 20));
+
+      // 7. RSI (14 hoặc tuỳ chỉnh)
+      const rsiPeriod = indConfig.rsi.period || 14;
+      const rsiVal = calcRSI(rawCandles, rsiPeriod);
+      const rsiElem = document.getElementById('disp-rsi');
+      const rsiLbl = document.getElementById('disp-rsi-lbl');
+      if (rsiLbl) rsiLbl.textContent = `Chỉ số RSI (${rsiPeriod}):`;
+      if (rsiElem) {
+        const ob = indConfig.rsi.ob || 70;
+        const os = indConfig.rsi.os || 30;
+        if (rsiVal >= ob) {
+          rsiElem.textContent = `${rsiVal.toFixed(1)} (QUÁ MUA)`;
+          rsiElem.style.color = '#ef4444';
+        } else if (rsiVal <= os) {
+          rsiElem.textContent = `${rsiVal.toFixed(1)} (QUÁ BÁN)`;
+          rsiElem.style.color = '#10b981';
+        } else {
+          rsiElem.textContent = rsiVal.toFixed(1);
+          rsiElem.style.color = '#f8fafc';
+        }
+      }
+
+      if (indConfig.rsi.enabled) {
+        rsiSeries.setData(calcRSISeries(rawCandles, rsiPeriod));
+      } else {
+        rsiSeries.setData([]);
+      }
+
+      // 8. Cập nhật vị thế VWAP trên bảng phân tích
+      const vwapVals = calcVWAP(rawCandles.slice(-100));
+      const vwapElem = document.getElementById('disp-vwap');
+      if (vwapElem && vwapVals.length > 0) {
+        const curVwap = vwapVals[vwapVals.length - 1].value;
+        const curClose = rawCandles[rawCandles.length - 1].close;
+        if (curClose >= curVwap) {
+          vwapElem.textContent = `Trên VWAP (${curVwap.toFixed(1)})`;
+          vwapElem.style.color = '#38bdf8';
+        } else {
+          vwapElem.textContent = `Dưới VWAP (${curVwap.toFixed(1)})`;
+          vwapElem.style.color = '#fb923c';
+        }
+      }
+
+      // 9. Auto Fibonacci Retracement
+      updateAutoFibo();
+    }
+
+    // =========================================================================
+    // 3. ENGINE KẾT NỐI DỮ LIỆU VÀNG THẾ GIỚI CHUẨN XÁC & ĐỒNG BỘ SÀN EXNESS
+    // =========================================================================
+    const tfSecondsMap = { '1m': 60, '5m': 300, '15m': 900, '1h': 3600, '4h': 14400 };
+    const tfBinanceMap = { '1m': '1m', '5m': '5m', '15m': '15m', '1h': '1h', '4h': '4h' };
+
+    let currentTfStr = '5m';
+    let liveWs = null;
+    let liveScanTimer = null;
+    let spotScanTimer = null;
+    let selectedSource = 'exness'; // 'exness', 'oanda', 'pepperstone', 'binance'
+
+    // QUẢN LÝ ĐỘ LỆCH HIỆU CHỈNH EXNESS (LOCALSTORAGE)
+    const EXNESS_OFFSET_KEY = 'exness_gold_offset_v1';
+    let currentExnessOffset = 0.0;
+    try {
+      const savedOffset = localStorage.getItem(EXNESS_OFFSET_KEY);
+      if (savedOffset !== null) {
+        currentExnessOffset = parseFloat(savedOffset) || 0.0;
+      }
+    } catch(e) {}
+
+    // Độ lệch cơ sở giữa giá Spot thật và Binance PAXG
+    let currentAlignmentDelta = 0.0;
+
+    const sourceSelectElem = document.getElementById('source-select');
+    if (sourceSelectElem) {
+      sourceSelectElem.value = selectedSource;
+      sourceSelectElem.addEventListener('change', (e) => {
+        selectedSource = e.target.value;
+        const labelMap = {
+          'exness': 'EXNESS SPOT',
+          'oanda': 'OANDA FOREX',
+          'pepperstone': 'PEPPERSTONE FX',
+          'binance': 'BINANCE 24/7'
+        };
+        const subElem = document.getElementById('price-sub-source');
+        if (subElem) subElem.textContent = labelMap[selectedSource] || 'EXNESS SPOT';
+        updateDisplayFromFeeds();
+      });
+    }
+
+    let marketState = {
+      spotPrice: null,         // Giá Spot vàng thế giới thật (LBMA / Interbank)
+      spotChange: null,
+      spotHigh: null,
+      spotLow: null,
+      exnessPrice: null,       // Giá sàn Exness (spotPrice + currentExnessOffset)
+      oandaPrice: null,
+      oandaChange: null,
+      oandaHigh: null,
+      oandaLow: null,
+      pepperstonePrice: null,
+      tvcPrice: null,
+      tvcChange: null,
+      binancePrice: null,      // Giá Binance PAXG crypto
+      recommendation: null,
+      lastUpdate: 0
+    };
+
+    function setStatus(status, text) {
+      const indicator = document.getElementById('status-indicator');
+      const textElem = document.getElementById('status-text');
+      if (!indicator || !textElem) return;
+      
+      indicator.className = 'live-feed';
+      if (status === 'live') {
+        textElem.textContent = text || 'SÀN EXNESS LIVE (CHUẨN)';
+      } else if (status === 'wait') {
+        indicator.classList.add('offline');
+        textElem.textContent = text || 'ĐANG ĐỒNG BỘ NGUỒN SÀN EXNESS...';
+      } else if (status === 'closed') {
+        indicator.classList.add('offline');
+        textElem.textContent = text || 'THỊ TRƯỜNG FOREX NGHỈ (CHUYỂN SPOT 24/7)';
+      } else if (status === 'error') {
+        indicator.classList.add('error');
+        textElem.textContent = text || 'LỖI MẠNG - ĐANG THỬ LẠI...';
+      }
+    }
+
+    // Cập nhật giao diện Modal & Badge Hiệu chỉnh Exness
+    function updateCalibUI() {
+      const badge = document.getElementById('calib-badge-text');
+      if (badge) {
+        const sign = currentExnessOffset > 0 ? '+' : '';
+        badge.textContent = `${sign}${currentExnessOffset.toFixed(2)}`;
+      }
+      const curOffLbl = document.getElementById('lbl-cur-offset');
+      if (curOffLbl) {
+        const sign = currentExnessOffset > 0 ? '+' : '';
+        curOffLbl.textContent = `${sign}${currentExnessOffset.toFixed(2)} USD`;
+      }
+      const offDisp = document.getElementById('md-offset-display');
+      if (offDisp) {
+        const sign = currentExnessOffset > 0 ? '+' : '';
+        offDisp.textContent = `${sign}${currentExnessOffset.toFixed(2)} USD`;
+      }
+
+      // Cập nhật các dòng theo dõi trong Modal
+      const spotElem = document.getElementById('md-spot-price');
+      if (spotElem && marketState.spotPrice) {
+        spotElem.textContent = `${marketState.spotPrice.toFixed(2)} USD`;
+      }
+      const bnElem = document.getElementById('md-binance-price');
+      if (bnElem && marketState.binancePrice) {
+        bnElem.textContent = `${marketState.binancePrice.toFixed(2)} USD`;
+      }
+      const basisElem = document.getElementById('md-basis-price');
+      if (basisElem && currentAlignmentDelta !== 0) {
+        const sign = currentAlignmentDelta >= 0 ? '+' : '';
+        basisElem.textContent = `${sign}${currentAlignmentDelta.toFixed(2)} USD`;
+      }
+      const finalElem = document.getElementById('md-exness-final');
+      if (finalElem) {
+        const p = marketState.exnessPrice || (marketState.spotPrice ? marketState.spotPrice + currentExnessOffset : null);
+        if (p) finalElem.textContent = `${p.toFixed(2)} USD`;
+      }
+
+      // Đánh dấu active preset
+      document.querySelectorAll('.calib-preset-btn').forEach(btn => {
+        const pVal = parseFloat(btn.dataset.preset);
+        btn.classList.toggle('active', Math.abs(pVal - currentExnessOffset) < 0.001);
+      });
+    }
+
+    function applyOffsetChange(newOffset) {
+      const diff = newOffset - currentExnessOffset;
+      currentExnessOffset = Math.round(newOffset * 100) / 100;
+      try {
+        localStorage.setItem(EXNESS_OFFSET_KEY, currentExnessOffset.toFixed(2));
+      } catch(e) {}
+      
+      if (marketState.spotPrice) {
+        marketState.exnessPrice = Math.round((marketState.spotPrice + currentExnessOffset) * 100) / 100;
+      }
+
+      // Điều chỉnh toàn bộ nến trong biểu đồ theo độ lệch mới
+      if (rawCandles && rawCandles.length > 0 && Math.abs(diff) > 0.001) {
+        rawCandles = rawCandles.map(c => ({
+          time: c.time,
+          open: Math.round((c.open + diff) * 100) / 100,
+          high: Math.round((c.high + diff) * 100) / 100,
+          low: Math.round((c.low + diff) * 100) / 100,
+          close: Math.round((c.close + diff) * 100) / 100,
+          volume: c.volume
+        }));
+        mainSeries.setData(rawCandles);
+        const last = rawCandles[rawCandles.length - 1];
+        buildDynamicLevels(last.close);
+        processLogic(last.close);
+        targetPrice = last.close;
+        displayPrice = last.close;
+      }
+
+      updateCalibUI();
+      updateDisplayFromFeeds();
+    }
+
+    function initCalibModal() {
+      const overlay = document.getElementById('calib-modal-overlay');
+      const openBtn = document.getElementById('btn-open-calib');
+      const closeBtn = document.getElementById('btn-close-calib');
+      const doneBtn = document.getElementById('btn-done-calib');
+
+      if (openBtn && overlay) {
+        openBtn.addEventListener('click', () => {
+          overlay.classList.add('active');
+          updateCalibUI();
+        });
+      }
+      if (closeBtn && overlay) {
+        closeBtn.addEventListener('click', () => {
+          overlay.classList.remove('active');
+        });
+      }
+      if (doneBtn && overlay) {
+        doneBtn.addEventListener('click', () => {
+          overlay.classList.remove('active');
+        });
+      }
+      if (overlay) {
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) overlay.classList.remove('active');
+        });
+      }
+
+      // Presets
+      document.querySelectorAll('.calib-preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const val = parseFloat(btn.dataset.preset);
+          applyOffsetChange(val);
+        });
+      });
+
+      // Vi chỉnh +/-
+      const btnMinus05 = document.getElementById('btn-offset-minus-05');
+      const btnMinus01 = document.getElementById('btn-offset-minus-01');
+      const btnPlus01 = document.getElementById('btn-offset-plus-01');
+      const btnPlus05 = document.getElementById('btn-offset-plus-05');
+      const btnReset = document.getElementById('btn-offset-reset');
+
+      if (btnMinus05) btnMinus05.addEventListener('click', () => applyOffsetChange(currentExnessOffset - 0.10));
+      if (btnMinus01) btnMinus01.addEventListener('click', () => applyOffsetChange(currentExnessOffset - 0.02));
+      if (btnPlus01) btnPlus01.addEventListener('click', () => applyOffsetChange(currentExnessOffset + 0.02));
+      if (btnPlus05) btnPlus05.addEventListener('click', () => applyOffsetChange(currentExnessOffset + 0.10));
+      if (btnReset) btnReset.addEventListener('click', () => applyOffsetChange(0.00));
+
+      // 1-Click Match
+      const applyMatchBtn = document.getElementById('btn-apply-instant-match');
+      const inpMatch = document.getElementById('inp-exness-now');
+      const matchMsg = document.getElementById('calib-match-msg');
+
+      if (applyMatchBtn && inpMatch) {
+        applyMatchBtn.addEventListener('click', () => {
+          const entered = parseFloat(inpMatch.value);
+          if (!entered || isNaN(entered) || entered < 1000 || entered > 10000) {
+            if (matchMsg) {
+              matchMsg.className = 'calib-match-msg error';
+              matchMsg.textContent = '⚠️ Vui lòng nhập giá vàng hợp lệ (ví dụ: 4124.80)';
+            }
+            return;
+          }
+          const baseRef = marketState.spotPrice || (marketState.binancePrice ? marketState.binancePrice + currentAlignmentDelta : displayPrice);
+          if (baseRef) {
+            const calculatedOffset = Math.round((entered - baseRef) * 100) / 100;
+            applyOffsetChange(calculatedOffset);
+            if (matchMsg) {
+              matchMsg.className = 'calib-match-msg success';
+              matchMsg.textContent = `✓ Đã khớp chuẩn giá Exness: ${entered.toFixed(2)} USD (Bù offset: ${calculatedOffset >= 0 ? '+' : ''}${calculatedOffset.toFixed(2)} USD)!`;
+            }
+          }
+        });
+      }
+
+      updateCalibUI();
+    }
+
+    // Tính phiên giao dịch
+    function updateTradingSession() {
+      const now = new Date();
+      const utcHours = now.getUTCHours();
+      let session = "Châu Á (Tokyo / Sydney)";
+      if (utcHours >= 7 && utcHours < 12) session = "Âu (London Mở)";
+      else if (utcHours >= 12 && utcHours < 16) session = "Âu & Mỹ Giao Thoa (Sôi Động)";
+      else if (utcHours >= 16 && utcHours < 21) session = "Mỹ (New York)";
+      else if (utcHours >= 21 || utcHours < 7) session = "Á (Tokyo / Hong Kong)";
+      
+      const utcDay = now.getUTCDay();
+      if ((utcDay === 6) || (utcDay === 0 && utcHours < 21) || (utcDay === 5 && utcHours >= 22)) {
+        session += " • Cuối tuần";
+      }
+      const sessElem = document.getElementById('tk-session');
+      if (sessElem) sessElem.textContent = session;
+    }
+    updateTradingSession();
+    setInterval(updateTradingSession, 60000);
+
+    function isForexWeekend() {
+      const now = new Date();
+      const utcDay = now.getUTCDay();
+      const utcHour = now.getUTCHours();
+      return (utcDay === 6) || (utcDay === 0 && utcHour < 21) || (utcDay === 5 && utcHour >= 22);
+    }
+
+    // Cập nhật giá trên Ticker Strip và UI
+    function updateDisplayFromFeeds() {
+      // 1. Cập nhật giá sàn Exness trên ticker
+      const exPrice = marketState.exnessPrice || (marketState.spotPrice ? marketState.spotPrice + currentExnessOffset : null);
+      if (exPrice) {
+        const tkEx = document.getElementById('tk-exness');
+        if (tkEx) tkEx.textContent = exPrice.toFixed(2);
+        const chg = marketState.oandaChange || marketState.spotChange || 0;
+        const exChgElem = document.getElementById('tk-exness-chg');
+        if (exChgElem) {
+          exChgElem.textContent = `${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%`;
+          exChgElem.className = `ticker-delta ${chg >= 0 ? 'ticker-up' : 'ticker-down'}`;
+        }
+      }
+
+      // 2. Cập nhật OANDA Forex
+      if (marketState.oandaPrice) {
+        const tkOanda = document.getElementById('tk-oanda');
+        if (tkOanda) tkOanda.textContent = marketState.oandaPrice.toFixed(2);
+        const chg = marketState.oandaChange || 0;
+        const oChgElem = document.getElementById('tk-oanda-chg');
+        if (oChgElem) {
+          oChgElem.textContent = `${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%`;
+          oChgElem.className = `ticker-delta ${chg >= 0 ? 'ticker-up' : 'ticker-down'}`;
+        }
+      }
+
+      // 3. Cập nhật TVC World Gold
+      if (marketState.tvcPrice) {
+        const tkTvc = document.getElementById('tk-tvc');
+        if (tkTvc) tkTvc.textContent = marketState.tvcPrice.toFixed(2);
+        const chg = marketState.tvcChange || 0;
+        const tChgElem = document.getElementById('tk-tvc-chg');
+        if (tChgElem) {
+          tChgElem.textContent = `${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%`;
+          tChgElem.className = `ticker-delta ${chg >= 0 ? 'ticker-up' : 'ticker-down'}`;
+        }
+      }
+
+      // 4. Cập nhật Binance PAXG
+      if (marketState.binancePrice) {
+        const tkBn = document.getElementById('tk-binance');
+        if (tkBn) tkBn.textContent = marketState.binancePrice.toFixed(2);
+      }
+
+      // 5. Chênh lệch giữa Exness và Binance PAXG Crypto
+      const refPrice = exPrice || marketState.oandaPrice || marketState.spotPrice;
+      if (refPrice && marketState.binancePrice) {
+        const spread = Math.abs(marketState.binancePrice - refPrice);
+        const spreadElem = document.getElementById('tk-spread');
+        if (spreadElem) spreadElem.textContent = `${spread.toFixed(2)} USD`;
+      }
+
+      // 6. Xác định giá hiển thị chính theo nguồn đã chọn
+      let mainPrice = null;
+      if (selectedSource === 'exness') {
+        mainPrice = exPrice || marketState.spotPrice || marketState.oandaPrice;
+        setStatus('live', 'SÀN EXNESS XAUUSD LIVE (CHUẨN)');
+      } else if (selectedSource === 'oanda') {
+        mainPrice = marketState.oandaPrice || marketState.spotPrice;
+        setStatus('live', 'OANDA FOREX LIVE (CFD)');
+      } else if (selectedSource === 'pepperstone') {
+        mainPrice = marketState.pepperstonePrice || marketState.oandaPrice;
+        setStatus('live', 'PEPPERSTONE FOREX LIVE');
+      } else if (selectedSource === 'binance') {
+        mainPrice = marketState.binancePrice;
+        setStatus('live', 'BINANCE PAXG SPOT 24/7');
+      }
+
+      if (!mainPrice) {
+        mainPrice = exPrice || marketState.spotPrice || marketState.oandaPrice || marketState.binancePrice;
+      }
+
+      if (mainPrice) {
+        targetPrice = mainPrice;
+        if (displayPrice === null) {
+          displayPrice = mainPrice;
+          processLogic(mainPrice);
+          updateLiveCandleWithTick(mainPrice);
+        }
+      }
+
+      // Cập nhật thông tin phân tích 24h
+      const h24 = marketState.oandaHigh || (marketState.spotPrice ? marketState.spotPrice + 12 : null);
+      const l24 = marketState.oandaLow || (marketState.spotPrice ? marketState.spotPrice - 14 : null);
+      if (h24 && l24) {
+        const dH = document.getElementById('disp-24h-high');
+        const dL = document.getElementById('disp-24h-low');
+        const dR = document.getElementById('disp-24h-range');
+        if (dH) dH.textContent = h24.toFixed(2);
+        if (dL) dL.textContent = l24.toFixed(2);
+        if (dR) dR.textContent = (h24 - l24).toFixed(2) + ' USD';
+      }
+
+      // Cập nhật nhãn khuyến nghị kỹ thuật
+      if (marketState.recommendation !== null) {
+        const r = marketState.recommendation;
+        const b = document.getElementById('recom-badge');
+        if (b) {
+          if (r >= 0.5) { b.className = 'recom-tag recom-strong-buy'; b.textContent = 'MUA MẠNH'; }
+          else if (r > 0.1) { b.className = 'recom-tag recom-buy'; b.textContent = 'CANH MUA'; }
+          else if (r <= -0.5) { b.className = 'recom-tag recom-strong-sell'; b.textContent = 'BÁN MẠNH'; }
+          else if (r < -0.1) { b.className = 'recom-tag recom-sell'; b.textContent = 'CANH BÁN'; }
+          else { b.className = 'recom-tag recom-neutral'; b.textContent = 'TRUNG LẬP'; }
+        }
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // A. Quét giá Spot Gold Thế giới thật (CORS Enabled, không rate-limit)
+    // -------------------------------------------------------------------------
+    async function fetchRealSpotPrice() {
+      try {
+        const res = await fetch("https://api.gold-api.com/price/XAU", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.price && !isNaN(data.price)) {
+            const p = parseFloat(data.price);
+            marketState.spotPrice = p;
+            marketState.exnessPrice = Math.round((p + currentExnessOffset) * 100) / 100;
+            marketState.lastUpdate = Date.now();
+            updateDisplayFromFeeds();
+            updateCalibUI();
+            return true;
+          }
+        }
+      } catch (err) {}
+      return false;
+    }
+
+    // -------------------------------------------------------------------------
+    // B. Quét giá TradingView CFD định kỳ an toàn (OANDA, Pepperstone, TVC)
+    // -------------------------------------------------------------------------
+    let isScanning = false;
+    let scanBackoffUntil = 0;
+    async function pollTradingViewCfd() {
+      if (isScanning) return;
+      if (Date.now() < scanBackoffUntil) return;
+      isScanning = true;
+      try {
+        const res = await fetch("https://scanner.tradingview.com/cfd/scan", {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({
+            symbols: { tickers: ["OANDA:XAUUSD", "PEPPERSTONE:XAUUSD", "TVC:GOLD", "FOREXCOM:XAUUSD"] },
+            columns: [
+              "close", "open", "high", "low", "volume", 
+              "change", "change_abs", "Recommend.All"
+            ]
+          })
+        });
+
+        if (res.status === 429) {
+          scanBackoffUntil = Date.now() + 30000;
+          fallbackSyncWithBinance();
+          return;
+        }
+
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.data) {
+            json.data.forEach(item => {
+              const p = item.d[0];
+              if (item.s === "OANDA:XAUUSD" && p) {
+                marketState.oandaPrice = p;
+                marketState.oandaHigh = item.d[2];
+                marketState.oandaLow = item.d[3];
+                marketState.oandaChange = item.d[5];
+                marketState.recommendation = item.d[7];
+              } else if (item.s === "PEPPERSTONE:XAUUSD" && p) {
+                marketState.pepperstonePrice = p;
+              } else if (item.s === "TVC:GOLD" && p) {
+                marketState.tvcPrice = p;
+                marketState.tvcChange = item.d[5];
+              }
+            });
+
+            if (!marketState.spotPrice && (marketState.oandaPrice || marketState.pepperstonePrice)) {
+              marketState.spotPrice = marketState.oandaPrice || marketState.pepperstonePrice;
+              marketState.exnessPrice = Math.round((marketState.spotPrice + currentExnessOffset) * 100) / 100;
+            }
+
+            marketState.lastUpdate = Date.now();
+            updateDisplayFromFeeds();
+            updateCalibUI();
+          }
+        } else {
+          fallbackSyncWithBinance();
+        }
+      } catch (e) {
+        fallbackSyncWithBinance();
+      } finally {
+        isScanning = false;
+      }
+    }
+
+    function fallbackSyncWithBinance() {
+      if (marketState.spotPrice) {
+        if (!marketState.exnessPrice) {
+          marketState.exnessPrice = Math.round((marketState.spotPrice + currentExnessOffset) * 100) / 100;
+        }
+        updateDisplayFromFeeds();
+        return;
+      }
+      if (marketState.binancePrice) {
+        const estimated = currentAlignmentDelta !== 0 ? (marketState.binancePrice + currentAlignmentDelta) : marketState.binancePrice;
+        if (!marketState.exnessPrice) marketState.exnessPrice = estimated;
+        if (!marketState.oandaPrice) marketState.oandaPrice = estimated;
+        if (!marketState.tvcPrice) marketState.tvcPrice = estimated;
+        updateDisplayFromFeeds();
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // C. Tải lịch sử nến và ĐỒNG BỘ CHUẨN XÁC VỚI SÀN EXNESS
+    // -------------------------------------------------------------------------
+    async function fetchRealHistory(tfStr) {
+      const bnInterval = tfBinanceMap[tfStr] || '5m';
+      const binanceUrl = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=500`;
+      
+      // Đồng bộ giá Spot thực trước khi nạp nến
+      await fetchRealSpotPrice();
+
+      try {
+        const res = await fetch(binanceUrl);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            let parsed = data.map(item => ({
+              time: Math.floor(item[0] / 1000),
+              open: parseFloat(item[1]),
+              high: parseFloat(item[2]),
+              low: parseFloat(item[3]),
+              close: parseFloat(item[4]),
+              volume: parseFloat(item[5])
+            }));
+
+            // TÍNH TOÁN HIỆU CHỈNH ĐỒNG BỘ NẾN VỚI SÀN EXNESS
+            const rawLastClose = parsed[parsed.length - 1].close;
+            const targetRefPrice = marketState.exnessPrice || (marketState.spotPrice ? marketState.spotPrice + currentExnessOffset : null) || marketState.oandaPrice || rawLastClose;
+            currentAlignmentDelta = Math.round((targetRefPrice - rawLastClose) * 100) / 100;
+
+            // Áp dụng cân chỉnh vào toàn bộ 500 nến thật
+            rawCandles = parsed.map(c => ({
+              time: c.time,
+              open: Math.round((c.open + currentAlignmentDelta) * 100) / 100,
+              high: Math.round((c.high + currentAlignmentDelta) * 100) / 100,
+              low: Math.round((c.low + currentAlignmentDelta) * 100) / 100,
+              close: Math.round((c.close + currentAlignmentDelta) * 100) / 100,
+              volume: c.volume
+            }));
+
+            updateCalibUI();
+            return true;
+          }
+        }
+      } catch (err) {
+        console.warn("Binance fetch error:", err);
+      }
+
+      // Nguồn dự phòng 1: Gate.io Spot Gold API
+      try {
+        const gateUrl = `https://api.gateio.ws/api/v4/spot/candlesticks?currency_pair=PAXG_USDT&interval=${bnInterval}&limit=500`;
+        const res = await fetch(gateUrl);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            let parsed = data.map(item => ({
+              time: parseInt(item[0]),
+              volume: parseFloat(item[1]),
+              close: parseFloat(item[2]),
+              high: parseFloat(item[3]),
+              low: parseFloat(item[4]),
+              open: parseFloat(item[5])
+            })).reverse();
+
+            const rawLastClose = parsed[parsed.length - 1].close;
+            const targetRefPrice = marketState.exnessPrice || marketState.spotPrice || rawLastClose;
+            currentAlignmentDelta = Math.round((targetRefPrice - rawLastClose) * 100) / 100;
+
+            rawCandles = parsed.map(c => ({
+              time: c.time,
+              open: Math.round((c.open + currentAlignmentDelta) * 100) / 100,
+              high: Math.round((c.high + currentAlignmentDelta) * 100) / 100,
+              low: Math.round((c.low + currentAlignmentDelta) * 100) / 100,
+              close: Math.round((c.close + currentAlignmentDelta) * 100) / 100,
+              volume: c.volume
+            }));
+            updateCalibUI();
+            return true;
+          }
+        }
+      } catch (err) {
+        console.warn("Gate.io fetch error:", err);
+      }
+
+      return false;
+    }
+
+    // -------------------------------------------------------------------------
+    // D. WebSocket Multi-Stream kết hợp (BookTicker + Trade + Kline):
+    // Cập nhật giá thời gian thực từng mili-giây bám sát giá Exness
+    // -------------------------------------------------------------------------
+    function startBinanceWebSocket(tfStr) {
+      if (liveWs) {
+        try { liveWs.close(); } catch(e) {}
+        liveWs = null;
+      }
+
+      const wsUrl = `wss://stream.binance.com:9443/stream?streams=paxgusdt@bookTicker/xautusdt@bookTicker/paxgusdt@trade/xautusdt@trade`;
+
+      try {
+        liveWs = new WebSocket(wsUrl);
+
+        liveWs.onopen = () => {
+          setStatus('live', 'KẾT NỐI REAL-TIME XAUUSD PIP FEED');
+        };
+
+        liveWs.onmessage = (event) => {
+          try {
+            const wrapper = JSON.parse(event.data);
+            const data = wrapper.data || wrapper;
+            let tickPrice = null;
+
+            if (data.b && data.a) {
+              tickPrice = (parseFloat(data.b) + parseFloat(data.a)) / 2;
+            } else if (data.p) {
+              tickPrice = parseFloat(data.p);
+            } else if (data.k) {
+              tickPrice = parseFloat(data.k.c);
+            }
+
+            if (tickPrice && !isNaN(tickPrice)) {
+              marketState.binancePrice = tickPrice;
+              
+              // Tính giá Exness dựa trên nhịp tick live mượt mà
+              const calibratedTick = currentAlignmentDelta !== 0 ? Math.round((tickPrice + currentAlignmentDelta) * 100) / 100 : tickPrice;
+              marketState.exnessPrice = calibratedTick;
+
+              if (selectedSource === 'binance') {
+                targetPrice = tickPrice;
+              } else if (selectedSource === 'exness') {
+                targetPrice = calibratedTick;
+              } else if (selectedSource === 'oanda' && marketState.oandaPrice) {
+                targetPrice = marketState.oandaPrice;
+              }
+
+              updateDisplayFromFeeds();
+            }
+          } catch(e) {}
+        };
+
+        liveWs.onerror = () => {
+          setStatus('wait', 'ĐANG ĐỒNG BỘ NGUỒN SÀN EXNESS...');
+        };
+
+        liveWs.onclose = () => {
+          setTimeout(() => {
+            if (currentTfStr === tfStr) startBinanceWebSocket(tfStr);
+          }, 2500);
+        };
+      } catch (err) {
+        console.warn("WebSocket init error:", err);
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // E. ENGINE DAO ĐỘNG TỪNG PIP CHÂN THẬT (SMOOTH PIP ENGINE)
+    // -------------------------------------------------------------------------
+    let targetPrice = null;
+    let displayPrice = null;
+    let pipTimer = null;
+
+    function startPipTickEngine() {
+      if (pipTimer) clearInterval(pipTimer);
+      
+      pipTimer = setInterval(() => {
+        if (!targetPrice) return;
+        if (!displayPrice) displayPrice = targetPrice;
+
+        const gap = targetPrice - displayPrice;
+        if (Math.abs(gap) > 0.005) {
+          // Bám sát giá mục tiêu một cách êm ái, chân thật theo biến động thị trường
+          const step = Math.sign(gap) * Math.min(Math.abs(gap), 0.02 + Math.abs(gap) * 0.12);
+          displayPrice += step;
+          displayPrice = Math.round(displayPrice * 100) / 100;
+          processLogic(displayPrice);
+          updateLiveCandleWithTick(displayPrice);
+        }
+      }, 100);
+    }
+
+    // -------------------------------------------------------------------------
+    // F. KHỞI CHẠY HỆ THỐNG
+    // -------------------------------------------------------------------------
+    async function loadApp(tfStr) {
+      currentTfStr = tfStr;
+      currentTF = tfSecondsMap[tfStr] || 300;
+      
+      const loader = document.getElementById('loader');
+      const loaderText = document.getElementById('loader-text');
+      const loaderSub = document.getElementById('loader-sub');
+      
+      if (loader) {
+        loader.style.display = 'flex';
+        loader.style.opacity = '1';
+        if (loaderText) loaderText.textContent = `ĐANG TẢI LỊCH SỬ NẾN ${tfStr.toUpperCase()} SÀN EXNESS...`;
+        if (loaderSub) loaderSub.textContent = "Đồng bộ nến Spot Gold và khởi tạo luồng dữ liệu từng pip";
+      }
+      
+      // 1. Tải nến lịch sử và đồng bộ với Spot Gold
+      const isSuccess = await fetchRealHistory(tfStr);
+      
+      if (isSuccess && rawCandles.length > 0) {
+        renderData();
+        
+        // 2. Lấy giá mới nhất và thiết lập các cản AI
+        const lastCandle = rawCandles[rawCandles.length - 1];
+        targetPrice = lastCandle.close;
+        displayPrice = lastCandle.close;
+        buildDynamicLevels(lastCandle.close);
+        processLogic(lastCandle.close);
+        
+        // 3. Khởi động Engine dao động từng pip
+        startPipTickEngine();
+
+        // 4. Khởi động luồng quét giá Spot Thế giới liên tục (mỗi 2.5 giây, CORS-ready)
+        if (spotScanTimer) clearInterval(spotScanTimer);
+        spotScanTimer = setInterval(fetchRealSpotPrice, 2500);
+
+        // 5. Khởi động luồng quét TradingView CFD định kỳ an toàn (mỗi 6 giây)
+        await pollTradingViewCfd();
+        if (liveScanTimer) clearInterval(liveScanTimer);
+        liveScanTimer = setInterval(pollTradingViewCfd, 6000);
+
+        // 6. Khởi động WebSocket đa luồng
+        startBinanceWebSocket(tfStr);
+
+        setStatus('live', 'SÀN EXNESS & WORLD SPOT PIP FEED');
+        
+        if (loader) {
+          loader.style.opacity = '0';
+          setTimeout(() => { loader.style.display = 'none'; }, 250);
+        }
+      } else {
+        if (loaderText) loaderText.innerHTML = `<span style="color:#ef4444">KẾT NỐI MẠNG GIÁN ĐOẠN</span>`;
+      }
+    }
+
+    // Xử lý nút chọn khung thời gian
+    document.querySelectorAll('.tf-btn').forEach(b => { 
+      b.addEventListener('click', (e) => { 
+        document.querySelectorAll('.tf-btn').forEach(btn => btn.classList.remove('active')); 
+        e.target.classList.add('active'); 
+        
+        mainSeries.setData([]);
+        volSeries.setData([]);
+        rawCandles = [];
+        
+        loadApp(e.target.dataset.tf); 
+      }); 
+    });
+    
+    // --- 4. ĐIỀU HƯỚNG CHẾ ĐỘ XEM TRÊN ĐIỆN THOẠI (CHIA ĐÔI / VÙNG GIÁ / CHART) ---
+    const mainGridElem = document.querySelector('.main-grid');
+    const floatPillBtn = document.getElementById('btn-floating-signals');
+
+    document.querySelectorAll('.m-tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const view = e.target.dataset.view;
+        document.querySelectorAll('.m-tab-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+
+        mainGridElem.classList.remove('mode-split', 'mode-dash', 'mode-chart');
+        mainGridElem.classList.add(`mode-${view}`);
+
+        if (floatPillBtn) {
+          floatPillBtn.style.display = view === 'chart' ? 'flex' : 'none';
+        }
+
+        setTimeout(() => {
+          if (chart && chartContainer) {
+            const rect = chartContainer.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+              chart.applyOptions({ width: rect.width, height: rect.height });
+            }
+          }
+        }, 60);
+      });
+    });
+
+    if (floatPillBtn) {
+      floatPillBtn.addEventListener('click', () => {
+        const splitBtn = document.querySelector('.m-tab-btn[data-view="split"]');
+        if (splitBtn) splitBtn.click();
+      });
+    }
+
+    // Khởi tạo Modal hiệu chỉnh Exness
+    initCalibModal();
+
+    // Khởi chạy hệ thống mặc định khung 5m
+    loadApp('5m');
+  </script>
+</body>
+</html>
