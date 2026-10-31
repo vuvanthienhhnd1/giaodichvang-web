@@ -9,7 +9,7 @@
   <title>AI XAUUSD System - Real World Gold Data</title>
   <script>
     // Tự động ép trình duyệt khách hàng tải bản mới nhất, không bao giờ kẹt cache cũ
-    const BUILD_VERSION = "2026.10.31.2370";
+    const BUILD_VERSION = "2026.11.01.0120";
     try {
       const lastVer = localStorage.getItem('xauusd_client_ver');
       if (lastVer !== BUILD_VERSION) {
@@ -460,6 +460,301 @@
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+
+    /* =========================================================================
+       CHẾ ĐỘ RÊ CHUỘT ĐẶT CẢNH BÁO GIÁ TRỰC TIẾP (HOVER & CLICK PRICE ALERTS)
+       ========================================================================= */
+    .tool-btn.active-pick {
+      background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+      color: #0b0e14 !important;
+      border-color: #fbbf24 !important;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.75) !important;
+      animation: alertBtnGlow 1.2s infinite alternate;
+    }
+    @keyframes alertBtnGlow {
+      0% { transform: scale(1); box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
+      100% { transform: scale(1.08); box-shadow: 0 0 18px rgba(245, 158, 11, 0.95); }
+    }
+
+    /* Thanh hướng dẫn nổi trên biểu đồ */
+    .alert-pick-banner {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1.5px solid #f59e0b;
+      border-radius: 20px;
+      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 100;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 12px rgba(245, 158, 11, 0.35);
+      color: #f8fafc;
+      font-size: 11px;
+      font-weight: 700;
+      pointer-events: auto;
+      max-width: 95vw;
+      box-sizing: border-box;
+      white-space: nowrap;
+      animation: toastIn 0.2s ease-out;
+    }
+    .alert-pick-banner .btn-alert-banner-sub {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #60a5fa;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .alert-pick-banner .btn-alert-banner-sub:hover {
+      background: rgba(59, 130, 246, 0.4);
+      color: #fff;
+    }
+    .alert-pick-banner .btn-alert-banner-done {
+      background: #f59e0b;
+      border: none;
+      color: #000;
+      padding: 4px 11px;
+      border-radius: 14px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .alert-pick-banner .btn-alert-banner-done:hover {
+      background: #fbbf24;
+    }
+
+    /* Đường ngắm rê chuột ngang theo con trỏ (Crosshair Guide) */
+    .alert-pick-crosshair {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      pointer-events: none;
+      z-index: 25;
+      display: none;
+    }
+    .alert-pick-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      border-top: 1.5px dashed #f59e0b;
+      opacity: 0.95;
+    }
+    .alert-pick-badge {
+      position: absolute;
+      right: 65px;
+      top: -11px;
+      background: #f59e0b;
+      color: #0b0e14;
+      font-family: var(--font-mono, monospace);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    /* Trạng thái chuột khi đang đặt cảnh báo */
+    .chart-box.picking-alert,
+    .chart-box.picking-alert #chart {
+      cursor: crosshair !important;
+    }
+
+    body.light-theme .alert-pick-banner {
+      background: rgba(255, 255, 255, 0.96);
+      border-color: #d97706;
+      color: #0f172a;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 0 15px rgba(217, 119, 6, 0.25);
+    }
+
+    /* FULLSCREEN CHO MODAL LỊCH SỬ MỐC MACRO CÁ MẬP / NGÂN HÀNG TRUNG ƯƠNG */
+    .macro-modal-box.macro-fullscreen-box {
+      width: 95vw !important;
+      max-width: 1100px !important;
+      height: 92vh !important;
+      max-height: 94vh !important;
+      display: flex;
+      flex-direction: column;
+    }
+    .macro-modal-box.macro-fullscreen-box .macro-modal-body {
+      flex: 1 1 auto;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior: contain;
+      padding: 16px 20px;
+    }
+    @media (max-width: 768px) {
+      .macro-modal-overlay {
+        padding: 0 !important;
+      }
+      .macro-modal-box.macro-fullscreen-box {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: 100vw !important;
+        max-height: 100vh !important;
+        border-radius: 0 !important;
+        border: none !important;
+      }
+      .macro-modal-box.macro-fullscreen-box .macro-modal-body {
+        padding: 12px 14px 50px 14px !important;
+      }
+    }
+
+
+    /* DROPDOWN CHỌN KHUNG THỜI GIAN (SIÊU GỌN GÀNG CHO ĐIỆN THOẠI & PC: 1M, 5M, 15M...) */
+    .tf-dropdown-wrap {
+      display: inline-flex;
+      align-items: center;
+      background: #101522;
+      border: 1px solid var(--border-color, #1e2638);
+      border-radius: 6px;
+      padding: 1px 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      height: 26px;
+      transition: all 0.15s;
+    }
+    .tf-dropdown-wrap:hover {
+      border-color: #3b82f6;
+    }
+    .tf-select {
+      background: transparent;
+      color: #fbbf24;
+      border: none;
+      font-size: 11.5px;
+      font-weight: 800;
+      font-family: var(--font-mono, monospace);
+      outline: none;
+      cursor: pointer;
+      padding: 0 2px;
+      text-align: center;
+    }
+    .tf-select option {
+      background: #0f172a;
+      color: #f8fafc;
+      font-size: 12px;
+      padding: 6px 12px;
+    }
+    body.light-theme .tf-dropdown-wrap {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    body.light-theme .tf-select {
+      color: #1d4ed8;
+    }
+    body.light-theme .tf-select option {
+      background: #ffffff;
+      color: #0f172a;
+    }
+    .alert-btn-edit {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #60a5fa;
+      border-radius: 4px;
+      padding: 3px 6px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .alert-btn-edit:hover {
+      background: rgba(59, 130, 246, 0.3);
+      color: #fff;
+    }
+
+
+    /* THANH TAB MODAL LỊCH SỬ MACRO (GỌN GÀNG, KHÔNG GHIM CHE MÀN HÌNH) */
+    .macro-tabs-bar {
+      display: flex;
+      background: #090c13;
+      border-bottom: 1px solid #1e2638;
+      padding: 4px 8px;
+      gap: 6px;
+      flex-shrink: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .macro-tabs-bar::-webkit-scrollbar { display: none; }
+    .macro-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #94a3b8;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .macro-tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .macro-tab-btn.active {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: #3b82f6;
+      color: #60a5fa;
+      font-weight: 800;
+    }
+    body.light-theme .macro-tabs-bar {
+      background: #f1f5f9;
+      border-bottom-color: #cbd5e1;
+    }
+    body.light-theme .macro-tab-btn {
+      color: #64748b;
+    }
+    body.light-theme .macro-tab-btn.active {
+      background: #eff6ff;
+      border-color: #3b82f6;
+      color: #1d4ed8;
+    }
+
+    /* Nút xác nhận đặt mốc trên thanh banner */
+    .btn-alert-banner-confirm {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+    .btn-badge-confirm {
+      background: #0b0e14;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #fbbf24;
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+    .btn-badge-confirm:hover {
+      background: #fbbf24;
+      color: #000;
+    }
 
     /* DRAWING LAYER FOR AI ZONES */
     #drawing-layer { 
@@ -1530,21 +1825,7 @@
     body.light-theme .macro-modal-close {
       color: #475569;
     }
-        body.light-theme .macro-modal-btn-fs {
-      background: #e0f2fe;
-      border-color: #7dd3fc;
-      color: #0284c7;
-    }
-    body.light-theme .macro-modal-btn-fs:hover {
-      background: #bae6fd;
-      color: #0369a1;
-    }
-    body.light-theme .macro-list-header-bar {
-      background: #f8fafc;
-      border-color: #cbd5e1;
-      color: #0f172a;
-    }
-body.light-theme .macro-modal-close:hover {
+    body.light-theme .macro-modal-close:hover {
       color: #0f172a;
       background: #e2e8f0;
     }
@@ -1981,15 +2262,14 @@ body.light-theme .macro-modal-close:hover {
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      z-index: 10000005;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 999999;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 16px;
-      box-sizing: border-box;
     }
     .macro-modal-overlay.open {
       display: flex;
@@ -1998,34 +2278,22 @@ body.light-theme .macro-modal-close:hover {
       background: #0f172a;
       border: 1px solid #334155;
       border-radius: 12px;
-      width: 95vw;
-      max-width: 1300px;
-      height: 92vh;
-      max-height: 92vh;
+      width: 100%;
+      max-width: 620px;
+      max-height: 85vh;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(59, 130, 246, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(59, 130, 246, 0.25);
       overflow: hidden;
-      animation: toastIn 0.22s ease-out;
-      transition: all 0.2s ease;
-    }
-    /* Chế độ Phóng Toàn Màn Hình Cực Đại */
-    .macro-modal-box.is-fullscreen {
-      width: 100vw !important;
-      height: 100vh !important;
-      max-width: 100vw !important;
-      max-height: 100vh !important;
-      border-radius: 0 !important;
-      border: none !important;
+      animation: toastIn 0.25s ease-out;
     }
     .macro-modal-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 18px;
-      background: linear-gradient(90deg, rgba(37, 99, 235, 0.22), rgba(245, 158, 11, 0.22));
+      padding: 14px 18px;
+      background: linear-gradient(90deg, rgba(37, 99, 235, 0.18), rgba(245, 158, 11, 0.18));
       border-bottom: 1px solid #1e293b;
-      flex-shrink: 0;
     }
     .macro-modal-title {
       font-size: 13px;
@@ -2036,29 +2304,11 @@ body.light-theme .macro-modal-close:hover {
       gap: 8px;
       letter-spacing: 0.3px;
     }
-    .macro-modal-btn-fs {
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.4);
-      color: #60a5fa;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 5px 11px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.15s;
-    }
-    .macro-modal-btn-fs:hover {
-      background: rgba(59, 130, 246, 0.3);
-      color: #fff;
-    }
     .macro-modal-close {
       background: transparent;
       border: none;
       color: #94a3b8;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 800;
       cursor: pointer;
       padding: 4px 8px;
@@ -2069,70 +2319,12 @@ body.light-theme .macro-modal-close:hover {
       color: #fff;
       background: rgba(239, 68, 68, 0.25);
     }
-    /* VÙNG CUỘN DUY NHẤT TOÀN DIỆN - KHẮC PHỤC 100% LỖI CUỘN TRÊN ĐIỆN THOẠI DI ĐỘNG */
     .macro-modal-body {
-      flex: 1 1 auto;
-      min-height: 0 !important;
-      overflow-y: auto !important;
-      -webkit-overflow-scrolling: touch !important;
-      touch-action: pan-y !important;
-      overscroll-behavior-y: contain;
-      padding: 16px 18px 60px 18px !important;
-    }
-    /* BỐ CỤC LƯỚI WIDESCREEN TRÊN DESKTOP */
-    .macro-grid-layout {
-      display: grid;
-      grid-template-columns: 430px 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-    .macro-grid-col-left {
+      padding: 16px 18px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 12px;
-    }
-    .macro-grid-col-right {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .macro-list-header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(30, 41, 59, 0.4);
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 8px 12px;
-    }
-    /* BỐ CỤC DI ĐỘNG (MOBILE FULLSCREEN & SMOOTH TOUCH SCROLL) */
-    @media (max-width: 900px) {
-      .macro-modal-overlay {
-        padding: 0 !important;
-        align-items: stretch !important;
-        justify-content: stretch !important;
-      }
-      .macro-modal-box {
-        width: 100vw !important;
-        height: 100vh !important;
-        max-width: 100vw !important;
-        max-height: 100vh !important;
-        border-radius: 0 !important;
-        border: none !important;
-      }
-      .macro-modal-head {
-        position: sticky !important;
-        top: 0;
-        z-index: 30;
-      }
-      .macro-grid-layout {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 14px !important;
-      }
-      .macro-modal-body {
-        padding: 12px 12px 80px 12px !important;
-      }
     }
 
     .macro-next-box {
@@ -2192,8 +2384,8 @@ body.light-theme .macro-modal-close:hover {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      overflow: visible !important;
-      max-height: none !important;
+      max-height: 320px;
+      overflow-y: auto;
     }
     .macro-ms-item {
       background: rgba(15, 23, 42, 0.6);
@@ -2456,22 +2648,13 @@ body.light-theme .macro-modal-close:hover {
         text-overflow: ellipsis;
       }
       .tf-bar {
-        width: 100%;
-        order: 10;
-        display: flex;
-        overflow-x: auto;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-        padding: 2px 3px;
-        background: #080a0f;
-        gap: 3px;
+        display: none;
       }
-      .tf-bar::-webkit-scrollbar { display: none; }
-      .tf-btn {
-        flex: 1 0 auto;
-        min-width: 34px;
-        text-align: center;
-        padding: 4px 6px;
+      .tf-dropdown-wrap {
+        height: 25px;
+        padding: 0 3px;
+      }
+      .tf-select {
         font-size: 11px;
       }
 
@@ -3018,12 +3201,11 @@ body.light-theme .macro-modal-close:hover {
       z-index: 9999998;
       display: none;
     }
-    .emergency-strobe,
     .emergency-strobe.active {
       display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
+
+      display: block;
+      animation: strobeFlashPulse 0.35s infinite alternate;
     }
     @keyframes strobeFlashPulse {
       0% {
@@ -3067,19 +3249,22 @@ body.light-theme .macro-modal-close:hover {
     /* THANH NỔI THÔNG BÁO KHỚP LỆNH (GỌN GÀNG, KHÔNG CHỚP NHÁY) */
     .alarm-floating-bar {
       position: fixed;
-      top: 14px;
+      top: 8px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid #3b82f6;
-      border-radius: 25px;
-      padding: 6px 14px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1.5px solid #ef4444;
+      border-radius: 20px;
+      padding: 4px 10px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 8px;
       z-index: 10000002;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.25);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 15px rgba(239, 68, 68, 0.4);
       color: #f8fafc;
+      max-width: 92vw;
+      box-sizing: border-box;
       animation: toastIn 0.2s ease-out;
     }
     .btn-quick-dismiss-alarm {
@@ -3109,6 +3294,170 @@ body.light-theme .macro-modal-close:hover {
       cursor: default;
     }
 
+  
+
+    /* =========================================================================
+       CSS TỐI ƯU CẢNH BÁO & LỊCH SỬ CÁ MẬP CHUẨN MOBILE (VERSION 2026.11.01.0100)
+       ========================================================================= */
+    .alert-pick-banner {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1.5px solid #f59e0b;
+      border-radius: 20px;
+      padding: 3px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8), 0 0 10px rgba(245, 158, 11, 0.35);
+      color: #f8fafc;
+      font-size: 11px;
+      font-weight: 700;
+      pointer-events: auto;
+      width: auto;
+      max-width: calc(100% - 16px);
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .btn-alert-banner-confirm {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+      animation: pulseGreen 1.5s infinite;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .btn-badge-confirm {
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 2px 7px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-left: 5px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+      display: inline-flex;
+      align-items: center;
+      transition: transform 0.1s, background 0.15s;
+    }
+    .btn-badge-confirm:active {
+      transform: scale(0.92);
+      background: #059669;
+    }
+
+    .alarm-floating-bar {
+      position: fixed;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1.5px solid #ef4444;
+      border-radius: 20px;
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      z-index: 10000002;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 15px rgba(239, 68, 68, 0.4);
+      color: #f8fafc;
+      width: auto;
+      max-width: calc(100vw - 16px);
+      box-sizing: border-box;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    #alarm-floating-text {
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      min-width: 0;
+    }
+    .btn-quick-dismiss-alarm {
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #ffffff;
+      border: none;
+      border-radius: 14px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* Tối ưu cuộn vuốt modal Macro cá mập trên mobile */
+    .macro-milestone-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: none !important;
+      overflow: visible !important;
+      width: 100%;
+    }
+    @media (max-width: 768px) {
+      .macro-fullscreen-box {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: 100vw !important;
+        max-height: 100vh !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+      }
+      .macro-modal-head {
+        padding: 8px 12px !important;
+        flex-shrink: 0 !important;
+      }
+      .macro-tabs-bar {
+        padding: 3px 6px !important;
+        flex-shrink: 0 !important;
+      }
+      .macro-modal-body {
+        flex: 1 1 auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-y !important;
+        overscroll-behavior: contain !important;
+        padding: 8px 10px 45px 10px !important;
+      }
+      .macro-actions-bar {
+        gap: 6px !important;
+        margin-bottom: 6px !important;
+      }
+      .macro-btn-add, .macro-btn-reset {
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -3136,17 +3485,19 @@ body.light-theme .macro-modal-close:hover {
       </div>
     </div>
 
-    <!-- KHUNG THỜI GIAN -->
-    <div class="tf-bar">
-      <button class="tf-btn" data-tf="1m">1m</button>
-      <button class="tf-btn active" data-tf="5m">5m</button>
-      <button class="tf-btn" data-tf="15m">15m</button>
-      <button class="tf-btn" data-tf="30m">30m</button>
-      <button class="tf-btn" data-tf="1h">1H</button>
-      <button class="tf-btn" data-tf="4h">4H</button>
-      <button class="tf-btn" data-tf="1d" title="Khung Ngày (Daily)">1D</button>
-      <button class="tf-btn" data-tf="1w" title="Khung Tuần (Weekly)">1W</button>
-      <button class="tf-btn" data-tf="1M" title="Khung Tháng (Monthly)">1M</button>
+    <!-- KHUNG THỜI GIAN (XỔ XUỐNG SIÊU GỌN GÀNG ĐỠ TỐN MÀN HÌNH: 1M, 5M, 15M...) -->
+    <div class="tf-dropdown-wrap" title="Chọn khung thời gian (1m, 5m, 15m, 1H...)">
+      <select id="tf-select" class="tf-select">
+        <option value="1m">1m</option>
+        <option value="5m" selected>5m</option>
+        <option value="15m">15m</option>
+        <option value="30m">30m</option>
+        <option value="1h">1H</option>
+        <option value="4h">4H</option>
+        <option value="1d">1D</option>
+        <option value="1w">1W</option>
+        <option value="1M">1M</option>
+      </select>
     </div>
   </header>
 
@@ -3434,7 +3785,25 @@ body.light-theme .macro-modal-close:hover {
     <!-- BIỂU ĐỒ CHÍNH -->
     <div class="chart-box" id="chart-container">
       <div id="chart"></div>
-      
+
+      <!-- THANH HƯỚNG DẪN ĐẶT CẢNH BÁO GIÁ TRỰC TIẾP (CO GIÃN CHUẨN MOBILE) -->
+      <div id="alert-pick-banner" class="alert-pick-banner" style="display:none;">
+        <span style="font-size:13px; flex-shrink:0;">🎯</span>
+        <span id="alert-pick-guide-text" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:85px;">Rê chọn giá</span>
+        <button id="btn-confirm-picked-alert" class="btn-alert-banner-confirm" style="display:none; flex-shrink:0;">✓ Đặt $<span id="picked-price-num">----</span></button>
+        <button id="btn-view-alert-list" class="btn-alert-banner-sub" style="flex-shrink:0;" title="Xem danh sách & Xoá mốc cảnh báo">📋 (<span id="alert-placed-count">0</span>)</button>
+        <button id="btn-finish-alert-pick" class="btn-alert-banner-done" style="flex-shrink:0;" title="Tắt chế độ đặt cảnh báo">❌ Đóng</button>
+      </div>
+
+      <!-- ĐƯỜNG NGẮM RÊ CẢM ỨNG TRÊN BIỂU ĐỒ (CROSSHAIR GUIDE) -->
+      <div id="alert-pick-crosshair" class="alert-pick-crosshair">
+        <div class="alert-pick-line"></div>
+        <div id="alert-pick-badge" class="alert-pick-badge">
+          <span id="alert-pick-badge-text">🔔 $----.--</span>
+          <button id="btn-badge-confirm" class="btn-badge-confirm" title="Xác nhận đặt mốc giá này">✓ Đặt</button>
+        </div>
+      </div>
+
       <!-- LOADER OVERLAY -->
       <div class="loader" id="loader">
         <div class="loader-spinner"></div>
@@ -3833,85 +4202,84 @@ body.light-theme .macro-modal-close:hover {
        MODAL: LỊCH SỬ CÁC MỐC DỮ LIỆU MACRO & SỔ TAY GHI CHÚ XUẤT NHẬP NOTEPAD
        ===================================================================== -->
   <div class="macro-modal-overlay" id="modal-macro-history">
-    <div class="macro-modal-box" id="macro-modal-box-el">
+    <div class="macro-modal-box macro-fullscreen-box">
       <div class="macro-modal-head">
         <div class="macro-modal-title">
           <span>🏛️</span>
-          <span>MỐC VĨ MÔ CỦA CÁ MẬP & NGÂN HÀNG TRUNG ƯƠNG (SMART MONEY & CENTRAL BANKS)</span>
+          <span>LỊCH SỬ MỐC MACRO CÁ MẬP / NHTW</span>
         </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <button class="macro-modal-btn-fs" id="btn-toggle-macro-fullscreen" title="Phóng to toàn màn hình hoặc thu nhỏ">
-            <span>⛶</span> Toàn Màn Hình
-          </button>
-          <button class="macro-modal-close" id="btn-close-macro-modal" title="Đóng cửa sổ">✕</button>
-        </div>
+        <button class="macro-modal-close" id="btn-close-macro-modal">✕</button>
       </div>
 
-      <div class="macro-modal-body" id="macro-modal-body-el">
-        <!-- BỐ CỤC 2 CỘT CHO MÀN HÌNH RỘNG & TỰ ĐỘNG THU 1 CỘT TRÊN DI ĐỘNG -->
-        <div class="macro-grid-layout">
-          <!-- CỘT TRÁI: NHẬN ĐỊNH VĨ MÔ & SỔ TAY NOTEPAD -->
-          <div class="macro-grid-col-left">
-            <!-- Khung Nhận Định Dòng Tiền Cá Mập & NHTW -->
-            <div class="macro-next-box">
-              <div class="macro-next-title">🔮 NHẬN ĐỊNH DÒNG TIỀN CÁ MẬP & NGÂN HÀNG TRUNG ƯƠNG:</div>
-              <div class="macro-next-content" id="macro-next-text">
-                Đang phân tích dữ liệu dòng tiền tổ chức...
-              </div>
-            </div>
+      <!-- THANH CHUYỂN TAB GỌN GÀNG: KHÔNG GHIM CHE KHUẤT MÀN HÌNH -->
+      <div class="macro-tabs-bar">
+        <button class="macro-tab-btn active" id="tab-btn-macro-list">
+          <span>🏛️</span> MỐC CÁ MẬP &amp; NHTW
+        </button>
+        <button class="macro-tab-btn" id="tab-btn-macro-note">
+          <span>📝</span> SỔ TAY &amp; FILE NOTEPAD
+        </button>
+        <button class="macro-tab-btn" id="tab-btn-macro-predict">
+          <span>🔮</span> CƠ SỞ NHẬN ĐỊNH
+        </button>
+      </div>
 
-            <!-- Sổ tay ghi chú giao dịch & Kế hoạch vĩ mô -->
-            <div class="macro-notepad-box">
-              <div class="macro-notepad-header">
-                <span class="macro-notepad-title">📝 SỔ TAY GHI CHÚ GIAO DỊCH & KẾ HOẠCH VĨ MÔ</span>
-                <span style="font-size: 11px; color: #10b981; font-weight: 600;">● Tự động lưu</span>
-              </div>
-              <textarea class="macro-notepad-textarea" id="macro-notepad-text" rows="4" placeholder="Nhập ghi chú cá nhân, chiến lược gom/xả của Cá Mập, quan sát động thái Ngân Hàng Trung Ương PBoC, FED... (Tự động lưu, xuất nhập cùng file NotePad .txt)"></textarea>
-            </div>
-
-            <!-- Thanh công cụ Xuất / Nhập file NotePad -->
-            <div class="macro-io-actions">
-              <button class="macro-btn-io primary" id="btn-export-macro-notepad" title="Tải về file văn bản dạng Notepad .txt">
-                <span>📥</span> Xuất File NotePad (.txt)
-              </button>
-              <button class="macro-btn-io" id="btn-import-macro-file" title="Chọn file .txt từ máy tính/điện thoại để nạp vào">
-                <span>📤</span> Nhập File NotePad
-              </button>
-              <button class="macro-btn-io" id="btn-copy-macro-notepad" title="Sao chép toàn bộ văn bản để dán qua Zalo/Telegram">
-                <span>📋</span> Sao Chép Text
-              </button>
-              <button class="macro-btn-io" id="btn-paste-macro-notepad" title="Dán nhanh văn bản hoặc ghi chú từ máy khác">
-                <span>✍️</span> Dán Dữ Liệu Nhanh
-              </button>
-              <input type="file" id="inp-import-macro-file" accept=".txt,.json,.log" style="display:none;">
-            </div>
-
-            <!-- Thanh công cụ thêm mốc -->
-            <div class="macro-actions-bar">
-              <button class="macro-btn-add" id="btn-add-current-price-milestone">
-                <span>➕</span> Lưu Mốc Giá Hiện Tại
-              </button>
-              <button class="macro-btn-add" id="btn-add-custom-milestone-dialog" style="background: linear-gradient(135deg, #0d9488, #059669);">
-                <span>➕</span> Thêm Mốc Tự Đặt
-              </button>
-              <button class="macro-btn-reset" id="btn-reset-macro-milestones">
-                <span>🔄</span> Khôi Phục Mốc Chuẩn Cá Mập & NHTW
-              </button>
-            </div>
+      <div class="macro-modal-body" style="padding: 10px 14px;">
+        <!-- TAB 1: DANH SÁCH MỐC CÁ MẬP & NGÂN HÀNG TRUNG ƯƠNG (MẶC ĐỊNH MỞ NGAY ĐẦU MÀN HÌNH) -->
+        <div id="tab-pane-macro-list" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+          <!-- Thanh công cụ thêm mốc -->
+          <div class="macro-actions-bar" style="margin-bottom: 4px;">
+            <button class="macro-btn-add" id="btn-add-current-price-milestone">
+              <span>➕</span> Lưu Giá Hiện Tại
+            </button>
+            <button class="macro-btn-add" id="btn-add-custom-milestone-dialog" style="background: linear-gradient(135deg, #0d9488, #059669);">
+              <span>➕</span> Thêm Mốc
+            </button>
+            <button class="macro-btn-reset" id="btn-reset-macro-milestones">
+              <span>🔄</span> Mặc Định AI
+            </button>
           </div>
 
-          <!-- CỘT PHẢI: DANH SÁCH MỐC GIÁ CỦA CÁ MẬP & NGÂN HÀNG TRUNG ƯƠNG -->
-          <div class="macro-grid-col-right">
-            <div class="macro-list-header-bar">
-              <div style="font-size: 12px; font-weight: 800; color: #f8fafc; display:flex; align-items:center; gap:6px;">
-                <span>🐋</span> <span>CÁC MỐC GIÁ CHIẾN LƯỢC CỦA CÁ MẬP & NGÂN HÀNG TRUNG ƯƠNG</span>
-              </div>
-              <span id="macro-count-badge" style="font-size: 11px; background: rgba(59, 130, 246, 0.2); color: #60a5fa; padding: 2px 8px; border-radius: 12px; font-weight: 700;">8 mốc vĩ mô</span>
-            </div>
+          <!-- Danh sách các mốc dữ liệu quá khứ -->
+          <div class="macro-milestone-list" id="macro-milestones-container">
+            <!-- Render động danh sách mốc dữ liệu -->
+          </div>
+        </div>
 
-            <!-- Danh sách các mốc dữ liệu quá khứ (Cuộn mượt mà trên điện thoại, không còn kẹt) -->
-            <div class="macro-milestone-list" id="macro-milestones-container">
-              <!-- Render động danh sách mốc dữ liệu -->
+        <!-- TAB 2: SỔ TAY GHI CHÚ & XUẤT NHẬP NOTEPAD -->
+        <div id="tab-pane-macro-note" style="display: none; flex-direction: column; gap: 10px; width: 100%;">
+          <div class="macro-notepad-box">
+            <div class="macro-notepad-header">
+              <span class="macro-notepad-title">📝 SỔ TAY GHI CHÚ GIAO DỊCH &amp; KẾ HOẠCH VĨ MÔ</span>
+              <span style="font-size: 11px; color: #10b981; font-weight: 600;">● Tự động lưu</span>
+            </div>
+            <textarea class="macro-notepad-textarea" id="macro-notepad-text" rows="4" placeholder="Nhập ghi chú cá nhân, kế hoạch giao dịch trong tuần, lưu ý tin tức... (Tự động lưu, xuất nhập cùng file NotePad)"></textarea>
+          </div>
+
+          <!-- Thanh công cụ Xuất / Nhập file NotePad -->
+          <div class="macro-io-actions">
+            <button class="macro-btn-io primary" id="btn-export-macro-notepad" title="Tải về file văn bản dạng Notepad .txt">
+              <span>📥</span> Xuất NotePad (.txt)
+            </button>
+            <button class="macro-btn-io" id="btn-import-macro-file" title="Chọn file .txt từ máy tính/điện thoại để nạp vào">
+              <span>📤</span> Nhập NotePad
+            </button>
+            <button class="macro-btn-io" id="btn-copy-macro-notepad" title="Sao chép toàn bộ văn bản để dán qua Zalo/Telegram">
+              <span>📋</span> Sao Chép
+            </button>
+            <button class="macro-btn-io" id="btn-paste-macro-notepad" title="Dán nhanh văn bản hoặc ghi chú từ máy khác">
+              <span>✍️</span> Dán Nhanh
+            </button>
+            <input type="file" id="inp-import-macro-file" accept=".txt,.json,.log" style="display:none;">
+          </div>
+        </div>
+
+        <!-- TAB 3: KHUNG NHẬN ĐỊNH VÙNG GIÁ TIẾP THEO -->
+        <div id="tab-pane-macro-predict" style="display: none; flex-direction: column; gap: 10px; width: 100%;">
+          <div class="macro-next-box">
+            <div class="macro-next-title">🔮 CƠ SỞ NHẬN ĐỊNH VÙNG GIÁ TIẾP THEO DỰA TRÊN DỮ LIỆU LỊCH SỬ:</div>
+            <div class="macro-next-content" id="macro-next-text">
+              Dựa trên phản ứng tại đỉnh lịch sử ATH $2,790.00 và các nhịp tích lũy gom hàng tổ chức tại $2,600.00 - $2,685.00, thị trường đang thiết lập vùng cản tiếp theo tại mốc Kháng cự Macro và Hỗ trợ Macro hiện tại. Cơ sở: Sự tích lũy volume của các Ngân hàng Trung ương và dòng tiền quỹ ETF toàn cầu.
             </div>
           </div>
         </div>
@@ -3935,6 +4303,10 @@ body.light-theme .macro-modal-close:hover {
       <div class="macro-modal-body" style="padding: 14px;">
         <!-- Form Tạo Cảnh Báo -->
         <div class="price-alert-form-box">
+          <!-- Nút chọn trực tiếp trên biểu đồ -->
+          <button id="btn-start-chart-pick" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #f59e0b, #d97706); border: none; border-radius: 8px; color: #0b0e14; font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); margin-bottom: 12px; transition: transform 0.15s;">
+            <span style="font-size: 16px;">🎯</span> ĐẶT BẰNG CÁCH CHẠM TRÊN BIỂU ĐỒ (RÊ &amp; NHẤP)
+          </button>
           <div style="font-size: 11px; font-weight: 800; color: #cbd5e1; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
             <span>➕</span> ĐẶT THÊM MỐC CẢNH BÁO GIÁ MỚI
           </div>
@@ -4047,11 +4419,11 @@ body.light-theme .macro-modal-close:hover {
   </div>
 
     <!-- THANH TẮT BÁO ĐỘNG NHANH NỔI TRÊN MÀN HÌNH (DỄ DÀNG TẮT CHỚP NHÁY / ESC) -->
-  <div id="alarm-dismiss-floating-bar" class="alarm-floating-bar" style="display:none;">
+  <div id="alarm-dismiss-floating-bar" class="alarm-floating-bar" style="display:none;" title="Chạm để tắt báo động ngay (hoặc bấm ESC)">
     <span class="alarm-floating-pulse">🚨</span>
-    <span id="alarm-floating-text" style="font-weight:800; font-size:12px;">BÁO ĐỘNG: GIÁ ĐÃ KHỚP!</span>
+    <span id="alarm-floating-text">BÁO ĐỘNG: GIÁ ĐÃ KHỚP!</span>
     <button id="btn-quick-dismiss-alarm" class="btn-quick-dismiss-alarm" title="Nhấn để tắt báo động ngay (hoặc bấm ESC)">
-      <span>🔕</span> TẮT BÁO ĐỘNG NGAY (ESC)
+      <span>🔕</span> Tắt (ESC)
     </button>
   </div>
 
@@ -4172,6 +4544,7 @@ body.light-theme .macro-modal-close:hover {
     chartContainer.addEventListener('mousedown', (e) => {
       // Chỉ kích hoạt khi nhấn chuột trái (e.button === 0)
       if (e.button !== 0) return;
+      if (typeof isAlertPickMode !== 'undefined' && isAlertPickMode) return; // Không kéo chuột khi đang ở chế độ rê chuột đặt cảnh báo
       if (e.target.closest('.tool-btn, .macro-modal-box, .indicator-menu, .loader, button, input')) return;
 
       isMouseDownOnChart = true;
@@ -4259,9 +4632,10 @@ body.light-theme .macro-modal-close:hover {
     // =========================================================================
     // QUẢN LÝ CẤU HÌNH THÔNG SỐ CHỈ BÁO KỸ THUẬT (LOCALSTORAGE & DYNAMIC CONFIG)
     // =========================================================================
-    const IND_CONFIG_KEY = 'ai_gold_indicators_config_v2';
+    const IND_CONFIG_KEY = 'ai_gold_indicators_config_v3';
+    // MẶC ĐỊNH BAN ĐẦU: KHÔNG CÀI CHỈ BÁO NÀO, CHỈ DUY NHẤT VOLUME BẬT (Người dùng tự setup sau)
     const defaultIndConfig = {
-      ema1: { enabled: true, period: 20 },
+      ema1: { enabled: false, period: 20 },
       ema2: { enabled: false, period: 50 },
       sma: { enabled: false, period: 200 },
       vwap: { enabled: false },
@@ -4269,8 +4643,19 @@ body.light-theme .macro-modal-close:hover {
       bb: { enabled: false, period: 20, mult: 2.0 },
       vol: { enabled: true, maPeriod: 20 },
       rsi: { enabled: false, period: 14, ob: 70, os: 30 },
-      autofibo: { enabled: true, lookback: 90 }
+      autofibo: { enabled: false, lookback: 90 }
     };
+
+    // Đảm bảo khởi động sạch: Xoá cài đặt chỉ báo cũ và cảnh báo thử nghiệm cũ nếu có
+    if (localStorage.getItem('agy_clean_defaults_v3') !== 'true') {
+      try {
+        localStorage.removeItem('ai_gold_indicators_config_v2');
+        localStorage.removeItem('ai_gold_indicators_config');
+        localStorage.removeItem(IND_CONFIG_KEY);
+        localStorage.removeItem('agy_gold_custom_alerts');
+        localStorage.setItem('agy_clean_defaults_v3', 'true');
+      } catch(e) {}
+    }
 
     function loadIndConfig() {
       try {
@@ -4836,7 +5221,9 @@ body.light-theme .macro-modal-close:hover {
     }
     updateSoundBtnUI();
 
-    function playBeep(freq = 880, dur = 0.15) {
+    function playBeep(freq = 880, dur = 0.15, isAlert = false) {
+      // Âm thanh CHỈ ĐƯỢC KÊU KHI LÀ CẢNH BÁO THẬT SỰ (chạm cản / khớp lệnh). Bấm phím/nút hoàn toàn im lặng!
+      if (!isAlert) return;
       if (!soundEnabled) return;
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -4847,7 +5234,7 @@ body.light-theme .macro-modal-close:hover {
         gain.connect(audioCtx.destination);
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.14, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
         osc.start();
         osc.stop(audioCtx.currentTime + dur);
@@ -4856,8 +5243,8 @@ body.light-theme .macro-modal-close:hover {
 
     function playChime() {
       if (!soundEnabled) return;
-      playBeep(880, 0.12);
-      setTimeout(() => playBeep(1320, 0.18), 110);
+      playBeep(880, 0.12, true);
+      setTimeout(() => playBeep(1320, 0.18, true), 110);
     }
 
     if (btnSound) {
@@ -5763,7 +6150,7 @@ body.light-theme .macro-modal-close:hover {
         ui.bBd.textContent = "TRONG VÙNG"; 
         ui.bMsg.textContent = "Đảo chiều BUY!"; 
         ui.bMsg.style.color = "#10b981"; 
-        if (Date.now() - lastSoundAlert > 15000) { playBeep(900, 0.2); lastSoundAlert = Date.now(); }
+        if (Date.now() - lastSoundAlert > 15000) { playBeep(900, 0.2, true); lastSoundAlert = Date.now(); }
         triggerContinuousVibration(price, 'VÙNG CANH BUY');
       } else if (price < LV.bBot) {
         zBuy.className = "hatch-zone zb-active";
@@ -5792,7 +6179,7 @@ body.light-theme .macro-modal-close:hover {
         ui.sBd.textContent = "TRONG VÙNG"; 
         ui.sMsg.textContent = "Đảo chiều SELL!"; 
         ui.sMsg.style.color = "#ef4444"; 
-        if (Date.now() - lastSoundAlert > 15000) { playBeep(500, 0.2); lastSoundAlert = Date.now(); }
+        if (Date.now() - lastSoundAlert > 15000) { playBeep(500, 0.2, true); lastSoundAlert = Date.now(); }
         triggerContinuousVibration(price, 'VÙNG CANH SELL');
       } else if (price > LV.sTop) {
         zSell.className = "hatch-zone zs-active";
@@ -6402,19 +6789,22 @@ body.light-theme .macro-modal-close:hover {
           if (Array.isArray(data1) && data1.length > 0) {
             let combined = data1;
 
-            // Tải thêm 1000 nến quá khứ (Trang 2) để đường SMA 200 trải dài trọn vẹn cả tuần như MT5
-            try {
-              const oldestTs = data1[0][0];
-              const p2Url = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=1000&endTime=${oldestTs - 1}`;
-              const res2 = await fetch(p2Url);
-              if (res2.ok) {
-                const data2 = await res2.json();
-                if (Array.isArray(data2) && data2.length > 0) {
-                  combined = data2.concat(data1);
+            // Tải thêm nến quá khứ (Trang 2) có timeout chống nghẽn mạng
+            if (bnInterval !== '1m') {
+              try {
+                const oldestTs = data1[0][0];
+                const p2Url = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=1000&endTime=${oldestTs - 1}`;
+                const ctrl = new AbortController();
+                const tId = setTimeout(() => ctrl.abort(), 1800);
+                const res2 = await fetch(p2Url, { signal: ctrl.signal });
+                clearTimeout(tId);
+                if (res2.ok) {
+                  const data2 = await res2.json();
+                  if (Array.isArray(data2) && data2.length > 0) {
+                    combined = data2.concat(data1);
+                  }
                 }
-              }
-            } catch (errP2) {
-              console.warn("Lỗi tải trang 2 nến lịch sử:", errP2);
+              } catch (errP2) {}
             }
 
             let parsed = combined.map(item => ({
@@ -6436,7 +6826,7 @@ body.light-theme .macro-modal-close:hover {
             }
 
             if (selectedSource === 'binance') {
-              // CHẾ ĐỘ COIN 24/7 DỰ ĐOÁN XU HƯỚNG: Lấy dữ liệu thuần túy từ Binance, không offset, không bẻ nến
+              // CHẾ ĐỘ COIN 24/7 DỰ ĐOÁN XU HƯỚNG: Lấy dữ liệu thuần túy từ Binance, làm mượt nến
               currentAlignmentDelta = 0;
               rawCandles = beautifyCandlesSeries(parsed, tfStr, null, false);
             } else {
@@ -6615,6 +7005,8 @@ body.light-theme .macro-modal-close:hover {
     async function loadApp(tfStr) {
       currentTfStr = tfStr;
       currentTF = tfSecondsMap[tfStr] || 300;
+      const selTfEl = document.getElementById('tf-select');
+      if (selTfEl && selTfEl.value !== tfStr) selTfEl.value = tfStr;
       
       const loader = document.getElementById('loader');
       const loaderText = document.getElementById('loader-text');
@@ -6627,12 +7019,11 @@ body.light-theme .macro-modal-close:hover {
         if (loaderSub) loaderSub.textContent = selectedSource === 'binance' ? "Dữ liệu Binance PAXG Spot 24/7 (Đoán xu hướng)" : "Đồng bộ chuẩn xác theo giá chốt phiên sàn Forex";
       }
       
-      // 1. Quét giá chuẩn từ TradingView & Spot Gold trước
-      await pollTradingViewCfd();
-      await fetchRealSpotPrice();
-
-      // 2. Tải nến lịch sử và đồng bộ chuẩn xác
+      // 1. Nạp siêu tốc lịch sử nến để hiển thị biểu đồ ngay lập tức ~0.3s
       const isSuccess = await fetchRealHistory(tfStr);
+      // Quét ngầm Spot Gold & TradingView CFD chạy song song không làm nghẽn biểu đồ
+      pollTradingViewCfd().catch(() => {});
+      fetchRealSpotPrice().catch(() => {});
       
       if (isSuccess && rawCandles.length > 0) {
         chart.timeScale().applyOptions({
@@ -6640,6 +7031,7 @@ body.light-theme .macro-modal-close:hover {
           secondsVisible: false
         });
         renderData();
+        if (typeof syncAlertPriceLinesOnChart === 'function') syncAlertPriceLinesOnChart();
         if (indConfig.autofibo.enabled) {
           updateAutoFibo();
         }
@@ -6683,19 +7075,39 @@ body.light-theme .macro-modal-close:hover {
       }
     }
 
-    // Xử lý nút chọn khung thời gian
-    document.querySelectorAll('.tf-btn').forEach(b => { 
-      b.addEventListener('click', (e) => { 
-        document.querySelectorAll('.tf-btn').forEach(btn => btn.classList.remove('active')); 
-        e.target.classList.add('active'); 
+    // Xử lý chọn khung thời gian dạng xổ xuống (Dropdown)
+    const selTf = document.getElementById('tf-select');
+    if (selTf) {
+      selTf.addEventListener('change', (e) => {
+        const tf = e.target.value;
+        currentTfStr = tf;
         
         mainSeries.setData([]);
         volSeries.setData([]);
         rawCandles = [];
         
-        loadApp(e.target.dataset.tf);
+        loadApp(tf);
         if (indConfig.autofibo.enabled) {
-          showToast(`📐 ĐÃ TỰ ĐỘNG KẺ FIBO THOÁI LUI KHUNG ${e.target.dataset.tf.toUpperCase()}`, 'info', 2200);
+          showToast(`📐 ĐÃ TỰ ĐỘNG KẺ FIBO THOÁI LUI KHUNG ${tf.toUpperCase()}`, 'info', 2200);
+        }
+      });
+    }
+
+    // Tương thích ngược nếu có bất kỳ nút .tf-btn nào
+    document.querySelectorAll('.tf-btn').forEach(b => { 
+      b.addEventListener('click', (e) => { 
+        document.querySelectorAll('.tf-btn').forEach(btn => btn.classList.remove('active')); 
+        e.target.classList.add('active'); 
+        const tf = e.target.dataset.tf;
+        if (selTf) selTf.value = tf;
+        
+        mainSeries.setData([]);
+        volSeries.setData([]);
+        rawCandles = [];
+        
+        loadApp(tf);
+        if (indConfig.autofibo.enabled) {
+          showToast(`📐 ĐÃ TỰ ĐỘNG KẺ FIBO THOÁI LUI KHUNG ${tf.toUpperCase()}`, 'info', 2200);
         }
       }); 
     });
@@ -7087,99 +7499,18 @@ body.light-theme .macro-modal-close:hover {
     // HỆ THỐNG LỊCH SỬ MỐC MACRO, SỔ TAY GHI CHÚ & XUẤT NHẬP NOTEPAD THÔNG MINH
     // =========================================================================
     const DEFAULT_MACRO_MILESTONES = [
-      {
-        id: 'ms-4000',
-        price: 4000.00,
-        tag: '🎯 MỤC TIÊU VĨ MÔ 4,000$',
-        tagClass: 'ms-tag-ath',
-        actor: '🏛️ FED & NHTW TOÀN CẦU',
-        time: 'Kỳ vọng chu kỳ 2026 - 2027',
-        desc: 'Mốc cản tâm lý thế kỷ chẵn 4,000 USD/oz. Vùng chốt lời mục tiêu dài hạn của các quỹ phòng hộ vĩ mô (Macro Hedge Funds) và dòng tiền lớn toàn cầu.',
-        userNote: 'Ngưỡng tâm lý tối thượng của chu kỳ, theo dõi lực chốt lời lớn nếu giá bứt phá.'
-      },
-      {
-        id: 'ms-3950',
-        price: 3950.00,
-        tag: '🐋 CÁ MẬP PHÂN PHỐI / LIQUIDITY SWEEP',
-        tagClass: 'ms-tag-ath',
-        actor: '🐋 WHALE DISTRIBUTION BLOCK',
-        time: 'Khung Tuần W1',
-        desc: 'Vùng quét thanh khoản lệnh Mua phá đỉnh (Buy Breakout) của Cá mập tạo lập thị trường trước khi kích hoạt nhịp đạp giá thanh lọc thị trường.',
-        userNote: 'Vùng đón bán chặn cản của dòng tiền thông minh (Smart Money).'
-      },
-      {
-        id: 'ms-3912',
-        price: 3912.00,
-        tag: '🏛️ KHÁNG CỰ MACRO W1 / ĐỈNH PHIÊN MỸ',
-        tagClass: 'ms-tag-res',
-        actor: '🏛️ TỔ CHỨC TẠO LẬP (MM)',
-        time: 'Phiên Thứ Sáu 30/10/2026',
-        desc: 'Đỉnh tuần W1 - Áp lực xả hàng quyết liệt của phe Bán tổ chức khiến giá sụt giảm hơn 36 USD (-3.60%). Biên cản kháng cự trên tối quan trọng.',
-        userNote: 'Cản Macro then chốt, dưới mốc này phe Gấu kiểm soát hoàn toàn thế trận.'
-      },
-      {
-        id: 'ms-3875',
-        price: 3875.65,
-        tag: '⚖️ TRỤC PIVOT VĨ MÔ / CHỐT PHIÊN THỨ 6',
-        tagClass: 'ms-tag-pvt',
-        actor: '⚖️ EXNESS FOREX WEEKLY CLOSE',
-        time: 'Chốt phiên 22:00 UTC Thứ 6',
-        desc: 'Mốc chốt phiên tuần chuẩn sàn Exness. Trục xoay cân bằng cung cầu thanh khoản toàn cầu giữa phe Bò và phe Gấu cho tuần giao dịch mới.',
-        userNote: 'Mốc tham chiếu tuần, giá nằm trên ưu tiên Buy, giá dưới ưu tiên Sell.'
-      },
-      {
-        id: 'ms-3866',
-        price: 3866.15,
-        tag: '🏛️ VÙNG CẦU GOM HÀNG PBOC & ASIA',
-        tagClass: 'ms-tag-sup',
-        actor: '🏛️ NGÂN HÀNG TRUNG ƯƠNG PBOC',
-        time: 'Khung H4 / D1',
-        desc: 'Khối lệnh mua gom (Institutional Order Block) của Ngân hàng Nhân dân Trung Quốc (PBoC) và các NHTW Châu Á. Bệ đỡ giá ngắn hạn cực mạnh.',
-        userNote: 'Vùng gom hàng uy tín của NHTW, entry Buy Limit theo kế hoạch AI tại $3866.15.'
-      },
-      {
-        id: 'ms-3820',
-        price: 3820.00,
-        tag: '🏦 BỆ ĐỠ QUỸ SPDR GOLD TRUST',
-        tagClass: 'ms-tag-sup',
-        actor: '🏦 QUỸ SPDR GOLD TRUST & BLACKROCK',
-        time: 'Khung H4',
-        desc: 'Mức giá gom tích lũy trung bình của quỹ ETF vàng lớn nhất thế giới SPDR Gold Trust. Vùng hấp thụ toàn bộ lực bán tháo hoảng loạn.',
-        userNote: 'Hỗ trợ cứng vững chắc của dòng tiền tổ chức, bệ phóng bật nảy mạnh.'
-      },
-      {
-        id: 'ms-3780',
-        price: 3780.00,
-        tag: '🐋 CÁ MẬP BẮT ĐÁY VĨ MÔ (STRUCTURAL LOW)',
-        tagClass: 'ms-tag-sup',
-        actor: '🐋 WHALE SMART MONEY',
-        time: 'Khung D1',
-        desc: 'Đáy cấu trúc sóng đẩy trung hạn. Nơi dòng tiền lớn kích hoạt các lệnh Buy Limit quét sạch phe Bán non để tái tích lũy.',
-        userNote: 'Bệ phóng tăng trưởng dài hạn, hỗ trợ vĩ mô uy tín.'
-      },
-      {
-        id: 'ms-2790',
-        price: 2790.00,
-        tag: '🏛️ ĐỈNH ATH LỊCH SỬ THÁNG 10/2024',
-        tagClass: 'ms-tag-res',
-        actor: '🏛️ MỐC LỊCH SỬ KINH ĐIỂN',
-        time: 'Tháng 10/2024',
-        desc: 'Đỉnh cao nhất mọi thời đại chu kỳ trước; vùng phân phối gom - xả hàng lịch sử của các ngân hàng trung ương trước khi mở rộng biên độ lên trên 3,000 USD.',
-        userNote: 'Mốc tham chiếu vĩ mô quan trọng để tính toán tỉ lệ mở rộng Fibonacci Extension.'
-      }
+      { id: 'ms-1', price: 2790.00, tag: 'ATH LỊCH SỬ', tagClass: 'ms-tag-ath', time: 'Tháng 10/2024', desc: 'Đỉnh cao nhất mọi thời đại ATH; vùng phân phối chốt lời mạnh của các quỹ đầu tư toàn cầu.', userNote: 'Đỉnh phân phối dòng tiền lớn, cản vĩ mô tối thượng' },
+      { id: 'ms-2', price: 2758.50, tag: 'KHÁNG CỰ W1', tagClass: 'ms-tag-res', time: 'Khung Tuần W1', desc: 'Vùng kháng cự kỹ thuật khung Tuần; áp lực bán đè giá lớn khi chạm biên cản.', userNote: 'Cản phiên Mỹ quét thanh khoản' },
+      { id: 'ms-3', price: 2720.00, tag: 'LIQUIDITY PIVOT', tagClass: 'ms-tag-pvt', time: 'Khung Ngày D1', desc: 'Điểm xoay thanh khoản trung tâm; nơi tranh chấp cung cầu quyết liệt của dòng tiền lớn.', userNote: 'Trục xoay cân bằng phe Mua & Bán' },
+      { id: 'ms-4', price: 2685.00, tag: 'CẢN TRƯỚC PRE-MACRO', tagClass: 'ms-tag-res', time: 'Khung H4', desc: 'Cản trước vĩ mô; mốc đệm xác nhận đà bứt phá hoặc thoái lui.', userNote: 'Vùng đệm sóng tăng' },
+      { id: 'ms-5', price: 2600.00, tag: 'HỖ TRỢ MACRO D1', tagClass: 'ms-tag-sup', time: 'Khung D1', desc: 'Vùng gom hàng quyết liệt của Ngân hàng Trung ương và tổ chức lớn; bệ đỡ giá trung dài hạn vững chắc.', userNote: 'Bệ đỡ gom hàng của PBoC' },
+      { id: 'ms-6', price: 2540.00, tag: 'ĐÁY TÍCH LŨY SÂU', tagClass: 'ms-tag-sup', time: 'Chu kỳ trước', desc: 'Đáy nền thanh khoản sâu; điểm xuất phát của toàn bộ con sóng tăng trưởng vĩ mô.', userNote: 'Nền giá hỗ trợ an toàn tuyệt đối' }
     ];
 
     function loadMacroMilestones() {
       try {
         const raw = localStorage.getItem('agy_gold_macro_milestones');
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          // Tự động nâng cấp sang mốc Cá mập & NHTW mới nếu dữ liệu cũ còn ở mốc 2700
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            const hasWhaleData = parsed.some(m => m.actor || m.price >= 3500);
-            if (hasWhaleData) return parsed;
-          }
-        }
+        if (raw) return JSON.parse(raw);
       } catch(e) {}
       return JSON.parse(JSON.stringify(DEFAULT_MACRO_MILESTONES));
     }
@@ -7202,16 +7533,12 @@ body.light-theme .macro-modal-close:hover {
       const container = document.getElementById('macro-milestones-container');
       const nextBox = document.getElementById('macro-next-text');
       const npEl = document.getElementById('macro-notepad-text');
-      const countBadge = document.getElementById('macro-count-badge');
       if (npEl && npEl.value !== macroNotepadText) {
         npEl.value = macroNotepadText;
       }
-      if (countBadge) {
-        countBadge.textContent = `${macroMilestones.length} mốc vĩ mô`;
-      }
       if (!container) return;
 
-      const curPrice = previousLivePrice || (rawCandles && rawCandles.length ? rawCandles[rawCandles.length - 1].close : 3875.65);
+      const curPrice = previousLivePrice || 2740;
 
       container.innerHTML = macroMilestones.map((m, idx) => {
         const diff = curPrice - m.price;
@@ -7225,41 +7552,33 @@ body.light-theme .macro-modal-close:hover {
           distBadge = `<span style="color:#ef4444; font-weight:600;">▼ Giá dưới mốc ${diff.toFixed(2)}$ (${diffPips} pips)</span>`;
         }
 
-        const actorHtml = m.actor 
-          ? `<span style="font-size:10px; background:rgba(30,41,59,0.8); border:1px solid #475569; color:#93c5fd; padding:1px 6px; border-radius:4px; font-weight:700;">${escapeHtmlText(m.actor)}</span>`
-          : '';
-
         return `
           <div class="macro-ms-item">
             <div class="macro-ms-top">
-              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <span class="macro-ms-price" style="color: ${m.price > curPrice ? '#f87171' : '#34d399'};">$${m.price.toFixed(2)}</span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="macro-ms-price">$${m.price.toFixed(2)}</span>
                 <span class="macro-ms-tag ${m.tagClass || 'ms-tag-res'}">${m.tag || 'MỐC MACRO'}</span>
-                ${actorHtml}
               </div>
               <div style="display:flex; align-items:center; gap:6px;">
                 <span style="font-size:11px;">${distBadge}</span>
-                <button class="macro-btn-io ms-btn-copy-price" data-price="${m.price.toFixed(2)}" data-desc="${escapeHtmlText(m.desc || '')}" title="Sao chép mốc giá này" style="padding:2px 7px; font-size:10px;">📋</button>
-                <button class="macro-btn-io ms-btn-set-alert" data-price="${m.price.toFixed(2)}" data-note="${escapeHtmlText(m.tag || 'Mốc ' + m.price.toFixed(2))}" title="Đặt cảnh báo mức giá này" style="padding:2px 7px; font-size:10px; color:#fbbf24;">⏰</button>
-                <button class="ms-btn-del" data-idx="${idx}" title="Xoá mốc này" style="background:transparent; border:none; cursor:pointer; font-size:12px;">🗑️</button>
+                <button class="ms-btn-del" data-idx="${idx}" title="Xoá mốc này">🗑️</button>
               </div>
             </div>
-            <div class="macro-ms-desc" style="font-size:11.5px; line-height:1.45; color:#cbd5e1; margin-top:4px;">
-              ${m.desc || ''}
-            </div>
+            <div class="macro-ms-desc">${m.desc || ''}</div>
             <div style="margin-top:6px;">
               <input type="text" class="ms-user-note-inp" data-idx="${idx}" value="${escapeHtmlText(m.userNote || '')}" placeholder="✏️ Thêm ghi chú cá nhân cho mốc $${m.price.toFixed(2)} (tự động lưu)...">
             </div>
-            <div class="macro-ms-meta" style="margin-top:5px; font-size:10px; color:#64748b; display:flex; justify-content:space-between;">
-              <span>🗓️ Thời điểm: ${m.time || 'Lịch sử vĩ mô'}</span>
-              <span style="color:#60a5fa; font-weight:600;">● Dữ liệu Cá Mập & NHTW</span>
+            <div class="macro-ms-meta">
+              <span>Thời điểm: ${m.time || 'Lịch sử'}</span>
+              <span style="color:#60a5fa;">● Cơ sở đối chiếu AI</span>
             </div>
           </div>
         `;
       }).join('');
 
       // Gắn sự kiện sửa ghi chú trực tiếp
-      container.querySelectorAll('.ms-user-note-inp').forEach(inp => {
+      const noteInputs = container.querySelectorAll('.ms-user-note-inp');
+      noteInputs.forEach(inp => {
         inp.addEventListener('input', (e) => {
           const idx = parseInt(e.target.dataset.idx, 10);
           if (!isNaN(idx) && macroMilestones[idx]) {
@@ -7270,7 +7589,8 @@ body.light-theme .macro-modal-close:hover {
       });
 
       // Gắn sự kiện xoá mốc
-      container.querySelectorAll('.ms-btn-del').forEach(btn => {
+      const delBtns = container.querySelectorAll('.ms-btn-del');
+      delBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
           const idx = parseInt(e.currentTarget.dataset.idx, 10);
           if (!isNaN(idx) && macroMilestones[idx]) {
@@ -7282,54 +7602,21 @@ body.light-theme .macro-modal-close:hover {
         });
       });
 
-      // Gắn sự kiện copy mốc
-      container.querySelectorAll('.ms-btn-copy-price').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const p = e.currentTarget.dataset.price;
-          const d = e.currentTarget.dataset.desc;
-          const textToCopy = `[MỐC VĨ MÔ XAUUSD] $${p} - ${d}`;
-          navigator.clipboard.writeText(textToCopy).then(() => {
-            showToast(`📋 Đã copy mốc $${p} vào bộ nhớ tạm!`, 'success', 2000);
-            playBeep(920, 0.08);
-          }).catch(() => {
-            showToast(`Mốc: $${p}`, 'info', 2000);
-          });
-        });
-      });
-
-      // Gắn sự kiện đặt cảnh báo ngay từ mốc
-      container.querySelectorAll('.ms-btn-set-alert').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const p = parseFloat(e.currentTarget.dataset.price);
-          const note = e.currentTarget.dataset.note || 'Cảnh báo mốc vĩ mô';
-          if (!isNaN(p)) {
-            const inpAlertPrice = document.getElementById('inp-alert-price');
-            const inpAlertNote = document.getElementById('inp-alert-note');
-            if (inpAlertPrice) inpAlertPrice.value = p.toFixed(2);
-            if (inpAlertNote) inpAlertNote.value = note;
-            
-            const modalPriceAlerts = document.getElementById('modal-price-alerts');
-            if (modalPriceAlerts) {
-              renderCustomPriceAlerts();
-              modalPriceAlerts.classList.add('open');
-              showToast(`⏰ Đã nạp mốc $${p.toFixed(2)} vào khung Cài Đặt Cảnh Báo!`, 'success', 2200);
-              playBeep(980, 0.08);
-            }
-          }
-        });
-      });
-
-      // Cập nhật phân tích tương quan dòng tiền Cá Mập & Ngân Hàng Trung Ương
-      if (nextBox) {
-        const p = curPrice;
-        let nextTarget = `Hiện giá vàng đang ở mức $${p.toFixed(2)} (Trục Pivot vĩ mô chốt tuần). ` +
-          `Phía trên là vùng cản xả hàng của Cá Mập tạo lập tại $3908.00 - $3912.00 và vùng quét thanh khoản $3950.00. ` +
-          `Phía dưới là khối lệnh gom hàng chiến lược của Ngân Hàng Trung Ương PBoC tại $3860.00 - $3866.15 và bệ đỡ thanh khoản Quỹ SPDR Gold Trust tại $3820.00. ` +
-          `Cơ sở: Các ngân hàng trung ương toàn cầu tiếp tục duy trì chính sách mua ròng tích trữ vàng thỏi, trong khi phe Cá mập liên tục quét biên độ hai đầu để thu gom vị thế tối ưu.`;
+      if (nextBox && previousLivePrice) {
+        const p = previousLivePrice;
+        let nextTarget = '';
+        if (LV && LV.mSTop && p < LV.mSBot) {
+          nextTarget = `Hiện giá đang ở mức $${p.toFixed(2)}. Nếu phá vỡ cản trước $${LV.sTop ? LV.sTop.toFixed(1) : '---'}, mục tiêu tiếp theo hướng thẳng lên Kháng Cự Macro $${LV.mSBot.toFixed(1)} - $${LV.mSTop.toFixed(1)}. Ngược lại, nếu thủng Pivot $${LV.pvt.toFixed(1)}, Hỗ Trợ Macro $${LV.mBBot.toFixed(1)} - $${LV.mBTop.toFixed(1)} sẽ là bệ phóng gom hàng tối ưu.`;
+        } else {
+          nextTarget = `Dựa trên phản ứng tại đỉnh lịch sử ATH $2,790.00 và các mốc cản tuần, cơ sở nhận định vùng giá tiếp theo tập trung quanh biên độ Kháng cự Macro và Hỗ trợ Macro để thiết lập kế hoạch giải ngân an toàn.`;
+        }
         nextBox.textContent = nextTarget;
       }
     }
 
+    // =========================================================================
+    // XUẤT NHẬP DỮ LIỆU NOTEPAD (.TXT) THÔNG MINH SANG MÁY KHÁC
+    // =========================================================================
     function exportMacroToNotepad() {
       const now = new Date();
       const timeStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
@@ -7536,7 +7823,15 @@ body.light-theme .macro-modal-close:hover {
     function loadCustomPriceAlerts() {
       try {
         const raw = localStorage.getItem('agy_gold_custom_alerts');
-        if (raw) return JSON.parse(raw);
+        if (raw) {
+          const arr = JSON.parse(raw);
+          if (Array.isArray(arr)) {
+            // Tự động làm sạch các cảnh báo cũ đã khớp hoặc mốc 3875.65 cũ tránh bị báo động treo vô tận
+            const cleaned = arr.filter(a => a && typeof a.price === 'number' && a.active && !a.triggered && Math.abs(a.price - 3875.65) > 0.45);
+            localStorage.setItem('agy_gold_custom_alerts', JSON.stringify(cleaned));
+            return cleaned;
+          }
+        }
       } catch(e) {}
       return [];
     }
@@ -7565,6 +7860,8 @@ body.light-theme .macro-modal-close:hover {
       }
     }
 
+    let editingAlertIdx = null;
+
     function renderCustomPriceAlerts() {
       const container = document.getElementById('price-alerts-container');
       if (!container) return;
@@ -7574,15 +7871,48 @@ body.light-theme .macro-modal-close:hover {
       if (!customPriceAlerts.length) {
         container.innerHTML = `
           <div style="text-align:center; padding:18px 10px; color:#64748b; font-size:12px;">
-            Chưa có cảnh báo giá nào. Hãy nhập giá ở trên và bấm "ĐẶT CẢNH BÁO" để nhận thông báo chuông & rung khi giá chạm!
+            Chưa có cảnh báo giá nào. Hãy nhập giá hoặc bấm "🎯 ĐẶT TRÊN BIỂU ĐỒ" để nhận thông báo chuông & rung khi giá chạm!
           </div>
         `;
         return;
       }
 
-      const curPrice = previousLivePrice || 2740;
+      const curPrice = previousLivePrice || 3875;
 
       container.innerHTML = customPriceAlerts.map((al, idx) => {
+        // NẾU ĐANG CHỈNH SỬA MỐC NÀY: HIỂN THỊ HỘP SỬA TRỰC TIẾP
+        if (editingAlertIdx === idx) {
+          return `
+            <div class="custom-alert-item editing-alert" style="border:1.5px solid #f59e0b; background:rgba(245,158,11,0.08); padding:10px; border-radius:8px; display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:800; font-size:11px; color:#f59e0b; text-transform:uppercase;">✏️ CHỈNH SỬA CẢNH BÁO</span>
+                <span style="font-size:10px; color:#94a3b8;">Mốc #${idx + 1}</span>
+              </div>
+
+              <div style="display:flex; gap:6px; align-items:center;">
+                <div style="position:relative; flex:1;">
+                  <span style="position:absolute; left:8px; top:50%; transform:translateY(-50%); font-weight:800; color:#f59e0b; font-size:13px;">$</span>
+                  <input type="number" step="0.1" class="inp-edit-alert-price" value="${al.price.toFixed(2)}" style="width:100%; padding:6px 6px 6px 18px; background:#0b0e14; border:1px solid #f59e0b; border-radius:4px; color:#fff; font-size:13px; font-weight:800; box-sizing:border-box;">
+                </div>
+                <select class="sel-edit-alert-cond" style="padding:6px; background:#0b0e14; border:1px solid #475569; border-radius:4px; color:#fff; font-size:11px; font-weight:600;">
+                  <option value="touch" ${al.condition === 'touch' ? 'selected' : ''}>Chạm vùng (+/- 0.4$)</option>
+                  <option value="cross_up" ${al.condition === 'cross_up' ? 'selected' : ''}>Vượt lên (&gt;=)</option>
+                  <option value="cross_down" ${al.condition === 'cross_down' ? 'selected' : ''}>Cắt xuống (&lt;=)</option>
+                </select>
+              </div>
+
+              <div>
+                <input type="text" class="inp-edit-alert-note" value="${escapeHtmlText(al.note || '')}" placeholder="Ghi chú (VD: Chốt lời Buy, Cản Sell...)" style="width:100%; padding:5px 8px; background:#0b0e14; border:1px solid #475569; border-radius:4px; color:#fff; font-size:11px; box-sizing:border-box;">
+              </div>
+
+              <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:2px;">
+                <button class="btn-cancel-edit-alert" data-idx="${idx}" style="padding:4px 10px; background:transparent; border:1px solid #64748b; color:#cbd5e1; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;">✕ HỦY</button>
+                <button class="btn-save-edit-alert" data-idx="${idx}" style="padding:4px 12px; background:linear-gradient(135deg, #f59e0b, #d97706); border:none; color:#0b0e14; font-size:11px; font-weight:800; border-radius:4px; cursor:pointer; display:flex; align-items:center; gap:4px;">✓ LƯU CẬP NHẬT</button>
+              </div>
+            </div>
+          `;
+        }
+
         const diff = curPrice - al.price;
         const diffPips = (Math.abs(diff) * 10).toFixed(0);
         let distText = '';
@@ -7630,25 +7960,78 @@ body.light-theme .macro-modal-close:hover {
               ${al.triggered ? `<button class="alert-btn-rearm" data-idx="${idx}" title="Kích hoạt lại cảnh báo này">Bật Lại</button>` : `
                 <input type="checkbox" class="alert-toggle-active" data-idx="${idx}" ${al.active ? 'checked' : ''} title="Bật/Tắt theo dõi">
               `}
+              <button class="alert-btn-edit" data-idx="${idx}" title="Sửa mức giá hoặc ghi chú">✏️ Sửa</button>
               <button class="alert-btn-del" data-idx="${idx}" title="Xoá cảnh báo này">🗑️</button>
             </div>
           </div>
         `;
       }).join('');
 
-      // Gắn sự kiện danh sách cảnh báo
+      // Gắn sự kiện Xoá
       container.querySelectorAll('.alert-btn-del').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const idx = parseInt(e.currentTarget.dataset.idx, 10);
           if (!isNaN(idx) && customPriceAlerts[idx]) {
             const removed = customPriceAlerts.splice(idx, 1);
+            if (editingAlertIdx === idx) editingAlertIdx = null;
             saveCustomPriceAlerts();
+            syncAlertPriceLinesOnChart();
             renderCustomPriceAlerts();
             showToast(`🗑️ Đã xoá cảnh báo $${removed[0].price.toFixed(2)}`, 'info', 1800);
           }
         });
       });
 
+      // Gắn sự kiện Sửa (Bật form sửa inline)
+      container.querySelectorAll('.alert-btn-edit').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx, 10);
+          editingAlertIdx = idx;
+          renderCustomPriceAlerts();
+        });
+      });
+
+      // Gắn sự kiện Hủy sửa
+      container.querySelectorAll('.btn-cancel-edit-alert').forEach(btn => {
+        btn.addEventListener('click', () => {
+          editingAlertIdx = null;
+          renderCustomPriceAlerts();
+        });
+      });
+
+      // Gắn sự kiện Lưu sửa
+      container.querySelectorAll('.btn-save-edit-alert').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx, 10);
+          const card = e.currentTarget.closest('.editing-alert');
+          if (!card || isNaN(idx) || !customPriceAlerts[idx]) return;
+
+          const priceInp = card.querySelector('.inp-edit-alert-price');
+          const condSel = card.querySelector('.sel-edit-alert-cond');
+          const noteInp = card.querySelector('.inp-edit-alert-note');
+
+          const newP = parseFloat(priceInp.value);
+          if (isNaN(newP) || newP < 1000 || newP > 5000) {
+            showToast('⚠️ Vui lòng nhập mức giá hợp lệ (VD: 3875.50)!', 'warning', 2500);
+            priceInp.focus();
+            return;
+          }
+
+          customPriceAlerts[idx].price = Math.round(newP * 100) / 100;
+          customPriceAlerts[idx].condition = condSel ? condSel.value : 'touch';
+          customPriceAlerts[idx].note = noteInp ? noteInp.value.trim() : '';
+          customPriceAlerts[idx].triggered = false;
+          customPriceAlerts[idx].active = true;
+
+          editingAlertIdx = null;
+          saveCustomPriceAlerts();
+          syncAlertPriceLinesOnChart();
+          renderCustomPriceAlerts();
+          showToast(`✓ ĐÃ CẬP NHẬT CẢNH BÁO $${newP.toFixed(2)} THÀNH CÔNG!`, 'success', 2200);
+        });
+      });
+
+      // Gắn sự kiện Kích hoạt lại
       container.querySelectorAll('.alert-btn-rearm').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const idx = parseInt(e.currentTarget.dataset.idx, 10);
@@ -7656,19 +8039,21 @@ body.light-theme .macro-modal-close:hover {
             customPriceAlerts[idx].triggered = false;
             customPriceAlerts[idx].active = true;
             saveCustomPriceAlerts();
+            syncAlertPriceLinesOnChart();
             renderCustomPriceAlerts();
             showToast(`✓ Đã kích hoạt lại cảnh báo $${customPriceAlerts[idx].price.toFixed(2)}`, 'success', 2000);
-            playBeep(980, 0.08);
           }
         });
       });
 
+      // Gắn sự kiện Bật/Tắt checkbox
       container.querySelectorAll('.alert-toggle-active').forEach(chk => {
         chk.addEventListener('change', (e) => {
           const idx = parseInt(e.target.dataset.idx, 10);
           if (!isNaN(idx) && customPriceAlerts[idx]) {
             customPriceAlerts[idx].active = e.target.checked;
             saveCustomPriceAlerts();
+            syncAlertPriceLinesOnChart();
             renderCustomPriceAlerts();
           }
         });
@@ -7682,26 +8067,23 @@ body.light-theme .macro-modal-close:hover {
       customPriceAlerts.forEach(al => {
         if (!al.active || al.triggered) return;
 
-        let isMatch = false;
-        if (al.condition === 'cross_up' && currentPrice >= al.price) {
-          isMatch = true;
-        } else if (al.condition === 'cross_down' && currentPrice <= al.price) {
-          isMatch = true;
-        } else if (al.condition === 'touch' && Math.abs(currentPrice - al.price) <= 0.6) {
-          isMatch = true;
-        }
+        // CHỈ CẦN GIÁ CHẠM LÀ THÔNG BÁO (Khoảng cách <= 0.40 USD hoặc cắt qua mốc)
+        const isTouch = Math.abs(currentPrice - al.price) <= 0.40;
+        const isCrossed = (al.lastPrice && ((al.lastPrice <= al.price && currentPrice >= al.price) || (al.lastPrice >= al.price && currentPrice <= al.price)));
+        al.lastPrice = currentPrice;
 
-        if (isMatch) {
+        if (isTouch || isCrossed) {
           al.triggered = true;
-          al.active = false; // Tắt trạng thái kích hoạt để không phát lặp lại liên tục sau khi người dùng đã tắt
+          al.active = false; // Tắt trạng thái để không lặp lại liên tục sau khi người dùng đã tắt
           hasTriggered = true;
-          triggerContinuousAlert(al.price, al.note || 'Cảnh báo mức giá đặt trước: $' + al.price.toFixed(2), al.vibrate, al.sound);
+          triggerContinuousAlert(al.price, al.note || `Đã chạm mức cảnh báo $${al.price.toFixed(2)}`, al.vibrate, al.sound);
         }
       });
 
       if (hasTriggered) {
         saveCustomPriceAlerts();
         renderCustomPriceAlerts();
+        if (typeof syncAlertPriceLinesOnChart === 'function') syncAlertPriceLinesOnChart();
       }
     }
 
@@ -7763,19 +8145,19 @@ body.light-theme .macro-modal-close:hover {
 
         const now = audioCtx.currentTime;
 
-        // Tiếng "Tích" 1 trong trẻo, êm ái
+        // Tiếng "Tích" 1 trong trẻo
         const osc1 = audioCtx.createOscillator();
         const gain1 = audioCtx.createGain();
         osc1.type = 'sine';
         osc1.frequency.setValueAtTime(880, now);
-        gain1.gain.setValueAtTime(0.12, now);
-        gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+        gain1.gain.setValueAtTime(0.18, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
         osc1.connect(gain1);
         gain1.connect(audioCtx.destination);
         osc1.start(now);
-        osc1.stop(now + 0.06);
+        osc1.stop(now + 0.08);
 
-        // Tiếng "Tích" 2 sau 85ms
+        // Tiếng "Tích" 2 sau 90ms
         setTimeout(() => {
           try {
             if (!audioCtx || !isCurrentlyVibrating) return;
@@ -7783,15 +8165,15 @@ body.light-theme .macro-modal-close:hover {
             const osc2 = audioCtx.createOscillator();
             const gain2 = audioCtx.createGain();
             osc2.type = 'sine';
-            osc2.frequency.setValueAtTime(1174.66, now2); // Nốt D6 trong trẻo
-            gain2.gain.setValueAtTime(0.12, now2);
-            gain2.gain.exponentialRampToValueAtTime(0.0001, now2 + 0.06);
+            osc2.frequency.setValueAtTime(1174.66, now2); // Nốt D6 trong sáng
+            gain2.gain.setValueAtTime(0.18, now2);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now2 + 0.08);
             osc2.connect(gain2);
             gain2.connect(audioCtx.destination);
             osc2.start(now2);
-            osc2.stop(now2 + 0.06);
+            osc2.stop(now2 + 0.08);
           } catch(err) {}
-        }, 85);
+        }, 90);
       } catch(e) {}
     }
 
@@ -7809,11 +8191,10 @@ body.light-theme .macro-modal-close:hover {
       if (titleEl) titleEl.textContent = `🔔 CẢNH BÁO: GIÁ ĐÃ KHỚP!`;
       if (priceEl) priceEl.textContent = `XAUUSD: $${price.toFixed(2)}`;
       if (msgEl) msgEl.textContent = `Ghi chú: ${note || 'Giá đã chạm mốc bạn cài đặt'}. Nhấn nút tắt hoặc bấm phím ESC để dừng!`;
-      if (modal) modal.classList.add('active');
 
-      // 1. Hiển thị thanh thông báo nổi gọn gàng ở đầu màn hình
+      // 1. Hiển thị thanh thông báo nổi gọn gàng ở đầu màn hình (KHÔNG tràn màn hình điện thoại)
       if (floatBar) {
-        if (floatText) floatText.textContent = `🔔 Khớp Lệnh $${price.toFixed(2)}: ${note || 'Mốc giá đã đặt'}`;
+        if (floatText) floatText.textContent = `🚨 Khớp $${price.toFixed(2)}: ${note ? note.slice(0, 20) : 'Chạm mốc giá'}`;
         floatBar.style.display = 'flex';
       }
 
@@ -7884,11 +8265,10 @@ body.light-theme .macro-modal-close:hover {
         alarmAutoDismissTimer = null;
       }
       
-      // 3. Dừng rung thiết bị triệt để
+      // 3. Dừng rung
       doDeviceVibrate(0);
-      try { if (navigator.vibrate) navigator.vibrate(0); } catch(e) {}
 
-      // 4. Dừng nhấp nháy tiêu đề tab trình duyệt, khôi phục ngay lập tức
+      // 4. Khôi phục tiêu đề tab trình duyệt về bình thường ngay lập tức
       if (titleStrobeInterval) {
         clearInterval(titleStrobeInterval);
         titleStrobeInterval = null;
@@ -7903,10 +8283,7 @@ body.light-theme .macro-modal-close:hover {
       if (floatBar) floatBar.style.display = 'none';
 
       const strobe = document.getElementById('emergency-visual-strobe');
-      if (strobe) {
-        strobe.classList.remove('active');
-        strobe.style.display = 'none';
-      }
+      if (strobe) strobe.classList.remove('active');
 
       lastVibeDismissTime = Date.now();
     }
@@ -7993,7 +8370,7 @@ body.light-theme .macro-modal-close:hover {
       triggerContinuousAlert(price, `Đã chạm ${zoneTitle.toUpperCase()}!`, true, true);
     }
 
-    // Đã hợp nhất stopContinuousVibration() duy nhất ở trên
+// Duplicate stopContinuousVibration removed - using master handler
 
     const btnDismissVibe = document.getElementById('btn-dismiss-vibrate');
     if (btnDismissVibe) {
@@ -8028,6 +8405,10 @@ body.light-theme .macro-modal-close:hover {
     // Phím tắt bàn phím PC: Bấm ESC hoặc Space để tắt báo động ngay lập tức
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' || e.code === 'Escape') {
+        if (typeof isAlertPickMode !== 'undefined' && isAlertPickMode) {
+          toggleAlertPickMode(false);
+          return;
+        }
         if (isCurrentlyVibrating) {
           stopContinuousVibration();
           showToast('🔕 ĐÃ TẮT BÁO ĐỘNG (ESC)', 'success', 2000);
@@ -8052,31 +8433,7 @@ body.light-theme .macro-modal-close:hover {
     const btnCopyNotepad = document.getElementById('btn-copy-macro-notepad');
     const btnPasteNotepad = document.getElementById('btn-paste-macro-notepad');
 
-    // Nút chuyển đổi phóng to Toàn Màn Hình hoặc Thu Nhỏ
-    const btnToggleMacroFs = document.getElementById('btn-toggle-macro-fullscreen');
-    const boxMacroEl = document.getElementById('macro-modal-box-el');
-    if (btnToggleMacroFs && boxMacroEl) {
-      btnToggleMacroFs.addEventListener('click', () => {
-        const isFs = boxMacroEl.classList.toggle('is-fullscreen');
-        btnToggleMacroFs.innerHTML = isFs 
-          ? '<span>🗖</span> Thu Nhỏ' 
-          : '<span>⛶</span> Toàn Màn Hình';
-        btnToggleMacroFs.title = isFs ? 'Thu nhỏ cửa sổ' : 'Phóng to toàn màn hình';
-        showToast(isFs ? '⛶ ĐÃ PHÓNG TO TOÀN MÀN HÌNH' : '🗖 Đã thu nhỏ cửa sổ', 'info', 1600);
-        playBeep(920, 0.06);
-      });
-    }
-
-    if (modalMacro) {
-      modalMacro.addEventListener('click', (e) => {
-        if (e.target === modalMacro) {
-          modalMacro.classList.remove('open');
-          playBeep(700, 0.06);
-        }
-      });
-    }
-
-        if (btnMacroHist && modalMacro) {
+    if (btnMacroHist && modalMacro) {
       btnMacroHist.addEventListener('click', () => {
         renderMacroMilestones();
         modalMacro.classList.add('open');
@@ -8216,7 +8573,11 @@ body.light-theme .macro-modal-close:hover {
       });
     }
 
-    // 2. Custom Price Alerts Modal (Nút đặt sau chuông)
+    // 2. HỆ THỐNG CẢNH BÁO GIÁ TRỰC QUAN & DỄ SỬ DỤNG
+    let isAlertPickMode = false;
+    let alertPriceLinesMap = {};
+    let lastAlertPlacedTimestamp = 0;
+
     const btnPriceAlerts = document.getElementById('btn-price-alerts');
     const modalPriceAlerts = document.getElementById('modal-price-alerts');
     const btnClosePriceAlerts = document.getElementById('btn-close-price-alerts-modal');
@@ -8228,17 +8589,173 @@ body.light-theme .macro-modal-close:hover {
     const chkAlertSound = document.getElementById('chk-alert-sound');
     const btnAddAlert = document.getElementById('btn-add-custom-price-alert');
     const btnClearAllAlerts = document.getElementById('btn-clear-all-alerts');
+    const btnStartChartPick = document.getElementById('btn-start-chart-pick');
 
-    if (btnPriceAlerts && modalPriceAlerts) {
-      btnPriceAlerts.addEventListener('click', () => {
-        if (inpAlertPrice && (!inpAlertPrice.value || parseFloat(inpAlertPrice.value) === 0)) {
-          if (previousLivePrice) inpAlertPrice.value = previousLivePrice.toFixed(2);
+    const alertPickBanner = document.getElementById('alert-pick-banner');
+    const alertPickCrosshair = document.getElementById('alert-pick-crosshair');
+    const alertPickBadge = document.getElementById('alert-pick-badge');
+    const btnFinishAlertPick = document.getElementById('btn-finish-alert-pick');
+    const btnViewAlertList = document.getElementById('btn-view-alert-list');
+    const alertPlacedCountEl = document.getElementById('alert-placed-count');
+
+    // Bật / tắt chế độ rê chuột đặt cảnh báo
+    function toggleAlertPickMode(forceState) {
+      isAlertPickMode = (typeof forceState === 'boolean') ? forceState : !isAlertPickMode;
+
+      if (btnPriceAlerts) {
+        btnPriceAlerts.classList.toggle('active-pick', isAlertPickMode);
+      }
+      if (chartContainer) {
+        chartContainer.classList.toggle('picking-alert', isAlertPickMode);
+      }
+
+      if (alertPickBanner) {
+        alertPickBanner.style.display = isAlertPickMode ? 'flex' : 'none';
+      }
+      if (alertPickCrosshair && !isAlertPickMode) {
+        alertPickCrosshair.style.display = 'none';
+      }
+
+      updateAlertBadge();
+
+      const guideText = document.getElementById('alert-pick-guide-text');
+      const isDesktop = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+      if (guideText) {
+        guideText.textContent = isDesktop ? 'Click để đặt giá' : 'Rê chọn giá';
+      }
+
+      if (isAlertPickMode) {
+        const msg = isDesktop
+          ? '🎯 CLICK CHUỘT VÀO MỨC GIÁ TRÊN BIỂU ĐỒ ĐỂ ĐẶT CẢNH BÁO (ESC ĐỂ THOÁT)'
+          : '🎯 RÊ ĐƯỜNG NGẮM ĐẾN MỨC GIÁ RỒI BẤM [✓ ĐẶT] ĐỂ XÁC NHẬN (ESC ĐỂ THOÁT)';
+        showToast(msg, 'warning', 3200);
+        playBeep(980, 0.08);
+      } else {
+        showToast('✓ ĐÃ TẮT CHẾ ĐỘ ĐẶT CẢNH BÁO', 'info', 1600);
+      }
+    }
+
+    // Thêm mốc cảnh báo tại mức giá chỉ định (Không giới hạn số lần đặt)
+    function addCustomPriceAlertAt(price) {
+      const now = Date.now();
+      if (now - lastAlertPlacedTimestamp < 260) return; // Chống click đúp nhầm
+      lastAlertPlacedTimestamp = now;
+
+      if (!price || isNaN(price) || price <= 0) return;
+      price = Math.round(price * 100) / 100;
+
+      const newAlert = {
+        id: 'al_' + now + '_' + Math.floor(Math.random() * 1000),
+        price: price,
+        condition: 'touch',
+        note: `Mốc cảnh báo $${price.toFixed(2)}`,
+        vibrate: true,
+        sound: true,
+        active: true,
+        triggered: false,
+        createdTime: now
+      };
+
+      customPriceAlerts.push(newAlert);
+      saveCustomPriceAlerts();
+      syncAlertPriceLinesOnChart();
+      renderCustomPriceAlerts();
+
+      // Âm thanh tích nhẹ nhàng xác nhận + rung nhẹ điện thoại
+      playTickSound();
+      doDeviceVibrate(30);
+
+      showToast(`🔔 ĐÃ ĐẶT CẢNH BÁO $${price.toFixed(2)} (GIÁ CHẠM LÀ BÁO)!`, 'success', 2200);
+    }
+
+    // Vẽ và đồng bộ các đường kẻ cảnh báo trên biểu đồ
+    function syncAlertPriceLinesOnChart() {
+      if (!mainSeries) return;
+
+      // Xoá các đường kẻ không còn hiệu lực hoặc đã khớp
+      Object.keys(alertPriceLinesMap).forEach(id => {
+        const al = customPriceAlerts.find(a => a.id === id);
+        if (!al || !al.active || al.triggered) {
+          try {
+            mainSeries.removePriceLine(alertPriceLinesMap[id]);
+          } catch(e) {}
+          delete alertPriceLinesMap[id];
         }
+      });
+
+      // Tạo đường kẻ cho các mốc đang chờ
+      let activeCount = 0;
+      customPriceAlerts.forEach(al => {
+        if (!al.active || al.triggered) return;
+        activeCount++;
+        if (!alertPriceLinesMap[al.id]) {
+          try {
+            const pLine = mainSeries.createPriceLine({
+              price: al.price,
+              color: '#f59e0b',
+              lineWidth: 1,
+              lineStyle: 2, // Nét đứt rõ ràng
+              axisLabelVisible: true,
+              title: `🔔 $${al.price.toFixed(2)}`
+            });
+            alertPriceLinesMap[al.id] = pLine;
+          } catch(e) {}
+        }
+      });
+
+      if (alertPlacedCountEl) alertPlacedCountEl.textContent = activeCount;
+      updateAlertBadge();
+    }
+
+    // NÚT BÁO THỨC TRÊN THANH CÔNG CỤ: XỬ LÝ THÔNG MINH MỌI TRƯỜNG HỢP
+    if (btnPriceAlerts) {
+      btnPriceAlerts.addEventListener('click', (e) => {
+        e.stopPropagation();
+
+        // 1. Nếu đang có chuông báo động reo / rung: Chạm vào báo thức là TẮT NGAY LẬP TỨC
+        if (isCurrentlyVibrating) {
+          stopContinuousVibration();
+          showToast('🔕 ĐÃ TẮT BÁO ĐỘNG', 'success', 2000);
+          return;
+        }
+
+        // 2. Nếu đang ở chế độ chọn giá trên biểu đồ: Chạm vào báo thức là TẮT CHẾ ĐỘ NÀY NGAY
+        if (isAlertPickMode) {
+          toggleAlertPickMode(false);
+          return;
+        }
+
+        // 3. Trạng thái bình thường: Mở bảng quản lý cảnh báo giá & xem danh sách đã đặt
         renderCustomPriceAlerts();
-        modalPriceAlerts.classList.add('open');
+        if (modalPriceAlerts) modalPriceAlerts.classList.add('open');
         playBeep(880, 0.08);
       });
     }
+
+    // Nút Bật chọn trên biểu đồ từ bên trong Modal
+    if (btnStartChartPick && modalPriceAlerts) {
+      btnStartChartPick.addEventListener('click', () => {
+        modalPriceAlerts.classList.remove('open');
+        toggleAlertPickMode(true);
+      });
+    }
+
+    // Nút Xong & Danh sách trên thanh nổi trên biểu đồ
+    if (btnFinishAlertPick) {
+      btnFinishAlertPick.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleAlertPickMode(false);
+      });
+    }
+
+    if (btnViewAlertList && modalPriceAlerts) {
+      btnViewAlertList.addEventListener('click', (e) => {
+        e.stopPropagation();
+        renderCustomPriceAlerts();
+        modalPriceAlerts.classList.add('open');
+      });
+    }
+
     if (btnClosePriceAlerts && modalPriceAlerts) {
       btnClosePriceAlerts.addEventListener('click', () => modalPriceAlerts.classList.remove('open'));
     }
@@ -8248,7 +8765,21 @@ body.light-theme .macro-modal-close:hover {
       });
     }
 
-    // Live price quick button
+    // Hỗ trợ thêm cảnh báo thủ công bằng phím trong modal
+    if (btnAddAlert && inpAlertPrice) {
+      btnAddAlert.addEventListener('click', () => {
+        const p = parseFloat(inpAlertPrice.value);
+        if (isNaN(p) || p < 1000 || p > 5000) {
+          showToast('⚠️ Vui lòng nhập mức giá hợp lệ (VD: 3875.50)!', 'warning', 2500);
+          inpAlertPrice.focus();
+          return;
+        }
+        addCustomPriceAlertAt(p);
+        inpAlertPrice.value = '';
+      });
+    }
+
+    // Lấy giá hiện tại điền vào ô
     if (btnGetLivePrice && inpAlertPrice) {
       btnGetLivePrice.addEventListener('click', () => {
         if (previousLivePrice) {
@@ -8259,92 +8790,184 @@ body.light-theme .macro-modal-close:hover {
       });
     }
 
-    // Quick step buttons (+/- 2, 5, 10)
+    // Nút bước giá nhanh (+/- 2, 5, 10)
     document.querySelectorAll('.alert-step-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const step = parseFloat(e.currentTarget.dataset.step);
         if (isNaN(step) || !inpAlertPrice) return;
         let baseVal = parseFloat(inpAlertPrice.value);
         if (isNaN(baseVal) || baseVal <= 0) {
-          baseVal = previousLivePrice || 2740;
+          baseVal = previousLivePrice || 3875;
         }
         inpAlertPrice.value = (baseVal + step).toFixed(2);
         playBeep(800 + step * 20, 0.04);
       });
     });
 
-    // Add new price alert
-    if (btnAddAlert) {
-      btnAddAlert.addEventListener('click', () => {
-        if (!inpAlertPrice) return;
-        const p = parseFloat(inpAlertPrice.value);
-        if (isNaN(p) || p < 1000 || p > 5000) {
-          showToast('⚠️ Vui lòng nhập mức giá hợp lệ (VD: 2745.50)!', 'warning', 2500);
-          inpAlertPrice.focus();
-          return;
-        }
-
-        const cond = selAlertCond ? selAlertCond.value : 'touch';
-        const note = inpAlertNote ? inpAlertNote.value.trim() : '';
-        const vibe = chkAlertVibe ? chkAlertVibe.checked : true;
-        const snd = chkAlertSound ? chkAlertSound.checked : true;
-
-        const newAlert = {
-          id: 'al-' + Date.now(),
-          price: p,
-          condition: cond,
-          note: note,
-          vibrate: vibe,
-          sound: snd,
-          active: true,
-          triggered: false,
-          createdAt: new Date().toLocaleTimeString()
-        };
-
-        customPriceAlerts.unshift(newAlert);
-        saveCustomPriceAlerts();
-        renderCustomPriceAlerts();
-
-        if (inpAlertNote) inpAlertNote.value = '';
-        showToast(`🔔 ĐÃ ĐẶT CẢNH BÁO GIÁ $${p.toFixed(2)} THÀNH CÔNG!`, 'success', 2800);
-        playBeep(1050, 0.12);
-      });
-    }
-
-    // Clear all alerts
+    // Xoá tất cả cảnh báo
     if (btnClearAllAlerts) {
       btnClearAllAlerts.addEventListener('click', () => {
         if (!customPriceAlerts.length) return;
-        if (confirm('Bạn có chắc chắn muốn xoá toàn bộ danh sách cảnh báo giá?')) {
+        if (confirm('Bạn có chắc chắn muốn xoá toàn bộ cảnh báo giá đã đặt?')) {
           customPriceAlerts = [];
           saveCustomPriceAlerts();
+          syncAlertPriceLinesOnChart();
           renderCustomPriceAlerts();
           showToast('🗑️ Đã xoá toàn bộ cảnh báo giá!', 'info', 2000);
         }
       });
     }
 
-    // Sự kiện nút Thử Rung & Chuông trên máy
+    // Test rung
     const btnTestHaptic = document.getElementById('btn-test-haptic');
     if (btnTestHaptic) {
       btnTestHaptic.addEventListener('click', () => {
         unlockMobileSensors();
         playTickSound();
-
-        const hasVibe = doDeviceVibrate([400, 100, 400, 100]);
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
+        const hasVibe = doDeviceVibrate([300, 100, 300, 100]);
         if (hasVibe) {
-          showToast('✅ RUNG THÀNH CÔNG! Điện thoại đã sẵn sàng rung khi khớp lệnh.', 'success', 3000);
-        } else if (isIOS) {
-          showToast('ℹ️ Máy iPhone (iOS) bị Apple chặn rung web. Hệ thống sẽ báo bằng CÒI SIREN & CHỚP NHÁY MÀN HÌNH!', 'warning', 4500);
+          showToast('📳 Rung thành công! (Điện thoại hỗ trợ rung)', 'success', 2500);
         } else {
-          showToast('⚠️ Thiết bị không rung. Vui lòng kiểm tra chế độ "Im lặng" hoặc "Không làm phiền" của Android!', 'warning', 4000);
+          showToast('ℹ️ Đã phát âm thanh tích tích. Thiết bị không hỗ trợ rung web.', 'info', 2500);
         }
       });
     }
 
-        // Khởi tạo badge alert
+    // HỆ THỐNG ĐẶT CẢNH BÁO TỐI ƯU CẢ MÁY TÍNH (1 CLICK CHUỘT) & ĐIỆN THOẠI (RÊ NGẮM + XÁC NHẬN)
+    let currentPickedPrice = null;
+    let pointerStartPos = { x: 0, y: 0, time: 0, isTouch: false };
+
+    function updateCrosshairToPrice(price, y) {
+      if (!price || isNaN(price) || price <= 0) return;
+      currentPickedPrice = Math.round(price * 100) / 100;
+
+      if (alertPickCrosshair) {
+        alertPickCrosshair.style.display = 'block';
+        alertPickCrosshair.style.top = y + 'px';
+      }
+
+      const badgeText = document.getElementById('alert-pick-badge-text');
+      if (badgeText) badgeText.textContent = `🔔 $${currentPickedPrice.toFixed(2)}`;
+
+      const confirmBtn = document.getElementById('btn-confirm-picked-alert');
+      const priceNum = document.getElementById('picked-price-num');
+      const guideText = document.getElementById('alert-pick-guide-text');
+      if (confirmBtn && priceNum) {
+        priceNum.textContent = currentPickedPrice.toFixed(2);
+        confirmBtn.style.display = 'inline-flex';
+      }
+      if (guideText) guideText.style.display = 'none';
+    }
+
+    if (chartContainer) {
+      const handlePointerAim = (e) => {
+        if (!isAlertPickMode || !mainSeries) return;
+        if (e.target.closest('#alert-pick-banner') || e.target.closest('.tool-btn') || e.target.closest('.macro-modal-overlay') || e.target.closest('.btn-badge-confirm') || e.target.closest('#btn-confirm-picked-alert')) return;
+
+        const rect = chartContainer.getBoundingClientRect();
+        const y = e.clientY - rect.top;
+        if (y < 0 || y > rect.height) return;
+
+        const price = mainSeries.coordinateToPrice(y);
+        if (price !== null && !isNaN(price) && price >= 1000 && price <= 5000) {
+          updateCrosshairToPrice(price, y);
+        }
+      };
+
+      // Ghi nhận tọa độ ấn chuột / chạm cảm ứng
+      chartContainer.addEventListener('pointerdown', (e) => {
+        if (!isAlertPickMode) return;
+        pointerStartPos = {
+          x: e.clientX,
+          y: e.clientY,
+          time: Date.now(),
+          isTouch: (e.pointerType === 'touch')
+        };
+        handlePointerAim(e);
+      }, true);
+
+      // Rê chuột trên máy tính hoặc rê ngón tay trên điện thoại
+      chartContainer.addEventListener('pointermove', handlePointerAim, true);
+
+      // Xử lý nhả chuột / nhấc ngón tay:
+      chartContainer.addEventListener('pointerup', (e) => {
+        if (!isAlertPickMode || !mainSeries) return;
+        if (e.target.closest('#alert-pick-banner') || e.target.closest('.tool-btn') || e.target.closest('.macro-modal-overlay') || e.target.closest('.btn-badge-confirm') || e.target.closest('#btn-confirm-picked-alert')) return;
+
+        const isMouse = (e.pointerType === 'mouse') || (!pointerStartPos.isTouch && e.pointerType !== 'touch');
+
+        // TRÊN MÁY TÍNH: Click 1 chạm chuột trái (không kéo rê chart > 6px) là ĐẶT CẢNH BÁO NGAY
+        if (isMouse && e.button === 0) {
+          const dist = Math.hypot(e.clientX - pointerStartPos.x, e.clientY - pointerStartPos.y);
+          const elapsed = Date.now() - pointerStartPos.time;
+          if (dist < 6 && elapsed < 800) {
+            const rect = chartContainer.getBoundingClientRect();
+            const y = e.clientY - rect.top;
+            const price = mainSeries.coordinateToPrice(y);
+            if (price !== null && !isNaN(price) && price >= 1000 && price <= 5000) {
+              addCustomPriceAlertAt(price);
+            }
+          }
+        }
+        // TRÊN ĐIỆN THOẠI (pointerType === 'touch'):
+        // Giữ nguyên đường ngắm tại mức giá đã rê, người dùng chạm nút [✓ Đặt] để xác nhận, tránh đặt nhầm
+      }, true);
+
+      // Nút xác nhận đặt mốc giá đã ngắm (Hoạt động cho cả mobile và desktop)
+      const btnConfirmPicked = document.getElementById('btn-confirm-picked-alert');
+      if (btnConfirmPicked) {
+        btnConfirmPicked.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (currentPickedPrice) {
+            addCustomPriceAlertAt(currentPickedPrice);
+            btnConfirmPicked.style.display = 'none';
+            const guideText = document.getElementById('alert-pick-guide-text');
+            if (guideText) guideText.style.display = 'inline';
+          }
+        });
+      }
+
+      const btnBadgeConfirm = document.getElementById('btn-badge-confirm');
+      if (btnBadgeConfirm) {
+        btnBadgeConfirm.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (currentPickedPrice) {
+            addCustomPriceAlertAt(currentPickedPrice);
+          }
+        });
+      }
+    }
+
+    // Xử lý chuyển đổi Tab trong Modal Lịch Sử Macro
+    const tabBtnMacroList = document.getElementById('tab-btn-macro-list');
+    const tabBtnMacroNote = document.getElementById('tab-btn-macro-note');
+    const tabBtnMacroPredict = document.getElementById('tab-btn-macro-predict');
+    const tabPaneMacroList = document.getElementById('tab-pane-macro-list');
+    const tabPaneMacroNote = document.getElementById('tab-pane-macro-note');
+    const tabPaneMacroPredict = document.getElementById('tab-pane-macro-predict');
+
+    function switchMacroTab(tabKey) {
+      [tabBtnMacroList, tabBtnMacroNote, tabBtnMacroPredict].forEach(b => { if (b) b.classList.remove('active'); });
+      [tabPaneMacroList, tabPaneMacroNote, tabPaneMacroPredict].forEach(p => { if (p) p.style.display = 'none'; });
+
+      if (tabKey === 'note') {
+        if (tabBtnMacroNote) tabBtnMacroNote.classList.add('active');
+        if (tabPaneMacroNote) tabPaneMacroNote.style.display = 'flex';
+      } else if (tabKey === 'predict') {
+        if (tabBtnMacroPredict) tabBtnMacroPredict.classList.add('active');
+        if (tabPaneMacroPredict) tabPaneMacroPredict.style.display = 'flex';
+      } else {
+        if (tabBtnMacroList) tabBtnMacroList.classList.add('active');
+        if (tabPaneMacroList) tabPaneMacroList.style.display = 'flex';
+      }
+    }
+
+    if (tabBtnMacroList) tabBtnMacroList.addEventListener('click', () => switchMacroTab('list'));
+    if (tabBtnMacroNote) tabBtnMacroNote.addEventListener('click', () => switchMacroTab('note'));
+    if (tabBtnMacroPredict) tabBtnMacroPredict.addEventListener('click', () => switchMacroTab('predict'));
+
+    // Khởi tạo các đường kẻ cảnh báo hiện có ngay khi mở web
+    syncAlertPriceLinesOnChart();
     updateAlertBadge();
 
     // =========================================================================
