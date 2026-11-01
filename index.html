@@ -9,7 +9,7 @@
   <title>HDPE ROBOT - Real World Gold Data</title>
   <script>
     // Tự động ép trình duyệt khách hàng tải bản mới nhất, không bao giờ kẹt cache cũ
-    const BUILD_VERSION = "2026.11.02.0602";
+    const BUILD_VERSION = "2026.11.02.0610";
     try {
       const lastVer = localStorage.getItem('xauusd_client_ver');
       if (lastVer !== BUILD_VERSION) {
@@ -8339,6 +8339,11 @@ function renderData() {
             if (refSpot) {
               marketState.spotPrice = refSpot;
               marketState.exnessPrice = Math.round((refSpot + currentExnessOffset) * 100) / 100;
+              
+              // Tự động căn chỉnh lại delta theo giá Exness thật nếu có giá Binance
+              if (selectedSource !== 'binance' && marketState.binancePrice) {
+                currentAlignmentDelta = Math.round((marketState.exnessPrice - marketState.binancePrice) * 100) / 100;
+              }
             }
 
             marketState.lastUpdate = Date.now();
@@ -8512,17 +8517,23 @@ function renderData() {
 
           // LỌC BỎ 100% NẾN THỨ BẢY VÀ CHỦ NHẬT (CHUẨN SÀN EXNESS FOREX)
           if (selectedSource !== 'binance') {
-            parsed = parsed.filter(c => {
+            parsed = parsed.filter((c, idx) => {
               const dt = new Date(c.time * 1000);
               const day = dt.getUTCDay(); // 0 = CN, 6 = T7
               const h = dt.getUTCHours();
-              const m = dt.getUTCMinutes();
               if (day === 6) return false; // Thứ 7 đóng cửa
               if (day === 0) {
-                if (tfStr === '1d' || tfStr === '1w' || tfStr === '1M') return false; // Không có nến ngày CN
-                if (h < 23 || (h === 23 && m < 1)) return false; // Giờ mùa đông mở sau 23:05 UTC (06:01 VN)
+                const isMarketOpenNow = getGoldMarketInfo().isOpen;
+                const isLastCandle = (idx === parsed.length - 1);
+                if (tfStr === '1d' || tfStr === '1w' || tfStr === '1M') {
+                  // Chỉ giữ nến ngày hôm nay nếu thị trường đã mở phiên đầu tuần
+                  if (!isMarketOpenNow || !isLastCandle) return false;
+                } else {
+                  // Khung trong ngày: Giữ toàn bộ nến từ giờ mở phiên mùa đông (23:00 UTC trở đi)
+                  if (h < 23) return false;
+                }
               }
-              if (day === 5 && (h > 21 || (h === 21 && m >= 55))) return false;
+              if (day === 5 && (h > 21 || (h === 21 && dt.getUTCMinutes() >= 55))) return false;
               if (isWeekendForex && c.time > friCloseTime) return false;
               return true;
             });
@@ -8534,7 +8545,8 @@ function renderData() {
               rawCandles = sanitizeCandlesSeries(parsed, tfStr, null, false);
             } else {
               const lastCandleRaw = parsed[parsed.length - 1];
-              currentAlignmentDelta = Math.round((targetRefPrice - lastCandleRaw.close) * 100) / 100;
+              const liveTargetPrice = marketState.exnessPrice || (marketState.spotPrice ? marketState.spotPrice + currentExnessOffset : null) || (marketState.oandaPrice ? marketState.oandaPrice + currentExnessOffset : null) || targetRefPrice;
+              currentAlignmentDelta = Math.round((liveTargetPrice - lastCandleRaw.close) * 100) / 100;
 
               const shifted = parsed.map(c => ({
                 time: c.time,
@@ -8603,13 +8615,19 @@ function renderData() {
             }
 
             if (tickPrice && !isNaN(tickPrice)) {
+              marketState.binancePrice = tickPrice;
               if (selectedSource === 'binance') {
-                marketState.binancePrice = tickPrice;
                 targetPrice = tickPrice;
                 updateDisplayFromFeeds();
                 updateLiveCandleWithTick(tickPrice);
                 processLogic(tickPrice);
               } else if (getGoldMarketInfo().isOpen) {
+                // Tự động kiểm tra và hiệu chỉnh delta nếu bị trượt giá so với Spot Exness
+                if (currentAlignmentDelta === 0 || (marketState.exnessPrice && Math.abs((tickPrice + currentAlignmentDelta) - marketState.exnessPrice) > 2.5)) {
+                  if (marketState.exnessPrice) {
+                    currentAlignmentDelta = Math.round((marketState.exnessPrice - tickPrice) * 100) / 100;
+                  }
+                }
                 const liveExPrice = Math.round((tickPrice + currentAlignmentDelta) * 100) / 100;
                 marketState.exnessPrice = liveExPrice;
                 targetPrice = liveExPrice;
@@ -8788,9 +8806,15 @@ function renderData() {
         if (loaderSub) loaderSub.textContent = selectedSource === 'binance' ? "Dữ liệu Binance PAXG Spot 24/7 (Đoán xu hướng)" : "Đồng bộ chuẩn xác theo giá chốt phiên sàn Forex";
       }
       
-      // 1. Nạp siêu tốc lịch sử nến để hiển thị biểu đồ ngay lập tức ~0.3s
+      // 1. Quét trước giá LIVE từ TradingView CFD / Spot Gold nếu chưa có để đảm bảo nến khớp chính xác 100% với giá LIVE
+      if (!marketState.oandaPrice && !marketState.spotPrice) {
+        try {
+          await Promise.allSettled([pollTradingViewCfd(), fetchRealSpotPrice()]);
+        } catch(e) {}
+      }
+      
+      // 2. Nạp siêu tốc lịch sử nến và căn chỉnh chuẩn theo giá LIVE
       const isSuccess = await fetchRealHistory(tfStr);
-      // Quét ngầm Spot Gold & TradingView CFD chạy song song không làm nghẽn biểu đồ
       pollTradingViewCfd().catch(() => {});
       fetchRealSpotPrice().catch(() => {});
       
