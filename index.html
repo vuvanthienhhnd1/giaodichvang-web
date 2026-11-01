@@ -9,7 +9,7 @@
   <title>AI XAUUSD System - Real World Gold Data</title>
   <script>
     // Tự động ép trình duyệt khách hàng tải bản mới nhất, không bao giờ kẹt cache cũ
-    const BUILD_VERSION = "2026.11.01.0745";
+    const BUILD_VERSION = "2026.11.01.0800";
     try {
       const lastVer = localStorage.getItem('xauusd_client_ver');
       if (lastVer !== BUILD_VERSION) {
@@ -3519,6 +3519,8 @@
       border-radius: 50%;
       box-shadow: 0 0 6px #10b981;
       animation: trafficPulseGreen 1.4s infinite;
+      display: inline-block;
+      flex-shrink: 0;
     }
     @keyframes trafficPulseGreen {
       0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
@@ -4316,40 +4318,25 @@
               <div class="news-traffic-header">
                 <div class="traffic-header-left">
                   <span class="traffic-header-icon">📊</span>
-                  <span class="traffic-header-title">LƯU LƯỢNG &amp; TRUY CẬP</span>
-                </div>
-                <div class="traffic-online-badge" id="traffic-online-badge" title="Số lượng người dùng đang hoạt động trực tuyến thời gian thực">
-                  <span class="traffic-online-dot"></span>
-                  <span class="traffic-online-lbl">Đang Online:</span>
-                  <span class="traffic-online-num" id="stat-online-num">101</span>
+                  <span class="traffic-header-title">LƯU LƯỢNG TRUY CẬP</span>
                 </div>
               </div>
 
-              <!-- Lưới thống kê 6 mốc: Ngày, Tuần, Tháng, Năm, Tổng, Lượt xem -->
+              <!-- Lưới thống kê gọn gàng: Chỉ hiển thị Đang Online và Theo ngày hôm nay -->
               <div class="traffic-grid">
-                <div class="traffic-grid-item" title="Số lượt truy cập trong ngày hôm nay (+100 ảo)">
-                  <span class="stat-lbl">📅 Hôm nay:</span>
-                  <span class="stat-num" id="stat-today-num">101</span>
+                <div class="traffic-grid-item" id="traffic-online-badge" title="Số lượng người dùng đang hoạt động trực tuyến thời gian thực (+100 ảo)">
+                  <span class="stat-lbl">
+                    <span class="traffic-online-dot"></span>
+                    <span>Đang Online:</span>
+                  </span>
+                  <span class="stat-num" id="stat-online-num" style="color:#34d399;">101</span>
                 </div>
-                <div class="traffic-grid-item" title="Số lượt truy cập trong tuần này (+100 ảo)">
-                  <span class="stat-lbl">🗓️ Tuần này:</span>
-                  <span class="stat-num" id="stat-week-num">101</span>
-                </div>
-                <div class="traffic-grid-item" title="Số lượt truy cập trong tháng này (+100 ảo)">
-                  <span class="stat-lbl">📆 Tháng này:</span>
-                  <span class="stat-num" id="stat-month-num">101</span>
-                </div>
-                <div class="traffic-grid-item" title="Số lượt truy cập trong năm (+100 ảo)">
-                  <span class="stat-lbl">📈 Năm này:</span>
-                  <span class="stat-num" id="stat-year-num">101</span>
-                </div>
-                <div class="traffic-grid-item traffic-item-highlight" title="Tổng lượt truy cập tích lũy (+100 ảo)">
-                  <span class="stat-lbl">🌐 Tổng truy cập:</span>
-                  <span class="stat-num" id="stat-total-num">101</span>
-                </div>
-                <div class="traffic-grid-item" title="Tổng số lượt xem trang (+100 ảo)">
-                  <span class="stat-lbl">👁️ Lượt xem:</span>
-                  <span class="stat-num" id="stat-pv-num">101</span>
+                <div class="traffic-grid-item traffic-item-highlight" title="Số lượt truy cập trong ngày hôm nay (+100 ảo)">
+                  <span class="stat-lbl">
+                    <span>📅</span>
+                    <span>Hôm nay:</span>
+                  </span>
+                  <span class="stat-num" id="stat-today-num" style="color:#38bdf8;">101</span>
                 </div>
               </div>
             </div>
@@ -9272,33 +9259,15 @@
 
     
                 // =========================================================================
-    // HỆ THỐNG THỐNG KÊ LƯỢT TRUY CẬP & ONLINE TOÀN CẦU (ĐỒNG BỘ GITHUB PAGES)
+    // HỆ THỐNG THỐNG KÊ TRUY CẬP: ĐANG ONLINE & THEO NGÀY (HÔM NAY)
     // CƠ CHẾ: MẶC ĐỊNH +100 ẢO, 1 MÁY/IP = 101 ONLINE, TỰ ĐỘNG ĐỒNG BỘ TOÀN CẦU
     // =========================================================================
     const SITE_NAMESPACE = 'vuvanthien_giaodichvang';
     const VIRTUAL_OFFSET = 100; // Mặc định +100 ảo
 
-    function getISOWeekString(d) {
-      const target = new Date(d.valueOf());
-      const dayNr = (d.getDay() + 6) % 7;
-      target.setDate(target.getDate() - dayNr + 3);
-      const firstThursday = target.valueOf();
-      target.setMonth(0, 1);
-      if (target.getDay() !== 4) {
-        target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
-      }
-      const weekNum = 1 + Math.ceil((firstThursday - target) / 604800000);
-      return `${d.getFullYear()}-W${weekNum}`;
-    }
-
     let trafficStats = {
       online: 1,
-      today: 1,
-      week: 1,
-      month: 1,
-      year: 1,
-      total: 1,
-      pv: 1
+      today: 1
     };
 
     // Hàm gọi API đếm bảo đảm không bao giờ làm gián đoạn trang web
@@ -9315,23 +9284,19 @@
     }
 
     async function initTrafficEngine() {
+      const now = new Date();
+      const todayStr = `${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, '0')}_${String(now.getDate()).padStart(2, '0')}`;
+
       // 1. Tải cache nhanh từ localStorage (hiển thị tức thì 0.01s)
       try {
-        const raw = localStorage.getItem('agy_traffic_stats_global_v1');
-        if (raw) {
-          trafficStats = Object.assign(trafficStats, JSON.parse(raw));
-        }
+        const cachedToday = localStorage.getItem('agy_traffic_today_' + todayStr);
+        if (cachedToday) trafficStats.today = parseInt(cachedToday) || 1;
+        const cachedOnline = sessionStorage.getItem('agy_traffic_online_cached');
+        if (cachedOnline) trafficStats.online = parseInt(cachedOnline) || 1;
       } catch(e) {}
       renderTrafficStats();
 
-      // 2. Chuẩn bị các mốc thời gian
-      const now = new Date();
-      const todayStr = `${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, '0')}_${String(now.getDate()).padStart(2, '0')}`;
-      const weekStr = getISOWeekString(now);
-      const monthStr = `${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, '0')}`;
-      const yearStr = `${now.getFullYear()}`;
-
-      // 3. Đồng bộ Đang Online (Cửa sổ 3 phút: mỗi máy/IP chỉ hit 1 lần trong 3 phút)
+      // 2. Đồng bộ Đang Online (Cửa sổ 3 phút: mỗi máy/IP chỉ hit 1 lần trong 3 phút)
       const onlineWindow = Math.floor(Date.now() / 180000);
       const onlineKey = `${SITE_NAMESPACE}_online_${onlineWindow}`;
       const hasPingedWindow = sessionStorage.getItem('agy_last_online_win') === String(onlineWindow);
@@ -9339,61 +9304,38 @@
       if (!hasPingedWindow) {
         sessionStorage.setItem('agy_last_online_win', String(onlineWindow));
         const val = await fetchCounter('hit', onlineKey);
-        if (val) trafficStats.online = Math.max(1, val);
+        if (val) {
+          trafficStats.online = Math.max(1, val);
+          sessionStorage.setItem('agy_traffic_online_cached', String(trafficStats.online));
+        }
       } else {
         const val = await fetchCounter('get', onlineKey);
-        if (val) trafficStats.online = Math.max(1, val);
+        if (val) {
+          trafficStats.online = Math.max(1, val);
+          sessionStorage.setItem('agy_traffic_online_cached', String(trafficStats.online));
+        }
       }
       renderTrafficStats();
 
-      // 4. Đồng bộ Lượt xem trang (Pageviews - PV)
-      const pvKey = `${SITE_NAMESPACE}_pv`;
-      fetchCounter('hit', pvKey).then(val => {
-        if (val) {
-          trafficStats.pv = val;
+      // 3. Đồng bộ Hôm nay (Chỉ hit 1 lần/ngày cho mỗi thiết bị, sau đó chỉ get)
+      const lastToday = localStorage.getItem('agy_last_hit_today');
+      const todayAction = (lastToday !== todayStr) ? 'hit' : 'get';
+
+      if (todayAction === 'hit') {
+        localStorage.setItem('agy_last_hit_today', todayStr);
+      }
+
+      fetchCounter(todayAction, `${SITE_NAMESPACE}_today_${todayStr}`).then(td => {
+        if (td !== null) {
+          trafficStats.today = td;
+          try {
+            localStorage.setItem('agy_traffic_today_' + todayStr, String(td));
+          } catch(e) {}
           renderTrafficStats();
         }
       });
 
-      // 5. Đồng bộ Hôm nay / Tuần này / Tháng này / Năm này / Tổng truy cập (Mỗi máy chỉ hit 1 lần)
-      const lastToday = localStorage.getItem('agy_last_hit_today');
-      const lastWeek = localStorage.getItem('agy_last_hit_week');
-      const lastMonth = localStorage.getItem('agy_last_hit_month');
-      const lastYear = localStorage.getItem('agy_last_hit_year');
-      const isNewSession = !sessionStorage.getItem('agy_session_visited_global');
-
-      const todayAction = (lastToday !== todayStr) ? 'hit' : 'get';
-      const weekAction = (lastWeek !== weekStr) ? 'hit' : 'get';
-      const monthAction = (lastMonth !== monthStr) ? 'hit' : 'get';
-      const yearAction = (lastYear !== yearStr) ? 'hit' : 'get';
-      const totalAction = isNewSession ? 'hit' : 'get';
-
-      if (todayAction === 'hit') localStorage.setItem('agy_last_hit_today', todayStr);
-      if (weekAction === 'hit') localStorage.setItem('agy_last_hit_week', weekStr);
-      if (monthAction === 'hit') localStorage.setItem('agy_last_hit_month', monthStr);
-      if (yearAction === 'hit') localStorage.setItem('agy_last_hit_year', yearStr);
-      if (isNewSession) sessionStorage.setItem('agy_session_visited_global', '1');
-
-      Promise.all([
-        fetchCounter(todayAction, `${SITE_NAMESPACE}_today_${todayStr}`),
-        fetchCounter(weekAction, `${SITE_NAMESPACE}_week_${weekStr}`),
-        fetchCounter(monthAction, `${SITE_NAMESPACE}_month_${monthStr}`),
-        fetchCounter(yearAction, `${SITE_NAMESPACE}_year_${yearStr}`),
-        fetchCounter(totalAction, `${SITE_NAMESPACE}_total_visits`)
-      ]).then(([td, wk, mo, yr, tt]) => {
-        if (td !== null) trafficStats.today = td;
-        if (wk !== null) trafficStats.week = wk;
-        if (mo !== null) trafficStats.month = mo;
-        if (yr !== null) trafficStats.year = yr;
-        if (tt !== null) trafficStats.total = tt;
-
-        try {
-          localStorage.setItem('agy_traffic_stats_global_v1', JSON.stringify(trafficStats));
-        } catch(e) {}
-        renderTrafficStats();
-      });
-
-      // Heartbeat định kỳ 2 phút để duy trì trạng thái Online cho máy đang xem
+      // Heartbeat định kỳ 2 phút để duy trì trạng thái Online cho người đang xem
       setInterval(async () => {
         const curWin = Math.floor(Date.now() / 180000);
         const winKey = `${SITE_NAMESPACE}_online_${curWin}`;
@@ -9414,24 +9356,15 @@
 
       const elOnline = document.getElementById('stat-online-num');
       const elToday = document.getElementById('stat-today-num');
-      const elWeek = document.getElementById('stat-week-num');
-      const elMonth = document.getElementById('stat-month-num');
-      const elYear = document.getElementById('stat-year-num');
-      const elTotal = document.getElementById('stat-total-num');
-      const elPv = document.getElementById('stat-pv-num');
 
       // 1 máy đang vào = 100 ảo + 1 = 101 Online
-      if (elOnline) elOnline.textContent = (VIRTUAL_OFFSET + (parseInt(trafficStats.online) || 1)).toLocaleString('vi-VN');
+      if (elOnline) elOnline.textContent = format(trafficStats.online);
       if (elToday) elToday.textContent = format(trafficStats.today);
-      if (elWeek) elWeek.textContent = format(trafficStats.week);
-      if (elMonth) elMonth.textContent = format(trafficStats.month);
-      if (elYear) elYear.textContent = format(trafficStats.year);
-      if (elTotal) elTotal.textContent = format(trafficStats.total);
-      if (elPv) elPv.textContent = format(trafficStats.pv);
     }
 
     initTrafficEngine();
 
+    
 
     renderWinRateStats('day');
 
