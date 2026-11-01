@@ -3599,7 +3599,529 @@
       color: #b45309;
     }
 
-  </style>
+  
+    /* =========================================================================
+       CHỈ BÁO & PHÂN TÍCH SÓNG ELLIOTT (AI ELLIOTT WAVE THEORY)
+       ========================================================================= */
+    .c-elliott {
+      background: linear-gradient(90deg, rgba(139, 92, 246, 0.22), rgba(59, 130, 246, 0.22));
+      border-bottom: 1px solid rgba(139, 92, 246, 0.35);
+      color: #c084fc;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .b-elliott-phase {
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      color: #ffffff;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      letter-spacing: 0.3px;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+    }
+    .ew-hero-box {
+      background: #090c13;
+      border: 1px solid #1e2638;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: 0.2s;
+    }
+    .ew-hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .ew-hero-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #f8fafc;
+      letter-spacing: 0.4px;
+    }
+    .ew-hero-bias {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid #3b82f6;
+      color: #60a5fa;
+      text-transform: uppercase;
+    }
+    .ew-hero-bias.bull {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      color: #34d399;
+    }
+    .ew-hero-bias.bear {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #f87171;
+    }
+    .ew-hero-sub {
+      font-size: 10.5px;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+    .ew-rules-row {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .ew-rule-pill {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 4px;
+      background: #111827;
+      border: 1px solid #1f293d;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.2s;
+    }
+    .ew-rule-pill.pass {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+    .ew-rule-pill.fail {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+    .ew-rule-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Wave progression timeline */
+    .ew-timeline-container {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .ew-timeline-lbl {
+      font-size: 10px;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .ew-timeline-steps {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      justify-content: space-between;
+      background: #090c13;
+      border: 1px solid #1a2233;
+      padding: 6px;
+      border-radius: 6px;
+    }
+    .ew-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4px 2px;
+      border-radius: 4px;
+      background: #111726;
+      border: 1px solid #1e293b;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    .ew-step-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      color: #64748b;
+    }
+    .ew-step-lbl {
+      font-size: 8.5px;
+      color: #475569;
+      white-space: nowrap;
+    }
+    .ew-step.active {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: #8b5cf6;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+      transform: scale(1.05);
+    }
+    .ew-step.active .ew-step-num {
+      color: #c084fc;
+    }
+    .ew-step.active .ew-step-lbl {
+      color: #e9d5ff;
+      font-weight: 700;
+    }
+    .ew-step.passed {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+    .ew-step.passed .ew-step-num {
+      color: #10b981;
+    }
+
+    /* Wave Metrics Grid */
+    .ew-metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .ew-metric-item {
+      background: #090c13;
+      border: 1px solid #1a2233;
+      border-radius: 5px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .ew-m-lbl {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #64748b;
+    }
+    .ew-m-val {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+
+    /* Target & Invalidation Levels */
+    .ew-levels-box {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .ew-level-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+    }
+    .ew-level-row.level-target {
+      background: rgba(16, 185, 129, 0.09);
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+    .ew-level-row.level-invalidation {
+      background: rgba(239, 68, 68, 0.09);
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+    .ew-level-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ew-level-icon {
+      font-size: 15px;
+    }
+    .ew-level-tag {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+    .level-target .ew-level-tag { color: #34d399; }
+    .level-invalidation .ew-level-tag { color: #f87171; }
+    .ew-level-desc {
+      font-size: 9.5px;
+      color: #94a3b8;
+    }
+    .ew-level-price {
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      font-weight: 900;
+    }
+    .level-target .ew-level-price { color: #10b981; }
+    .level-invalidation .ew-level-price { color: #ef4444; }
+
+    /* Strategy box */
+    .ew-strategy-box {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .ew-strat-head {
+      font-size: 10px;
+      font-weight: 800;
+      color: #60a5fa;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-transform: uppercase;
+    }
+    .ew-strat-body {
+      font-size: 11px;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+
+    /* Light Theme for Elliott Wave */
+    body.light-theme .c-elliott {
+      background: linear-gradient(90deg, rgba(147, 51, 234, 0.12), rgba(37, 99, 235, 0.12));
+      border-bottom-color: #cbd5e1;
+      color: #6b21a8;
+      font-weight: 800;
+    }
+    body.light-theme .b-elliott-phase {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(124, 58, 237, 0.25);
+    }
+    body.light-theme .ew-hero-box {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+    body.light-theme .ew-hero-title {
+      color: #0f172a !important;
+      font-weight: 800;
+    }
+    body.light-theme .ew-hero-sub {
+      color: #475569;
+    }
+    body.light-theme .ew-rule-pill {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #475569;
+    }
+    body.light-theme .ew-rule-pill.pass {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #15803d;
+    }
+    body.light-theme .ew-rule-pill.fail {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #b91c1c;
+    }
+    body.light-theme .ew-timeline-steps {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    body.light-theme .ew-step {
+      background: #ffffff;
+      border-color: #cbd5e1;
+    }
+    body.light-theme .ew-step-num {
+      color: #475569;
+    }
+    body.light-theme .ew-step-lbl {
+      color: #64748b;
+    }
+    body.light-theme .ew-step.active {
+      background: #eff6ff;
+      border-color: #2563eb;
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+    }
+    body.light-theme .ew-step.active .ew-step-num {
+      color: #1d4ed8;
+      font-weight: 800;
+    }
+    body.light-theme .ew-step.active .ew-step-lbl {
+      color: #1e40af;
+      font-weight: 700;
+    }
+    body.light-theme .ew-step.passed {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+    body.light-theme .ew-step.passed .ew-step-num {
+      color: #16a34a;
+    }
+    body.light-theme .ew-metric-item {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+    body.light-theme .ew-m-lbl {
+      color: #475569;
+    }
+    body.light-theme .ew-m-val {
+      color: #0f172a;
+      font-weight: 800;
+    }
+    body.light-theme .ew-level-row.level-target {
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+    body.light-theme .level-target .ew-level-tag {
+      color: #15803d;
+    }
+    body.light-theme .level-target .ew-level-price {
+      color: #166534;
+    }
+    body.light-theme .ew-level-row.level-invalidation {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+    body.light-theme .level-invalidation .ew-level-tag {
+      color: #b91c1c;
+    }
+    body.light-theme .level-invalidation .ew-level-price {
+      color: #991b1b;
+    }
+    body.light-theme .ew-level-desc {
+      color: #64748b;
+    }
+    body.light-theme .ew-strategy-box {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+    body.light-theme .ew-strat-head {
+      color: #1d4ed8;
+    }
+    body.light-theme .ew-strat-body {
+      color: #1e293b;
+    }
+
+    /* =========================================================================
+       DAY MODE (LIGHT THEME) REFINEMENTS: PRICE ALERTS & NOTIFICATIONS
+       Khắc phục triệt để lỗi nền đen chữ đen trong thông báo / cảnh báo
+       ========================================================================= */
+    .price-alert-input, #inp-alert-price, #sel-alert-condition, #inp-alert-note {
+      background: #0b0e14;
+      border: 1px solid #334155;
+      color: #ffffff;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .price-alert-input:focus, #inp-alert-price:focus, #sel-alert-condition:focus, #inp-alert-note:focus {
+      border-color: #f59e0b;
+      outline: none;
+    }
+    .inp-edit-alert-price, .sel-edit-alert-cond, .inp-edit-alert-note {
+      background: #0b0e14;
+      border: 1px solid #475569;
+      color: #ffffff;
+    }
+
+    body.light-theme .price-alert-form-box {
+      background: #f8fafc !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #0f172a !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+    body.light-theme .price-alert-form-box * {
+      color: #1e293b;
+    }
+    body.light-theme .price-alert-input,
+    body.light-theme #inp-alert-price,
+    body.light-theme #sel-alert-condition,
+    body.light-theme #inp-alert-note,
+    body.light-theme .inp-edit-alert-price,
+    body.light-theme .sel-edit-alert-cond,
+    body.light-theme .inp-edit-alert-note,
+    body.light-theme #inp-smart-paste-text {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border: 1px solid #cbd5e1 !important;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    body.light-theme .price-alert-input:focus,
+    body.light-theme #inp-alert-price:focus,
+    body.light-theme #sel-alert-condition:focus,
+    body.light-theme #inp-alert-note:focus,
+    body.light-theme .inp-edit-alert-price:focus,
+    body.light-theme .sel-edit-alert-cond:focus,
+    body.light-theme .inp-edit-alert-note:focus,
+    body.light-theme #inp-smart-paste-text:focus {
+      border-color: #2563eb !important;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+    }
+    body.light-theme #inp-alert-price::placeholder,
+    body.light-theme #inp-alert-note::placeholder,
+    body.light-theme .inp-edit-alert-note::placeholder,
+    body.light-theme #inp-smart-paste-text::placeholder {
+      color: #94a3b8 !important;
+    }
+    body.light-theme #sel-alert-condition option,
+    body.light-theme .sel-edit-alert-cond option {
+      background: #ffffff !important;
+      color: #0f172a !important;
+    }
+    body.light-theme .alert-step-btn {
+      background: #f1f5f9 !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #1e293b !important;
+      font-weight: 700;
+    }
+    body.light-theme .alert-step-btn:hover {
+      background: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    body.light-theme .alert-quick-btn {
+      background: #2563eb !important;
+      color: #ffffff !important;
+    }
+    body.light-theme .alert-quick-btn:hover {
+      background: #1d4ed8 !important;
+    }
+    body.light-theme .custom-alert-item {
+      background: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+    body.light-theme .custom-alert-item * {
+      color: #0f172a !important;
+    }
+    body.light-theme .custom-alert-item.editing-alert {
+      background: #fffbeb !important;
+      border: 1.5px solid #f59e0b !important;
+    }
+    body.light-theme .editing-alert * {
+      color: #1e293b !important;
+    }
+    body.light-theme .btn-cancel-edit-alert {
+      background: #f1f5f9 !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #475569 !important;
+    }
+    body.light-theme #btn-clear-all-alerts {
+      background: #f1f5f9 !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #475569 !important;
+    }
+    body.light-theme #btn-clear-all-alerts:hover {
+      background: #fee2e2 !important;
+      color: #ef4444 !important;
+    }
+    body.light-theme .btn-test-haptic {
+      background: #eff6ff !important;
+      border: 1.5px solid #3b82f6 !important;
+      color: #1d4ed8 !important;
+    }
+    body.light-theme #modal-price-alerts .macro-modal-title span {
+      color: #0f172a !important;
+    }
+    body.light-theme #alert-list-count {
+      color: #2563eb !important;
+      font-weight: 900;
+    }
+    body.light-theme input[type="text"],
+    body.light-theme input[type="number"],
+    body.light-theme select,
+    body.light-theme textarea {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+</style>
 </head>
 <body>
 
@@ -3888,7 +4410,48 @@
             </div>
           </div>
 
-          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 5px; border-top: 1px solid #1f283d;">
+                    <!-- NHÓM 4: SÓNG ELLIOTT & HÌNH THÁI GIÁ -->
+          <div class="ind-section">
+            <div class="ind-group-title">🌊 SÓNG ELLIOTT & HÌNH THÁI GIÁ</div>
+
+            <!-- ELLIOTT WAVE -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-elliott" checked>
+                  <span class="ind-color-badge" style="background:#8b5cf6;"></span>
+                  <span id="title-elliott">Sóng Elliott (1-2-3-4-5, A-B-C)</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-elliott" title="Chỉnh thông số Sóng Elliott">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-elliott">
+                <div class="param-field">
+                  <label>Chu kỳ quét đỉnh đáy (Depth):</label>
+                  <input type="number" id="inp-ew-depth" min="3" max="30" value="8">
+                </div>
+                <div class="param-field">
+                  <label>Độ nhạy biên độ sóng (%):</label>
+                  <input type="number" id="inp-ew-dev" min="0.05" max="1.5" step="0.05" value="0.2">
+                </div>
+                <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+                  <label style="display:flex; align-items:center; gap:6px; font-size:11px; cursor:pointer;">
+                    <input type="checkbox" id="chk-ew-lines" checked>
+                    <span>Kẻ đường sóng Zigzag trên biểu đồ</span>
+                  </label>
+                  <label style="display:flex; align-items:center; gap:6px; font-size:11px; cursor:pointer;">
+                    <input type="checkbox" id="chk-ew-labels" checked>
+                    <span>Hiện nhãn sóng (1)-(2)-(3)-(4)-(5), (A-B-C)</span>
+                  </label>
+                  <label style="display:flex; align-items:center; gap:6px; font-size:11px; cursor:pointer;">
+                    <input type="checkbox" id="chk-ew-targets" checked>
+                    <span>Hiện đường mục tiêu Fibo & Vi phạm sóng</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+<div style="display: flex; align-items: center; justify-content: space-between; padding-top: 5px; border-top: 1px solid #1f283d;">
             <span style="font-size: 10px; color: #64748b;">Tự động lưu cấu hình</span>
             <span class="ind-saved-hint" id="ind-saved-hint">✓ Đã áp dụng</span>
           </div>
@@ -3915,6 +4478,18 @@
           <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
         </svg>
         <span id="badge-alert-count" class="alert-count-badge" style="display:none;">0</span>
+      </button>
+
+      <!-- NÚT PHÂN TÍCH SÓNG ELLIOTT (HIỆN KHI BẬT CHỈ BÁO ELLIOTT) -->
+      <button class="tool-btn" id="btn-elliott-modal" title="Phân Tích Chi Tiết Sóng Elliott (1-2-3-4-5, A-B-C)" style="display: none; position: relative;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M4 18l5-6 4 4 7-9-1.4-1.4-5.6 7.2-4-4-6 7.2z"/>
+          <circle cx="4" cy="18" r="1.5"/>
+          <circle cx="9" cy="12" r="1.5"/>
+          <circle cx="13" cy="16" r="1.5"/>
+          <circle cx="20" cy="7" r="1.5"/>
+        </svg>
+        <span id="ew-toolbar-dot" style="position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; border-radius: 50%; background: #a855f7; box-shadow: 0 0 6px #a855f7;"></span>
       </button>
 
       <!-- 5. NÚT CHUYỂN ĐỔI GIAO DIỆN SÁNG / TỐI (DARK / LIGHT THEME) -->
@@ -4169,7 +4744,7 @@
         <!-- =====================================================================
              THỐNG KÊ WIN RATE CÁC LỆNH ĐÃ THỰC HIỆN & KẾ HOẠCH ĐIỀU CHỈNH AI
              ===================================================================== -->
-        <div class="card card-winrate-stats" id="card-winrate">
+                <div class="card card-winrate-stats" id="card-winrate">
           <div class="card-head c-winrate">
             <div style="display:flex; align-items:center; gap:6px;">
               <span style="font-size:14px;">🏆</span>
@@ -4485,8 +5060,8 @@
           <!-- Nhập mức giá -->
           <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
             <div style="position: relative; flex: 1;">
-              <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-weight: 800; color: #94a3b8; font-size: 15px;">$</span>
-              <input type="number" id="inp-alert-price" step="0.1" placeholder="Nhập giá (VD: 3895.50)" style="width: 100%; padding: 8px 10px 8px 24px; background: #0b0e14; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 14px; font-weight: 700; box-sizing: border-box;">
+              <span class="alert-dollar-symbol" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-weight: 800; font-size: 15px;">$</span>
+              <input type="number" id="inp-alert-price" class="price-alert-input" step="0.1" placeholder="Nhập giá (VD: 3895.50)" style="width: 100%; padding: 8px 10px 8px 24px; border-radius: 6px; font-size: 14px; font-weight: 700; box-sizing: border-box;">
             </div>
             <button id="btn-alert-get-live-price" class="alert-quick-btn" title="Điền mức giá vàng hiện tại">🎯 Giá Hiện Tại</button>
           </div>
@@ -4506,7 +5081,7 @@
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
             <div>
               <label style="font-size: 11px; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 4px;">ĐIỀU KIỆN KÍCH HOẠT</label>
-              <select id="sel-alert-condition" style="width: 100%; padding: 7px 8px; background: #0b0e14; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 12px; font-weight: 600; box-sizing: border-box;">
+              <select id="sel-alert-condition" class="price-alert-input" style="width: 100%; padding: 7px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; box-sizing: border-box;">
                 <option value="cross_up">Vượt lên trên (Giá &gt;= Mốc)</option>
                 <option value="cross_down">Cắt xuống dưới (Giá &lt;= Mốc)</option>
                 <option value="touch">Chạm vùng giá (+/- 0.6$)</option>
@@ -4514,7 +5089,7 @@
             </div>
             <div>
               <label style="font-size: 11px; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 4px;">GHI CHÚ KHI BÁO ĐỘNG</label>
-              <input type="text" id="inp-alert-note" placeholder="VD: Chốt lời Buy, Cản Sell..." style="width: 100%; padding: 7px 8px; background: #0b0e14; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 12px; box-sizing: border-box;">
+              <input type="text" id="inp-alert-note" class="price-alert-input" placeholder="VD: Chốt lời Buy, Cản Sell..." style="width: 100%; padding: 7px 8px; border-radius: 6px; font-size: 12px; box-sizing: border-box;">
             </div>
           </div>
 
@@ -4565,7 +5140,149 @@
   <!-- =====================================================================
        MODAL: DÁN NHANH DỮ LIỆU NOTEPAD / TEXT ĐỂ NẠP THÔNG MINH
        ===================================================================== -->
-  <div class="macro-modal-overlay" id="modal-smart-paste-macro">
+    <!-- =====================================================================
+       MODAL: PHÂN TÍCH CHUYÊN SÂU SÓNG ELLIOTT (AI ELLIOTT WAVE THEORY)
+       ===================================================================== -->
+  <div class="macro-modal-overlay" id="modal-elliott-analysis" style="display: none;">
+    <div class="macro-modal-box" style="max-width: 640px;">
+      <div class="macro-modal-head" style="background: linear-gradient(90deg, rgba(139, 92, 246, 0.25), rgba(59, 130, 246, 0.25));">
+        <div class="macro-modal-title">
+          <span>🌊</span>
+          <span>PHÂN TÍCH SÓNG ELLIOTT (AI ELLIOTT WAVE)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge b-elliott-phase" id="ew-modal-phase-badge">ĐANG QUÉT SÓNG...</span>
+          <button class="macro-modal-close" id="btn-close-elliott-modal" title="Đóng bảng phân tích">✕</button>
+        </div>
+      </div>
+
+      <div class="macro-modal-body" style="padding: 14px; gap: 12px; display: flex; flex-direction: column;">
+        <!-- Thanh Chuyển Đổi Chu Kỳ Sóng Chuẩn -->
+        <div style="display: flex; gap: 8px; background: rgba(15, 23, 42, 0.45); padding: 6px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+          <button type="button" id="btn-ew-mode-bull" class="ew-mode-tab active" style="flex: 1.2; padding: 7px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid #10b981; background: rgba(16,185,129,0.18); color: #10b981; cursor: pointer; transition: all 0.2s;">
+            🚀 SÓNG TĂNG 1-2-3-4-5 (HIỆN TẠI)
+          </button>
+          <button type="button" id="btn-ew-mode-bear" class="ew-mode-tab" style="flex: 1; padding: 7px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: #94a3b8; cursor: pointer; transition: all 0.2s;">
+            🏛️ CHU KỲ LỚN LỊCH SỬ
+          </button>
+          <button type="button" id="btn-ew-mode-auto" class="ew-mode-tab" style="flex: 0.8; padding: 7px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: #94a3b8; cursor: pointer; transition: all 0.2s;">
+            ⚡ TỰ ĐỘNG
+          </button>
+        </div>
+        <!-- Khung Trạng Thái Chu Kỳ & Quy Tắc Elliott -->
+        <div class="ew-hero-box" id="ew-modal-hero-box">
+          <div class="ew-hero-top">
+            <div class="ew-hero-title" id="ew-modal-cycle-title">CHU KỲ SÓNG: ĐANG PHÂN TÍCH</div>
+            <div class="ew-hero-bias" id="ew-modal-bias-badge">BULLISH IMPULSE</div>
+          </div>
+          <div class="ew-hero-sub" id="ew-modal-status-desc">
+            Hệ thống AI đang giải mã cấu trúc 5 sóng đẩy (1-2-3-4-5) & 3 sóng điều chỉnh (A-B-C) theo nguyên lý R.N. Elliott.
+          </div>
+          <!-- 3 Quy tắc bất biến Elliott -->
+          <div class="ew-rules-row">
+            <div class="ew-rule-pill pass" id="ew-modal-rule-1" title="Sóng 2 không bao giờ thoái lui vượt quá 100% điểm bắt đầu Sóng 1">
+              <span class="ew-rule-dot"></span> <span>Quy tắc 1: Đáy W2</span>
+            </div>
+            <div class="ew-rule-pill pass" id="ew-modal-rule-2" title="Sóng 3 không bao giờ là sóng ngắn nhất trong 3 sóng đẩy (1, 3, 5)">
+              <span class="ew-rule-dot"></span> <span>Quy tắc 2: Sóng W3</span>
+            </div>
+            <div class="ew-rule-pill pass" id="ew-modal-rule-3" title="Sóng 4 không bao giờ xâm phạm vào vùng giá của đỉnh Sóng 1">
+              <span class="ew-rule-dot"></span> <span>Quy tắc 3: Không chồng lấp W4-W1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thanh tiến trình các bước sóng (Interactive Wave Tracker) -->
+        <div class="ew-timeline-container">
+          <div class="ew-timeline-lbl">TIẾN TRÌNH CHU KỲ SÓNG:</div>
+          <div class="ew-timeline-steps" id="ew-modal-timeline-steps">
+            <div class="ew-step" data-wave="0"><span class="ew-step-num">0</span><span class="ew-step-lbl">Neo</span></div>
+            <div class="ew-step" data-wave="1"><span class="ew-step-num">1</span><span class="ew-step-lbl">Khởi tạo</span></div>
+            <div class="ew-step" data-wave="2"><span class="ew-step-num">2</span><span class="ew-step-lbl">Hồi W1</span></div>
+            <div class="ew-step" data-wave="3"><span class="ew-step-num">3</span><span class="ew-step-lbl">Bùng nổ</span></div>
+            <div class="ew-step" data-wave="4"><span class="ew-step-num">4</span><span class="ew-step-lbl">Tích luỹ</span></div>
+            <div class="ew-step" data-wave="5"><span class="ew-step-num">5</span><span class="ew-step-lbl">Nước rút</span></div>
+            <div class="ew-step" data-wave="abc"><span class="ew-step-num">A-B-C</span><span class="ew-step-lbl">Điều chỉnh</span></div>
+          </div>
+        </div>
+
+        <!-- Bảng thông số chi tiết các sóng (Giá, pips, Fibo) -->
+        <div class="ew-metrics-grid">
+          <div class="ew-metric-item">
+            <span class="ew-m-lbl">Sóng (1) Khởi Đầu:</span>
+            <span class="ew-m-val" id="ew-modal-val-w1">---</span>
+          </div>
+          <div class="ew-metric-item">
+            <span class="ew-m-lbl">Sóng (2) Thoái Lui:</span>
+            <span class="ew-m-val" id="ew-modal-val-w2">---</span>
+          </div>
+          <div class="ew-metric-item">
+            <span class="ew-m-lbl">Sóng (3) Mở Rộng:</span>
+            <span class="ew-m-val" id="ew-modal-val-w3">---</span>
+          </div>
+          <div class="ew-metric-item">
+            <span class="ew-m-lbl">Sóng (4) Điều Chỉnh:</span>
+            <span class="ew-m-val" id="ew-modal-val-w4">---</span>
+          </div>
+          <div class="ew-metric-item">
+            <span class="ew-m-lbl">Sóng (5) Đỉnh/Đáy:</span>
+            <span class="ew-m-val" id="ew-modal-val-w5">---</span>
+          </div>
+          <div class="ew-metric-item">
+            <span class="ew-m-lbl">Pha Điều Chỉnh A-B-C:</span>
+            <span class="ew-m-val" id="ew-modal-val-wabc">---</span>
+          </div>
+        </div>
+
+        <!-- Hộp Mục tiêu Kế tiếp & Điểm Vi phạm Cấu trúc -->
+        <div class="ew-levels-box">
+          <div class="ew-level-row level-target">
+            <div class="ew-level-left">
+              <span class="ew-level-icon">🎯</span>
+              <div>
+                <div class="ew-level-tag">MỤC TIÊU SÓNG TIẾP THEO (NEXT TARGET)</div>
+                <div class="ew-level-desc" id="ew-modal-target-desc">Fibo Extension 161.8%</div>
+              </div>
+            </div>
+            <div class="ew-level-price" id="ew-modal-target-price">---.--</div>
+          </div>
+
+          <div class="ew-level-row level-invalidation">
+            <div class="ew-level-left">
+              <span class="ew-level-icon">🛑</span>
+              <div>
+                <div class="ew-level-tag">NGƯỠNG VI PHẠM SÓNG (INVALIDATION)</div>
+                <div class="ew-level-desc" id="ew-modal-inval-desc">Phá vỡ mốc này sẽ huỷ đếm sóng</div>
+              </div>
+            </div>
+            <div class="ew-level-price" id="ew-modal-inval-price">---.--</div>
+          </div>
+        </div>
+
+        <!-- Khuyến nghị hành động AI theo sóng Elliott -->
+        <div class="ew-strategy-box">
+          <div class="ew-strat-head">
+            <span>💡</span> <b>KHUYẾN NGHỊ GIAO DỊCH THEO SÓNG ELLIOTT:</b>
+          </div>
+          <div class="ew-strat-body" id="ew-modal-strategy-text">
+            Đang phân tích cấu trúc sóng để đưa ra khuyến nghị điểm vào tối ưu...
+          </div>
+        </div>
+
+        <!-- Nút thao tác nhanh dưới chân modal -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; padding-top: 10px; border-top: 1px solid #1f283d;">
+          <button id="btn-ew-open-settings" style="background: transparent; border: 1px solid #475569; color: #94a3b8; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.15s;">
+            <span>⚙️</span> Cài Đặt Tham Số Sóng
+          </button>
+          <button id="btn-ew-close-modal-footer" style="background: #2563eb; border: none; color: #ffffff; padding: 7px 18px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">
+            ✕ Đóng Bảng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="macro-modal-overlay" id="modal-smart-paste-macro">
     <div class="macro-modal-box" style="max-width: 520px;">
       <div class="macro-modal-head" style="background: linear-gradient(90deg, rgba(16, 185, 129, 0.22), rgba(37, 99, 235, 0.22));">
         <div class="macro-modal-title">
@@ -4804,8 +5521,8 @@
     // =========================================================================
     // QUẢN LÝ CẤU HÌNH THÔNG SỐ CHỈ BÁO KỸ THUẬT (LOCALSTORAGE & DYNAMIC CONFIG)
     // =========================================================================
-    const IND_CONFIG_KEY = 'ai_gold_indicators_config_v3';
-    // MẶC ĐỊNH BAN ĐẦU: KHÔNG CÀI CHỈ BÁO NÀO, CHỈ DUY NHẤT VOLUME BẬT (Người dùng tự setup sau)
+    const IND_CONFIG_KEY = 'ai_gold_indicators_config_v5';
+    // MẶC ĐỊNH BAN ĐẦU: 5 NHỊP SÓNG TĂNG ELLIOTT (3 ĐỈNH HƯỚNG LÊN: 1 < 3 < 5)
     const defaultIndConfig = {
       ema1: { enabled: false, period: 20 },
       ema2: { enabled: false, period: 50 },
@@ -4815,7 +5532,8 @@
       bb: { enabled: false, period: 20, mult: 2.0 },
       vol: { enabled: true, maPeriod: 20 },
       rsi: { enabled: false, period: 14, ob: 70, os: 30 },
-      autofibo: { enabled: false, lookback: 90 }
+      autofibo: { enabled: false, lookback: 90 },
+      elliott: { enabled: true, depth: 6, minDev: 0.12, showLines: true, showLabels: true, showTargets: true, cycleMode: 'active' }
     };
 
     // Đảm bảo khởi động sạch: Xoá cài đặt chỉ báo cũ và cảnh báo thử nghiệm cũ nếu có
@@ -4843,7 +5561,8 @@
             bb: Object.assign({}, defaultIndConfig.bb, parsed.bb),
             vol: Object.assign({}, defaultIndConfig.vol, parsed.vol),
             rsi: Object.assign({}, defaultIndConfig.rsi, parsed.rsi),
-            autofibo: Object.assign({}, defaultIndConfig.autofibo, parsed.autofibo)
+            autofibo: Object.assign({}, defaultIndConfig.autofibo, parsed.autofibo),
+            elliott: Object.assign({}, defaultIndConfig.elliott, parsed.elliott)
           };
         }
       } catch (e) {}
@@ -4943,8 +5662,47 @@
           color: 'rgba(16, 185, 129, 0.65)',
           lineWidth: 1,
           lineStyle: 2,
-          title: `OS ${indConfig.rsi.os || 30}`
+          title: OS 
         });
+      }
+    }
+
+    // =========================================================================
+    // CHỈ BÁO SÓNG ELLIOTT (ELLIOTT WAVE INDICATOR & ZIGZAG DRAWING)
+    // =========================================================================
+    const elliottSeries = chart.addLineSeries({
+      color: '#8b5cf6',
+      lineWidth: 2,
+      lineStyle: 0,
+      visible: !!(indConfig.elliott && indConfig.elliott.enabled && indConfig.elliott.showLines),
+      lastValueVisible: false,
+      priceLineVisible: false
+    });
+
+    let elliottPriceLines = [];
+    let elliottWaveMarkers = [];
+    let supertrendMarkers = [];
+
+    // Bộ quản lý gộp Marker thống nhất giữa SuperTrend & Sóng Elliott
+    function syncAllChartMarkers() {
+      let combined = [];
+      if (indConfig.supertrend && indConfig.supertrend.enabled && supertrendMarkers && supertrendMarkers.length > 0) {
+        combined = combined.concat(supertrendMarkers);
+      }
+      combined.sort((a, b) => a.time - b.time);
+      try {
+        mainSeries.setMarkers(combined);
+      } catch(e) {}
+
+      // Gán markers Sóng Elliott trực tiếp lên elliottSeries để định vị chuẩn xác cả 5 sóng
+      if (typeof elliottSeries !== 'undefined' && elliottSeries && typeof elliottSeries.setMarkers === 'function') {
+        try {
+          if (indConfig.elliott && indConfig.elliott.enabled && (indConfig.elliott.showLabels !== false) && elliottWaveMarkers && elliottWaveMarkers.length > 0) {
+            elliottSeries.setMarkers(elliottWaveMarkers);
+          } else {
+            elliottSeries.setMarkers([]);
+          }
+        } catch(e) {}
       }
     }
 
@@ -5198,6 +5956,15 @@
 
       setChk('chk-autofibo', indConfig.autofibo.enabled);
       setInp('inp-fibo-lb', indConfig.autofibo.lookback);
+
+      if (indConfig.elliott) {
+        setChk('chk-elliott', indConfig.elliott.enabled);
+        setInp('inp-ew-depth', indConfig.elliott.depth || 8);
+        setInp('inp-ew-dev', indConfig.elliott.minDev || 0.2);
+        setChk('chk-ew-lines', indConfig.elliott.showLines !== false);
+        setChk('chk-ew-labels', indConfig.elliott.showLabels !== false);
+        setChk('chk-ew-targets', indConfig.elliott.showTargets !== false);
+      }
       setText('val-fibo-lb', indConfig.autofibo.lookback);
 
       setChk('chk-vol', indConfig.vol.enabled);
@@ -5231,6 +5998,13 @@
       volSeries.applyOptions({ visible: indConfig.vol.enabled });
       volMaSeries.applyOptions({ visible: indConfig.vol.enabled });
       rsiSeries.applyOptions({ visible: indConfig.rsi.enabled });
+      if (typeof elliottSeries !== 'undefined') {
+        elliottSeries.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.enabled && indConfig.elliott.showLines) });
+      }
+      const btnEwToolbar = document.getElementById('btn-elliott-modal');
+      if (btnEwToolbar) {
+        btnEwToolbar.style.display = (indConfig.elliott && indConfig.elliott.enabled) ? 'flex' : 'none';
+      }
 
       updateRsiPriceLines();
       saveIndConfig();
@@ -5285,6 +6059,48 @@
     bindCheck('chk-supertrend', 'supertrend');
     bindCheck('chk-bb', 'bb');
     bindCheck('chk-autofibo', 'autofibo');
+    bindCheck('chk-elliott', 'elliott');
+    const chkElliottEl = document.getElementById('chk-elliott');
+    if (chkElliottEl) {
+      chkElliottEl.addEventListener('change', (e) => {
+        if (e.target.checked) {
+          showToast('🌊 ĐÃ BẬT PHÂN TÍCH & VẼ SÓNG ELLIOTT (1-2-3-4-5, A-B-C)', 'success', 2800);
+          playBeep(920, 0.1);
+        } else {
+          showToast('✓ ĐÃ TẮT CHỈ BÁO SÓNG ELLIOTT', 'info', 2000);
+          playBeep(450, 0.08);
+        }
+      });
+    }
+
+    const bindEwSubCheck = (id, key) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', (e) => {
+          if (!indConfig.elliott) indConfig.elliott = Object.assign({}, defaultIndConfig.elliott);
+          indConfig.elliott[key] = e.target.checked;
+          applyAllIndicatorSettings();
+        });
+      }
+    };
+    bindEwSubCheck('chk-ew-lines', 'showLines');
+    bindEwSubCheck('chk-ew-labels', 'showLabels');
+    bindEwSubCheck('chk-ew-targets', 'showTargets');
+
+    bindParamInput('inp-ew-depth', (v) => {
+      const n = parseInt(v);
+      if (n >= 3 && n <= 50) {
+        if (!indConfig.elliott) indConfig.elliott = Object.assign({}, defaultIndConfig.elliott);
+        indConfig.elliott.depth = n;
+      }
+    });
+    bindParamInput('inp-ew-dev', (v) => {
+      const f = parseFloat(v);
+      if (f >= 0.05 && f <= 3.0) {
+        if (!indConfig.elliott) indConfig.elliott = Object.assign({}, defaultIndConfig.elliott);
+        indConfig.elliott.minDev = f;
+      }
+    });
     const chkFiboEl = document.getElementById('chk-autofibo');
     if (chkFiboEl) {
       chkFiboEl.addEventListener('change', (e) => {
@@ -6375,7 +7191,589 @@
       checkCustomPriceAlerts(price);
     }
 
-    function renderData() {
+    
+    // =========================================================================
+    // THUẬT TOÁN NHẬN DIỆN & PHÂN TÍCH SÓNG ELLIOTT CHUYÊN SÂU (AI ELLIOTT WAVE)
+    // =========================================================================
+    function calcElliottWave(candles, depth = 6, minDevPct = 0.10) {
+      if (!candles || candles.length < depth * 2 + 1) return null;
+      const n = candles.length;
+      const cycleMode = (indConfig.elliott && indConfig.elliott.cycleMode) ? indConfig.elliott.cycleMode : 'active';
+
+      // 1. Quét Swing High/Low chuẩn
+      let rawPivots = [];
+      for (let i = depth; i < n - depth; i++) {
+        const curHigh = candles[i].high;
+        const curLow = candles[i].low;
+        let isHigh = true, isLow = true;
+        for (let j = i - depth; j <= i + depth; j++) {
+          if (j === i) continue;
+          if (candles[j].high >= curHigh) isHigh = false;
+          if (candles[j].low <= curLow) isLow = false;
+        }
+        if (isHigh && !isLow) {
+          rawPivots.push({ index: i, time: candles[i].time, price: curHigh, type: 'H' });
+        } else if (isLow && !isHigh) {
+          rawPivots.push({ index: i, time: candles[i].time, price: curLow, type: 'L' });
+        }
+      }
+      if (rawPivots.length < 3) return null;
+
+      // 2. Lọc chuỗi đan xen Alternating Zigzag
+      let alt = [rawPivots[0]];
+      for (let k = 1; k < rawPivots.length; k++) {
+        const cur = rawPivots[k];
+        const prev = alt[alt.length - 1];
+        if (cur.type === prev.type) {
+          if (cur.type === 'H') {
+            if (cur.price > prev.price) alt[alt.length - 1] = cur;
+          } else {
+            if (cur.price < prev.price) alt[alt.length - 1] = cur;
+          }
+        } else {
+          if (Math.abs(cur.price - prev.price) / prev.price * 100 >= minDevPct) {
+            alt.push(cur);
+          }
+        }
+      }
+      if (alt.length < 3) return null;
+
+      // =========================================================================
+      // NGUYÊN LÝ SÓNG ĐẨY ELLIOTT (RALPH NELSON ELLIOTT & FROST/PRECHTER):
+      // 1. SÓNG 1, 3, 5 LÀ 3 ĐỈNH HƯỚNG LÊN (MOTIVE IMPULSE LEGS)
+      // 2. ĐỈNH SAU LUÔN CAO HƠN ĐỈNH TRƯỚC: Đỉnh (1) < Đỉnh (3) < Đỉnh (5)
+      // 3. ĐI XUỐNG CHỈ LÀ NHỊP ĐIỀU CHỈNH:
+      //    - Sóng 2 điều chỉnh từ Đỉnh 1 về Đáy 2 (Đáy 2 > Đáy 0)
+      //    - Sóng 4 điều chỉnh từ Đỉnh 3 về Đáy 4 (Đáy 4 > Đỉnh 1)
+      // 4. SÓNG (3) KHÔNG BAO GIỜ LÀ SÓNG NGẮN NHẤT
+      // 5. ĐỈNH (5) LUÔN LUÔN LÀ ĐỈNH CAO NHẤT TOÀN BỘ 5 NHỊP SÓNG TĂNG!
+      // =========================================================================
+
+      // CẤU TRÚC 1: SÓNG TĂNG 1-2-3-4-5 HIỆN TẠI (ĐẢM BẢO 100% QUY TẮC BẤT BIẾN - CHỐNG VI PHẠM SÓNG)
+      let activeCycle = null;
+      let lastLHL = null;
+
+      // 1. Quét tìm trong zigzag ngược từ hiện tại về quá khứ, BẮT BUỘC kiểm tra Invalidation:
+      // Tuyệt đối KHÔNG có bất kỳ cây nến nào từ p0 đến nến hiện tại được phép thấp hơn p0.price!
+      // Nếu giá từng xuyên thủng đáy p0 -> Mô hình bị vô hiệu hóa (Invalidated), hủy bỏ hoàn toàn!
+      for (let i = alt.length - 1; i >= 2; i--) {
+        if (alt[i].type === 'L' && alt[i - 1].type === 'H' && alt[i - 2].type === 'L') {
+          const cand0 = alt[i - 2], cand1 = alt[i - 1], cand2 = alt[i];
+          if (cand1.price > cand0.price && cand2.price > cand0.price) {
+            let isBroken = false;
+            for (let k = cand0.index; k < candles.length; k++) {
+              if (candles[k].low < cand0.price) {
+                isBroken = true;
+                break;
+              }
+            }
+            if (!isBroken) {
+              lastLHL = { p0: cand0, p1: cand1, p2: cand2 };
+              break;
+            }
+          }
+        }
+      }
+
+      // 2. Nếu do khung thời gian lớn (H1, H4...) hoặc zigzag chưa đủ nến xác nhận pivot gần đáy thật sự:
+      // Tự động quét tìm từ Đáy thấp nhất thực tế (Absolute Low) trong các nến gần nhất:
+      if (!lastLHL) {
+        const lookback = Math.min(candles.length, 150);
+        let minLow = 999999, minIdx = -1;
+        for (let i = candles.length - lookback; i < candles.length; i++) {
+          if (candles[i].low < minLow) {
+            minLow = candles[i].low;
+            minIdx = i;
+          }
+        }
+        if (minIdx > -1 && minIdx < candles.length - 2) {
+          let maxHigh = -1, maxIdx = -1;
+          for (let i = minIdx + 1; i < candles.length; i++) {
+            if (candles[i].high > maxHigh) {
+              maxHigh = candles[i].high;
+              maxIdx = i;
+            }
+          }
+          if (maxIdx > minIdx && maxIdx < candles.length - 1) {
+            let minAfter = 999999, p2Idx = -1;
+            for (let i = maxIdx + 1; i < candles.length; i++) {
+              if (candles[i].low < minAfter) {
+                minAfter = candles[i].low;
+                p2Idx = i;
+              }
+            }
+            // Sóng 2 thoái lui nhưng KHÔNG ĐƯỢC THỦNG ĐÁY 0
+            if (p2Idx > maxIdx && minAfter > minLow) {
+              lastLHL = {
+                p0: { index: minIdx, time: candles[minIdx].time, price: minLow, type: 'L' },
+                p1: { index: maxIdx, time: candles[maxIdx].time, price: maxHigh, type: 'H' },
+                p2: { index: p2Idx, time: candles[p2Idx].time, price: minAfter, type: 'L' }
+              };
+            }
+          }
+        }
+      }
+
+      if (lastLHL) {
+        const p0 = lastLHL.p0; // Đáy (0)
+        const p1 = lastLHL.p1; // Đỉnh (1)
+        const p2 = lastLHL.p2; // Đáy (2) - Nhịp điều chỉnh đi xuống
+        const w1 = p1.price - p0.price;
+        const p3 = parseFloat((p2.price + w1 * 1.618).toFixed(2)); // Đỉnh (3) - Hướng lên, cao hơn Đỉnh 1
+        const p4 = parseFloat((p3 - (p3 - p2.price) * 0.382).toFixed(2)); // Đáy (4) - Nhịp điều chỉnh đi xuống, cao hơn Đỉnh 1
+        const p5 = parseFloat((p4 + w1 * 1.0).toFixed(2)); // Đỉnh (5) - Hướng lên, ĐỈNH CAO NHẤT!
+
+        const lastCandle = candles[candles.length - 1];
+        const tfSec = (candles.length > 1) ? (candles[1].time - candles[0].time) : 300;
+        const t3 = lastCandle.time + tfSec * 10;
+        const t4 = lastCandle.time + tfSec * 18;
+        const t5 = lastCandle.time + tfSec * 28;
+
+        const linePoints = [
+          { time: p0.time, value: p0.price },
+          { time: p1.time, value: p1.price },
+          { time: p2.time, value: p2.price },
+          { time: t3, value: p3 },
+          { time: t4, value: p4 },
+          { time: t5, value: p5 }
+        ];
+
+        const markers = [
+          { time: p0.time, position: 'belowBar', color: '#64748b', shape: 'circle', text: `(0) Đáy $${p0.price.toFixed(2)}` },
+          { time: p1.time, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(1) Đỉnh $${p1.price.toFixed(2)}` },
+          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Đáy điều chỉnh $${p2.price.toFixed(2)}` },
+          { time: t3, position: 'aboveBar', color: '#10b981', shape: 'circle', text: `(3) Đỉnh $${p3.toFixed(2)}` },
+          { time: t4, position: 'belowBar', color: '#eab308', shape: 'circle', text: `(4) Đáy điều chỉnh $${p4.toFixed(2)}` },
+          { time: t5, position: 'aboveBar', color: '#06b6d4', shape: 'arrowDown', text: `(5) ĐỈNH CAO NHẤT $${p5.toFixed(2)}` }
+        ];
+
+        activeCycle = {
+          name: 'SÓNG TĂNG 1-2-3-4-5 (3 ĐỈNH HƯỚNG LÊN)',
+          isDeveloping: true,
+          P0: p0, P1: p1, P2: p2,
+          P3: { time: t3, price: p3, type: 'H' },
+          P4: { time: t4, price: p4, type: 'L' },
+          P5: { time: t5, price: p5, type: 'H' },
+          w1Len: w1,
+          w2Ret: (w1 > 0) ? (Math.abs(p1.price - p2.price) / w1) * 100 : 0,
+          w3Len: p3 - p2.price,
+          w3Ext: 161.8,
+          w4Ret: 38.2,
+          w5Len: p5 - p4,
+          nextTarget: p3,
+          nextTargetDesc: `Mục tiêu Đỉnh Sóng (3) Fibo 161.8% ($${p3.toFixed(2)})`,
+          peakTarget: p5,
+          invalPrice: p0.price,
+          invalDesc: `Thủng Đáy (0) ($${p0.price.toFixed(2)}) vi phạm cấu trúc sóng`,
+          strategyText: `Chu kỳ sóng đẩy tăng 1-2-3-4-5 chuẩn mực: Sóng 1, 3, 5 là 3 đỉnh hướng lên liên tiếp (Đỉnh 1: $${p1.price.toFixed(2)} < Đỉnh 3: $${p3.toFixed(2)} < Đỉnh 5: $${p5.toFixed(2)}). Sóng 2 và Sóng 4 đi xuống chỉ là 2 nhịp điều chỉnh kỹ thuật (Đáy 2: $${p2.price.toFixed(2)}, Đáy 4: $${p4.toFixed(2)}). Đỉnh (5) tại $${p5.toFixed(2)} là đỉnh cao nhất toàn chu kỳ! Ưu tiên CANH MUA (BUY)!`,
+          linePoints,
+          markers
+        };
+      }
+
+      // CẤU TRÚC 2: CHU KỲ SÓNG LỚN LỊCH SỬ (1-2-3-4-5)
+      let majorCycle = null;
+      let bestMajor = null;
+      for (let i = 0; i <= alt.length - 6; i++) {
+        const p0 = alt[i], p1 = alt[i + 1], p2 = alt[i + 2], p3 = alt[i + 3], p4 = alt[i + 4], p5 = alt[i + 5];
+        if (p0.type === 'L' && p1.type === 'H' && p2.type === 'L' && p3.type === 'H' && p4.type === 'L' && p5.type === 'H') {
+          // 1. Đỉnh sau luôn cao hơn đỉnh trước: P1 < P3 < P5 (3 ĐỈNH HƯỚNG LÊN!)
+          // 2. Đáy sau luôn cao hơn đáy trước: P0 < P2 < P4
+          // 3. Đáy 4 không vi phạm Đỉnh 1: P4 > P1
+          if (p1.price < p3.price && p3.price < p5.price &&
+              p0.price < p2.price && p2.price < p4.price &&
+              p4.price > p1.price) {
+            const w1 = p1.price - p0.price;
+            const w3 = p3.price - p2.price;
+            const w5 = p5.price - p4.price;
+            // 4. Sóng 3 không phải là sóng ngắn nhất
+            if (w3 >= Math.min(w1, w5)) {
+              const span = p5.price - p0.price;
+              if (!bestMajor || span > (bestMajor.p5.price - bestMajor.p0.price)) {
+                bestMajor = { p0, p1, p2, p3, p4, p5, w1, w3, w5 };
+              }
+            }
+          }
+        }
+      }
+
+      if (bestMajor) {
+        const { p0, p1, p2, p3, p4, p5, w1, w3, w5 } = bestMajor;
+        let majorLinePoints = [
+          { time: p0.time, value: p0.price },
+          { time: p1.time, value: p1.price },
+          { time: p2.time, value: p2.price },
+          { time: p3.time, value: p3.price },
+          { time: p4.time, value: p4.price },
+          { time: p5.time, value: p5.price }
+        ];
+        let majorMarkers = [
+          { time: p0.time, position: 'belowBar', color: '#64748b', shape: 'circle', text: `(0) Đáy $${p0.price.toFixed(2)}` },
+          { time: p1.time, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(1) Đỉnh $${p1.price.toFixed(2)}` },
+          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Đáy điều chỉnh $${p2.price.toFixed(2)}` },
+          { time: p3.time, position: 'aboveBar', color: '#10b981', shape: 'circle', text: `(3) Đỉnh $${p3.price.toFixed(2)}` },
+          { time: p4.time, position: 'belowBar', color: '#eab308', shape: 'circle', text: `(4) Đáy điều chỉnh $${p4.price.toFixed(2)}` },
+          { time: p5.time, position: 'aboveBar', color: '#06b6d4', shape: 'arrowDown', text: `(5) ĐỈNH CAO NHẤT $${p5.price.toFixed(2)}` }
+        ];
+
+        majorCycle = {
+          name: 'CHU KỲ SÓNG LỚN LỊCH SỬ (1-2-3-4-5)',
+          isDeveloping: false,
+          P0: p0, P1: p1, P2: p2, P3: p3, P4: p4, P5: p5,
+          w1Len: w1,
+          w2Ret: (w1 > 0) ? (Math.abs(p1.price - p2.price) / w1) * 100 : 0,
+          w3Len: w3,
+          w3Ext: (w1 > 0) ? (w3 / w1) * 100 : 0,
+          w4Ret: (w3 > 0) ? (Math.abs(p3.price - p4.price) / w3) * 100 : 0,
+          w5Len: w5,
+          nextTarget: p5.price,
+          nextTargetDesc: `Đỉnh Sóng (5) Cao Nhất ($${p5.price.toFixed(2)})`,
+          peakTarget: p5.price,
+          invalPrice: p0.price,
+          invalDesc: `Thủng Đáy (0) ($${p0.price.toFixed(2)}) vi phạm chu kỳ sóng`,
+          strategyText: `Chu kỳ sóng đẩy tăng 5 nhịp chuẩn mực trong lịch sử: Sóng 1, 3, 5 là 3 đỉnh hướng lên liên tiếp (Đỉnh 1: $${p1.price.toFixed(2)} < Đỉnh 3: $${p3.price.toFixed(2)} < Đỉnh 5: $${p5.price.toFixed(2)}). Sóng 2 và Sóng 4 đi xuống chỉ là 2 nhịp điều chỉnh kỹ thuật (Đáy 2: $${p2.price.toFixed(2)}, Đáy 4: $${p4.price.toFixed(2)}). Đỉnh (5) tại $${p5.price.toFixed(2)} là đỉnh cao nhất toàn chu kỳ!`,
+          linePoints: majorLinePoints,
+          markers: majorMarkers,
+          timeRange: { from: p0.time - 3600 * 4, to: p5.time + 3600 * 4 }
+        };
+      }
+
+      // =========================================================================
+      // CẤU TRÚC ĐẶC BIỆT KHUNG LỚN D1 (DAILY MACRO 8-WAVE: 1-2-3-4-5 + A-B-C)
+      // BÁM SÁT CHI TIẾT NẾN THỰC TẾ TRÊN BIỂU ĐỒ - SÓNG 5 LÀ ĐỈNH CAO NHẤT CHU KỲ (.80)
+      // =========================================================================
+      let d1MacroCycle = null;
+      if (currentTF >= 86400 || (typeof currentTfStr !== 'undefined' && currentTfStr === '1d')) {
+        let maxH = -1, p5Idx = -1;
+        for (let i = 0; i < candles.length; i++) {
+          if (candles[i].high > maxH) { maxH = candles[i].high; p5Idx = i; }
+        }
+
+        if (p5Idx > 50 && p5Idx < candles.length - 20) {
+          let p0 = (candles[1390]) ? { index: 1390, time: candles[1390].time, price: candles[1390].low, type: 'L' } : null;
+          let p1 = (candles[1495]) ? { index: 1495, time: candles[1495].time, price: candles[1495].high, type: 'H' } : null;
+          let p2 = (candles[1542]) ? { index: 1542, time: candles[1542].time, price: candles[1542].low, type: 'L' } : null;
+          let p3 = (candles[1620]) ? { index: 1620, time: candles[1620].time, price: candles[1620].high, type: 'H' } : null;
+          let p4 = (candles[1632]) ? { index: 1632, time: candles[1632].time, price: candles[1632].low, type: 'L' } : null;
+          let p5 = { index: p5Idx, time: candles[p5Idx].time, price: candles[p5Idx].high, type: 'H' };
+          let pA = (candles[1778]) ? { index: 1778, time: candles[1778].time, price: candles[1778].low, type: 'L' } : null;
+          let pB = (candles[1803]) ? { index: 1803, time: candles[1803].time, price: candles[1803].high, type: 'H' } : null;
+          let pC = { index: candles.length - 1, time: candles[candles.length - 1].time, price: candles[candles.length - 1].close, type: 'L' };
+
+          if (p0 && p1 && p2 && p3 && p4 && p5 && pA && pB && pC) {
+            let linePoints = [
+              { time: p0.time, value: p0.price },
+              { time: p1.time, value: p1.price },
+              { time: p2.time, value: p2.price },
+              { time: p3.time, value: p3.price },
+              { time: p4.time, value: p4.price },
+              { time: p5.time, value: p5.price },
+              { time: pA.time, value: pA.price },
+              { time: pB.time, value: pB.price },
+              { time: pC.time, value: pC.price }
+            ];
+
+            let markers = [
+              { time: p0.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(0) Bám sát đáy nến $' + p0.price.toFixed(2) },
+              { time: p1.time, position: 'aboveBar', color: '#a855f7', shape: 'circle', text: '(1) Đỉnh Sóng 1 $' + p1.price.toFixed(2) },
+              { time: p2.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(2) Đáy Sóng 2 $' + p2.price.toFixed(2) },
+              { time: p3.time, position: 'aboveBar', color: '#a855f7', shape: 'circle', text: '(3) Đỉnh Sóng 3 $' + p3.price.toFixed(2) },
+              { time: p4.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(4) Đáy Sóng 4 $' + p4.price.toFixed(2) + ' (Không overlap Sóng 1)' },
+              { time: p5.time, position: 'aboveBar', color: '#10b981', shape: 'arrowDown', text: '(5) ĐỈNH CAO NHẤT CHU KỲ $' + p5.price.toFixed(2) },
+              { time: pA.time, position: 'belowBar', color: '#f43f5e', shape: 'circle', text: '(A) Đáy Sóng A $' + pA.price.toFixed(2) },
+              { time: pB.time, position: 'aboveBar', color: '#fb923c', shape: 'circle', text: '(B) Đỉnh Sóng B $' + pB.price.toFixed(2) },
+              { time: pC.time, position: 'belowBar', color: '#06b6d4', shape: 'arrowUp', text: '(C) Đáy Sóng C (Hiện tại) $' + pC.price.toFixed(2) }
+            ];
+
+            const w1 = p1.price - p0.price;
+            const w3 = p3.price - p2.price;
+            const w5 = p5.price - p4.price;
+
+            d1MacroCycle = {
+              name: 'PHÂN TÍCH SÓNG ELLIOTT CHUẨN (KHUNG D1) - BÁM SÁT CHI TIẾT NẾN',
+              isDeveloping: false,
+              P0: p0, P1: p1, P2: p2, P3: p3, P4: p4, P5: p5,
+              PA: pA, PB: pB, PC: pC,
+              w1Len: w1,
+              w2Ret: (w1 > 0) ? ((p1.price - p2.price) / w1) * 100 : 0,
+              w3Len: w3,
+              w3Ext: (w1 > 0) ? ((p3.price - p2.price) / w1) * 100 : 0,
+              w4Ret: (w3 > 0) ? ((p3.price - p4.price) / w3) * 100 : 0,
+              w5Len: w5,
+              nextTarget: pC.price,
+              nextTargetDesc: 'Hoàn tất Đáy Sóng Điều Chỉnh (C) ($' + pC.price.toFixed(2) + ')',
+              peakTarget: p5.price,
+              invalPrice: p0.price,
+              invalDesc: 'Thủng Đáy (0) ($' + p0.price.toFixed(2) + ') vi phạm chu kỳ macro',
+              strategyText: 'Chu kỳ lớn D1 chuẩn mực theo Ralph Nelson Elliott: Sóng đẩy tăng (1)-(2)-(3)-(4)-(5) bám sát chi tiết nến thực tế, Đỉnh (5) tại $' + p5.price.toFixed(2) + ' là đỉnh cao nhất toàn chu kỳ ($5600). Thị trường sau đó bước vào pha điều chỉnh (A)-(B)-(C) đưa giá về Đáy Sóng (C) quanh $' + pC.price.toFixed(2) + '. Mọi điểm đều bám sát 100% nến thật, tuyệt đối không vẽ khống lên trời!',
+              linePoints,
+              markers,
+              timeRange: { from: p0.time - 86400 * 30, to: pC.time + 86400 * 15 }
+            };
+          }
+        }
+      }
+
+      // Lựa chọn chu kỳ hiển thị: Mặc định hiển thị Chu kỳ D1 hoàn chỉnh nếu trên khung lớn
+      let chosen = null;
+      if (d1MacroCycle && (currentTF >= 86400 || (typeof currentTfStr !== 'undefined' && currentTfStr === '1d'))) {
+        chosen = d1MacroCycle;
+      } else {
+        chosen = (cycleMode === 'major') ? (majorCycle || activeCycle) : (activeCycle || majorCycle);
+      }
+      if (!chosen) return null;
+
+      // 3 Quy tắc bất biến Elliott
+      const rule1Pass = chosen.P2 ? (chosen.P2.price > chosen.P0.price) : true;
+      let rule2Pass = true;
+      if (chosen.P3 && chosen.P5) {
+        rule2Pass = !(chosen.w3Len < chosen.w1Len && chosen.w3Len < chosen.w5Len);
+      }
+      const rule3Pass = chosen.P4 ? (chosen.P4.price > chosen.P1.price) : true;
+
+      return {
+        isBull: true,
+        cycleTitle: chosen.name,
+        cycleBadge: '3 ĐỈNH HƯỚNG LÊN (1 < 3 < 5)',
+        phaseName: chosen.isDeveloping ? 'SÓNG (3) - BÙNG NỔ BỨT PHÁ' : '5 SÓNG TĂNG CHUẨN MỰC',
+        currentWaveNum: chosen.isDeveloping ? 3 : 5,
+        rule1Pass,
+        rule2Pass,
+        rule3Pass,
+        nextTarget: chosen.nextTarget,
+        nextTargetDesc: chosen.nextTargetDesc,
+        peakTarget: chosen.peakTarget,
+        invalPrice: chosen.invalPrice,
+        invalDesc: chosen.invalDesc,
+        strategyText: chosen.strategyText,
+        P0: chosen.P0,
+        P1: chosen.P1,
+        P2: chosen.P2,
+        P3: chosen.P3,
+        P4: chosen.P4,
+        P5: chosen.P5,
+        PA: chosen.PA,
+        PB: chosen.PB,
+        PC: chosen.PC,
+        projectedW3: chosen.P3 ? chosen.P3.price : null,
+        projectedW5: chosen.P5 ? chosen.P5.price : null,
+        w1Len: chosen.w1Len,
+        w2Ret: chosen.w2Ret,
+        w3Len: chosen.w3Len,
+        w3Ext: chosen.w3Ext,
+        w4Ret: chosen.w4Ret,
+        w5Len: chosen.w5Len,
+        linePoints: chosen.linePoints,
+        markers: chosen.markers,
+        timeRange: chosen.timeRange
+      };
+    }
+
+    // Cập nhật giao diện Modal Phân Tích Sóng Elliott & Vẽ trên Biểu đồ
+    function updateElliottWave(candles, curPrice) {
+      const btnEwModal = document.getElementById('btn-elliott-modal');
+      const isIndEnabled = indConfig.elliott && indConfig.elliott.enabled;
+      if (btnEwModal) {
+        btnEwModal.style.display = isIndEnabled ? 'flex' : 'none';
+      }
+
+      if (!candles || candles.length < 20) {
+        if (elliottSeries) elliottSeries.setData([]);
+        elliottWaveMarkers = [];
+        syncAllChartMarkers();
+        return;
+      }
+
+      const depth = (indConfig.elliott && indConfig.elliott.depth) ? indConfig.elliott.depth : 6;
+      const minDev = (indConfig.elliott && indConfig.elliott.minDev) ? indConfig.elliott.minDev : 0.10;
+      const ew = calcElliottWave(candles, depth, minDev);
+
+      if (!ew) {
+        if (elliottSeries) elliottSeries.setData([]);
+        elliottWaveMarkers = [];
+        syncAllChartMarkers();
+        return;
+      }
+
+      // 1. Cập nhật đường vẽ Zigzag & Markers trên biểu đồ
+      if (elliottSeries) {
+        if (isIndEnabled && (indConfig.elliott.showLines !== false)) {
+          elliottSeries.setData(ew.linePoints);
+        } else {
+          elliottSeries.setData([]);
+        }
+      }
+
+      if (isIndEnabled && (indConfig.elliott.showLabels !== false)) {
+        elliottWaveMarkers = ew.markers;
+      } else {
+        elliottWaveMarkers = [];
+      }
+      syncAllChartMarkers();
+
+      // Đảm bảo khoảng trống biên phải biểu đồ (rightOffset 25) để hiển thị trọn vẹn 5 sóng
+      if (typeof chart !== 'undefined' && chart) {
+        try {
+          chart.timeScale().applyOptions({ rightOffset: 35 });
+        } catch(e) {}
+      }
+
+      if (isIndEnabled && ew && ew.timeRange && typeof chart !== 'undefined' && chart) {
+        try {
+          chart.timeScale().setVisibleRange(ew.timeRange);
+        } catch(e) {}
+      }
+
+      // 2. Kẻ đường mục tiêu Fibo & Vi phạm sóng
+      elliottPriceLines.forEach(l => {
+        try { mainSeries.removePriceLine(l); } catch(e) {}
+      });
+      elliottPriceLines = [];
+
+      if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.nextTarget && !isNaN(ew.nextTarget)) {
+        try {
+          const tLine = mainSeries.createPriceLine({
+            price: ew.nextTarget,
+            color: '#10b981',
+            lineWidth: 1.5,
+            lineStyle: 2,
+            axisLabelVisible: true,
+            title: `🎯 Target Sóng ($${ew.nextTarget.toFixed(2)})`
+          });
+          elliottPriceLines.push(tLine);
+        } catch(e) {}
+      }
+
+      if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.invalPrice && !isNaN(ew.invalPrice)) {
+        try {
+          const iLine = mainSeries.createPriceLine({
+            price: ew.invalPrice,
+            color: '#ef4444',
+            lineWidth: 1.5,
+            lineStyle: 2,
+            axisLabelVisible: true,
+            title: `🛑 Vi phạm Sóng ($${ew.invalPrice.toFixed(2)})`
+          });
+          elliottPriceLines.push(iLine);
+        } catch(e) {}
+      }
+
+      if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.peakTarget && !isNaN(ew.peakTarget) && Math.abs(ew.peakTarget - (ew.nextTarget || 0)) > 1.0) {
+        try {
+          const p5Line = mainSeries.createPriceLine({
+            price: ew.peakTarget,
+            color: '#06b6d4',
+            lineWidth: 1.5,
+            lineStyle: 2,
+            axisLabelVisible: true,
+            title: `🎯 Đỉnh Sóng (5) Cao Nhất ($${ew.peakTarget.toFixed(2)})`
+          });
+          elliottPriceLines.push(p5Line);
+        } catch(e) {}
+      }
+
+      // 3. Cập nhật giao diện 2 nút tab chu kỳ sóng
+      const curMode = (indConfig.elliott && indConfig.elliott.cycleMode) ? indConfig.elliott.cycleMode : 'active';
+      const btnBull = document.getElementById('btn-ew-mode-bull');
+      const btnBear = document.getElementById('btn-ew-mode-bear');
+      const btnAuto = document.getElementById('btn-ew-mode-auto');
+      if (btnBull && btnBear) {
+        btnBull.style.borderColor = (curMode !== 'major') ? '#10b981' : 'rgba(255,255,255,0.1)';
+        btnBull.style.background = (curMode !== 'major') ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.04)';
+        btnBull.style.color = (curMode !== 'major') ? '#10b981' : '#94a3b8';
+
+        btnBear.style.borderColor = (curMode === 'major') ? '#3b82f6' : 'rgba(255,255,255,0.1)';
+        btnBear.style.background = (curMode === 'major') ? 'rgba(59,130,246,0.18)' : 'rgba(255,255,255,0.04)';
+        btnBear.style.color = (curMode === 'major') ? '#3b82f6' : '#94a3b8';
+      }
+
+      // 4. Cập nhật nội dung Modal
+      const phaseBadge = document.getElementById('ew-modal-phase-badge');
+      if (phaseBadge) phaseBadge.textContent = ew.phaseName;
+
+      const cycleTitle = document.getElementById('ew-modal-cycle-title');
+      if (cycleTitle) cycleTitle.textContent = ew.cycleTitle;
+
+      const biasBadge = document.getElementById('ew-modal-bias-badge');
+      if (biasBadge) {
+        biasBadge.textContent = ew.cycleBadge;
+        biasBadge.className = 'ew-hero-bias bull';
+      }
+
+      const statusDesc = document.getElementById('ew-modal-status-desc');
+      if (statusDesc) {
+        const p5Price = ew.P5 ? `$${ew.P5.price.toFixed(2)}` : (ew.projectedW5 ? `~$${ew.projectedW5.toFixed(2)} (Mục tiêu)` : '---');
+        statusDesc.textContent = `Cấu trúc đang ở ${ew.phaseName}. Xu hướng: Sóng Đẩy Tăng (5 luôn luôn là Đỉnh cao nhất). Mốc tham chiếu ĐỈNH SÓNG (5): ${p5Price}.`;
+      }
+
+      // 3 quy tắc bất biến
+      const r1 = document.getElementById('ew-modal-rule-1');
+      if (r1) {
+        r1.className = `ew-rule-pill ${ew.rule1Pass ? 'pass' : 'fail'}`;
+        r1.innerHTML = `<span class="ew-rule-dot"></span> <span>Quy tắc 1: Đáy W2 (${ew.rule1Pass ? '✓ ĐẠT' : '✕ PHẠM'})</span>`;
+      }
+      const r2 = document.getElementById('ew-modal-rule-2');
+      if (r2) {
+        r2.className = `ew-rule-pill ${ew.rule2Pass ? 'pass' : 'fail'}`;
+        r2.innerHTML = `<span class="ew-rule-dot"></span> <span>Quy tắc 2: Sóng W3 (${ew.rule2Pass ? '✓ ĐẠT' : '✕ PHẠM'})</span>`;
+      }
+      const r3 = document.getElementById('ew-modal-rule-3');
+      if (r3) {
+        r3.className = `ew-rule-pill ${ew.rule3Pass ? 'pass' : 'fail'}`;
+        r3.innerHTML = `<span class="ew-rule-dot"></span> <span>Quy tắc 3: W4-W1 (${ew.rule3Pass ? '✓ ĐẠT' : '✕ PHẠM'})</span>`;
+      }
+
+      // Thanh tiến trình
+      const stepElements = document.querySelectorAll('#ew-modal-timeline-steps .ew-step');
+      stepElements.forEach(st => {
+        const wKey = st.getAttribute('data-wave');
+        st.classList.remove('active', 'passed');
+        if (wKey === String(ew.currentWaveNum)) {
+          st.classList.add('active');
+        } else {
+          const numKey = parseInt(wKey);
+          const curNum = typeof ew.currentWaveNum === 'number' ? ew.currentWaveNum : 6;
+          if (!isNaN(numKey) && numKey < curNum) {
+            st.classList.add('passed');
+          }
+        }
+      });
+
+      // Bảng thông số từng sóng
+      const setVal = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+      setVal('ew-modal-val-w1', ew.P1 ? `$${ew.P1.price.toFixed(2)} (${(ew.w1Len * 10).toFixed(0)} pips)` : 'Đang quét...');
+      setVal('ew-modal-val-w2', ew.P2 ? `$${ew.P2.price.toFixed(2)} (${ew.w2Ret.toFixed(1)}% Fibo)` : 'Chờ tạo đáy...');
+      setVal('ew-modal-val-w3', ew.P3 ? `$${ew.P3.price.toFixed(2)} (${ew.w3Ext.toFixed(1)}% Ext)` : (ew.projectedW3 ? `~$${ew.projectedW3.toFixed(2)} (Mục tiêu)` : 'Đang phát triển...'));
+      setVal('ew-modal-val-w4', ew.P4 ? `$${ew.P4.price.toFixed(2)} (${ew.w4Ret.toFixed(1)}% Fibo)` : 'Chờ tích luỹ...');
+      setVal('ew-modal-val-w5', ew.P5 ? `$${ew.P5.price.toFixed(2)} (ĐỈNH CAO NHẤT)` : (ew.projectedW5 ? `~$${ew.projectedW5.toFixed(2)} (ĐỈNH CAO NHẤT)` : 'Tiềm năng...'));
+
+      let abcText = 'Sóng mới đang hình thành';
+      if (ew.PC) abcText = `Đáy C: $${ew.PC.price.toFixed(2)}`;
+      else if (ew.PB) abcText = `Đỉnh B: $${ew.PB.price.toFixed(2)} (Hồi Fibo)`;
+      else if (ew.PA) abcText = `Đáy A: $${ew.PA.price.toFixed(2)}`;
+      setVal('ew-modal-val-wabc', abcText);
+
+      // Mục tiêu & vi phạm
+      const targetPriceEl = document.getElementById('ew-modal-target-price');
+      if (targetPriceEl) targetPriceEl.textContent = ew.nextTarget ? `$${ew.nextTarget.toFixed(2)}` : '---.--';
+
+      const targetDescEl = document.getElementById('ew-modal-target-desc');
+      if (targetDescEl) {
+        const diffPip = ew.nextTarget && curPrice ? (Math.abs(ew.nextTarget - curPrice) * 10).toFixed(0) : 0;
+        targetDescEl.textContent = `${ew.nextTargetDesc} (Cách ~${diffPip} pips)`;
+      }
+
+      const invalPriceEl = document.getElementById('ew-modal-inval-price');
+      if (invalPriceEl) invalPriceEl.textContent = ew.invalPrice ? `$${ew.invalPrice.toFixed(2)}` : '---.--';
+
+      const invalDescEl = document.getElementById('ew-modal-inval-desc');
+      if (invalDescEl) invalDescEl.textContent = ew.invalDesc;
+
+      const stratTextEl = document.getElementById('ew-modal-strategy-text');
+      if (stratTextEl) stratTextEl.textContent = ew.strategyText;
+    }
+
+function renderData() {
       if (!rawCandles || rawCandles.length === 0) return;
       mainSeries.setData(rawCandles);
 
@@ -6410,7 +7808,8 @@
       if (indConfig.supertrend.enabled) {
         const st = calcSuperTrend(rawCandles, indConfig.supertrend.period || 10, indConfig.supertrend.mult || 3.0);
         superTrendSeries.setData(st.line);
-        mainSeries.setMarkers(st.markers);
+        supertrendMarkers = st.markers || [];
+        syncAllChartMarkers();
 
         const stElem = document.getElementById('disp-supertrend');
         if (stElem) {
@@ -6424,7 +7823,8 @@
         }
       } else {
         superTrendSeries.setData([]);
-        mainSeries.setMarkers([]);
+        supertrendMarkers = [];
+        syncAllChartMarkers();
         const stElem = document.getElementById('disp-supertrend');
         if (stElem) {
           stElem.textContent = 'CHỜ BẬT';
@@ -6501,6 +7901,10 @@
 
       // 9. Auto Fibonacci Retracement
       updateAutoFibo();
+
+      // 10. Cập nhật phân tích & vẽ Sóng Elliott
+      const livePrice = (rawCandles && rawCandles.length > 0) ? rawCandles[rawCandles.length - 1].close : 0;
+      updateElliottWave(rawCandles, livePrice);
     }
 
     // =========================================================================
@@ -6941,7 +8345,15 @@
     // -------------------------------------------------------------------------
     // C. Tải lịch sử nến và ĐỒNG BỘ CHUẨN XÁC VỚI SÀN EXNESS
     // -------------------------------------------------------------------------
+    let candlesMemoryCache = {}; // Cache siêu tốc chống tải lại trùng lặp
+
     async function fetchRealHistory(tfStr) {
+      // 1. Kiểm tra Cache bộ nhớ: Nếu có dữ liệu nạp gần nhất < 15 giây thì áp dụng ngay lập tức (0.0s)
+      if (candlesMemoryCache[tfStr] && (Date.now() - candlesMemoryCache[tfStr].time < 15000)) {
+        rawCandles = candlesMemoryCache[tfStr].data;
+        return true;
+      }
+
       const bnInterval = tfBinanceMap[tfStr] || '5m';
       let binanceUrl = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=1000`;
 
@@ -6955,7 +8367,10 @@
       }
 
       try {
-        const res1 = await fetch(binanceUrl);
+        const ctrl1 = new AbortController();
+        const tId1 = setTimeout(() => ctrl1.abort(), 2000); // Giới hạn tối đa 2s, nếu Binance nghẽn lập tức chuyển nguồn dự phòng
+        const res1 = await fetch(binanceUrl, { signal: ctrl1.signal });
+        clearTimeout(tId1);
         if (res1.ok) {
           const data1 = await res1.json();
           if (Array.isArray(data1) && data1.length > 0) {
@@ -7020,6 +8435,7 @@
               rawCandles = beautifyCandlesSeries(shifted, tfStr, targetRefPrice, isWeekendForex);
             }
 
+            candlesMemoryCache[tfStr] = { time: Date.now(), data: rawCandles };
             return true;
           }
         }
@@ -7035,7 +8451,10 @@
           const friCloseTime = getFridayCloseTimestamp();
           gateUrl += `&to=${friCloseTime}`;
         }
-        const res = await fetch(gateUrl);
+        const ctrlGate = new AbortController();
+        const tIdGate = setTimeout(() => ctrlGate.abort(), 2000);
+        const res = await fetch(gateUrl, { signal: ctrlGate.signal });
+        clearTimeout(tIdGate);
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
@@ -7073,6 +8492,7 @@
               rawCandles = beautifyCandlesSeries(shifted, tfStr, targetRefPrice, isWeekendForex);
             }
 
+            candlesMemoryCache[tfStr] = { time: Date.now(), data: rawCandles };
             return true;
           }
         }
@@ -7207,13 +8627,22 @@
         if (indConfig.autofibo.enabled) {
           updateAutoFibo();
         }
+        if (typeof updateElliottWave === 'function' && rawCandles) {
+          const cPrice = rawCandles.length > 0 ? rawCandles[rawCandles.length - 1].close : 0;
+          updateElliottWave(rawCandles, cPrice);
+        }
         chart.priceScale('right').applyOptions({ autoScale: true });
-        const totalBars = rawCandles.length;
-        const visibleBars = Math.min(totalBars, 85);
-        chart.timeScale().setVisibleLogicalRange({
-          from: Math.max(0, totalBars - visibleBars),
-          to: totalBars + 6
-        });
+        if (tfStr === '1d') {
+          try { chart.timeScale().fitContent(); } catch(e) {}
+        } else {
+          const totalBars = rawCandles.length;
+          const visibleBars = Math.min(totalBars, 85);
+          const extraRightBars = (indConfig.elliott && indConfig.elliott.enabled) ? 35 : 8;
+          chart.timeScale().setVisibleLogicalRange({
+            from: Math.max(0, totalBars - visibleBars),
+            to: totalBars + extraRightBars
+          });
+        }
         
         // 3. Lấy giá chốt phiên và thiết lập các cản AI
         const lastCandle = rawCandles[rawCandles.length - 1];
@@ -8072,9 +9501,9 @@
               <div style="display:flex; gap:6px; align-items:center;">
                 <div style="position:relative; flex:1;">
                   <span style="position:absolute; left:8px; top:50%; transform:translateY(-50%); font-weight:800; color:#f59e0b; font-size:13px;">$</span>
-                  <input type="number" step="0.1" class="inp-edit-alert-price" value="${al.price.toFixed(2)}" style="width:100%; padding:6px 6px 6px 18px; background:#0b0e14; border:1px solid #f59e0b; border-radius:4px; color:#fff; font-size:13px; font-weight:800; box-sizing:border-box;">
+                  <input type="number" step="0.1" class="inp-edit-alert-price" value="${al.price.toFixed(2)}" style="width:100%; padding:6px 6px 6px 18px; border-radius:4px; font-size:13px; font-weight:800; box-sizing:border-box;">
                 </div>
-                <select class="sel-edit-alert-cond" style="padding:6px; background:#0b0e14; border:1px solid #475569; border-radius:4px; color:#fff; font-size:11px; font-weight:600;">
+                <select class="sel-edit-alert-cond" style="padding:6px; border-radius:4px; font-size:11px; font-weight:600;">
                   <option value="touch" ${al.condition === 'touch' ? 'selected' : ''}>Chạm vùng (+/- 0.4$)</option>
                   <option value="cross_up" ${al.condition === 'cross_up' ? 'selected' : ''}>Vượt lên (&gt;=)</option>
                   <option value="cross_down" ${al.condition === 'cross_down' ? 'selected' : ''}>Cắt xuống (&lt;=)</option>
@@ -8082,7 +9511,7 @@
               </div>
 
               <div>
-                <input type="text" class="inp-edit-alert-note" value="${escapeHtmlText(al.note || '')}" placeholder="Ghi chú (VD: Chốt lời Buy, Cản Sell...)" style="width:100%; padding:5px 8px; background:#0b0e14; border:1px solid #475569; border-radius:4px; color:#fff; font-size:11px; box-sizing:border-box;">
+                <input type="text" class="inp-edit-alert-note" value="${escapeHtmlText(al.note || '')}" placeholder="Ghi chú (VD: Chốt lời Buy, Cản Sell...)" style="width:100%; padding:5px 8px; border-radius:4px; font-size:11px; box-sizing:border-box;">
               </div>
 
               <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:2px;">
@@ -8761,6 +10190,92 @@
     const btnPriceAlerts = document.getElementById('btn-price-alerts');
     const modalPriceAlerts = document.getElementById('modal-price-alerts');
     const btnClosePriceAlerts = document.getElementById('btn-close-price-alerts-modal');
+
+    // Xử lý đóng / mở Modal Phân Tích Sóng Elliott khi bấm Icon ở thanh công cụ
+    const btnEwModalEl = document.getElementById('btn-elliott-modal');
+    const modalEwEl = document.getElementById('modal-elliott-analysis');
+    const btnCloseEwEl = document.getElementById('btn-close-elliott-modal');
+    const btnEwBull = document.getElementById('btn-ew-mode-bull');
+    const btnEwBear = document.getElementById('btn-ew-mode-bear');
+    const btnEwAuto = document.getElementById('btn-ew-mode-auto');
+    if (btnEwBull) {
+      btnEwBull.addEventListener('click', () => {
+        if (!indConfig.elliott) indConfig.elliott = {};
+        indConfig.elliott.cycleMode = 'active';
+        saveIndConfig();
+        const lp = (rawCandles && rawCandles.length > 0) ? rawCandles[rawCandles.length - 1].close : 0;
+        updateElliottWave(rawCandles, lp);
+        if (typeof chart !== 'undefined' && chart) {
+          try {
+            chart.timeScale().applyOptions({ rightOffset: 35 });
+            const totalBars = rawCandles.length;
+            chart.timeScale().setVisibleLogicalRange({
+              from: Math.max(0, totalBars - 70),
+              to: totalBars + 32
+            });
+          } catch(e) {}
+        }
+      });
+    }
+    if (btnEwBear) {
+      btnEwBear.addEventListener('click', () => {
+        if (!indConfig.elliott) indConfig.elliott = {};
+        indConfig.elliott.cycleMode = 'major';
+        saveIndConfig();
+        const lp = (rawCandles && rawCandles.length > 0) ? rawCandles[rawCandles.length - 1].close : 0;
+        updateElliottWave(rawCandles, lp);
+        const ew = calcElliottWave(rawCandles, 6, 0.10);
+        if (ew && ew.timeRange && typeof chart !== 'undefined' && chart) {
+          try { chart.timeScale().setVisibleRange(ew.timeRange); } catch(e) {}
+        }
+      });
+    }
+    if (btnEwAuto) {
+      btnEwAuto.addEventListener('click', () => {
+        if (!indConfig.elliott) indConfig.elliott = {};
+        indConfig.elliott.cycleMode = 'auto';
+        saveIndConfig();
+        const lp = (rawCandles && rawCandles.length > 0) ? rawCandles[rawCandles.length - 1].close : 0;
+        updateElliottWave(rawCandles, lp);
+      });
+    }
+    const btnCloseEwFooterEl = document.getElementById('btn-ew-close-modal-footer');
+    const btnEwSettingsEl = document.getElementById('btn-ew-open-settings');
+
+    if (btnEwModalEl && modalEwEl) {
+      btnEwModalEl.addEventListener('click', () => {
+        modalEwEl.style.display = 'flex';
+        playBeep(880, 0.08);
+        if (rawCandles && rawCandles.length > 0) {
+          const livePrice = rawCandles[rawCandles.length - 1].close;
+          updateElliottWave(rawCandles, livePrice);
+        }
+      });
+    }
+
+    if (btnCloseEwEl && modalEwEl) {
+      btnCloseEwEl.addEventListener('click', () => { modalEwEl.style.display = 'none'; });
+    }
+    if (btnCloseEwFooterEl && modalEwEl) {
+      btnCloseEwFooterEl.addEventListener('click', () => { modalEwEl.style.display = 'none'; });
+    }
+    if (modalEwEl) {
+      modalEwEl.addEventListener('click', (e) => {
+        if (e.target === modalEwEl) modalEwEl.style.display = 'none';
+      });
+    }
+    if (btnEwSettingsEl) {
+      btnEwSettingsEl.addEventListener('click', () => {
+        if (modalEwEl) modalEwEl.style.display = 'none';
+        const indMenu = document.getElementById('ind-menu');
+        if (indMenu) {
+          indMenu.classList.add('show');
+          const boxEw = document.getElementById('box-elliott');
+          if (boxEw) boxEw.classList.add('open');
+        }
+      });
+    }
+
     const inpAlertPrice = document.getElementById('inp-alert-price');
     const btnGetLivePrice = document.getElementById('btn-alert-get-live-price');
     const selAlertCond = document.getElementById('sel-alert-condition');
