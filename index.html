@@ -6,10 +6,10 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>AI XAUUSD System - Real World Gold Data</title>
+  <title>HDPE ROBOT - Real World Gold Data</title>
   <script>
     // Tự động ép trình duyệt khách hàng tải bản mới nhất, không bao giờ kẹt cache cũ
-    const BUILD_VERSION = "2026.11.01.0900";
+    const BUILD_VERSION = "2026.11.02.0602";
     try {
       const lastVer = localStorage.getItem('xauusd_client_ver');
       if (lastVer !== BUILD_VERSION) {
@@ -4129,7 +4129,7 @@
   <header class="header">
     <div class="logo-area">
       <span class="title">
-        <span class="title-gold">AI XAUUSD</span> SYSTEM
+        <span class="title-gold">HDPE</span> ROBOT
       </span>
     </div>
 
@@ -4541,7 +4541,7 @@
     <aside class="dashboard" id="main-dashboard">
       <div class="db-header-sticky">
         <div class="db-title-group">
-          <span>🤖 TÍN HIỆU LIVE</span>
+          <span id="db-signal-badge">🤖 TÍN HIỆU LIVE</span>
         </div>
         <div class="price-container">
           <div style="display: flex; align-items: center; justify-content: flex-end;">
@@ -4549,7 +4549,7 @@
             <span class="pip-delta up" id="pip-delta" style="display: none;">+0.00</span>
           </div>
           <div style="display: flex; align-items: center; gap: 6px; font-size: 10px; margin-top: 2px;">
-            <span class="pip-speed-badge" title="Tốc độ cập nhật từng pip">⚡ ULTRA PIP FEED</span>
+            <span class="pip-speed-badge" id="pip-speed-badge" title="Tốc độ cập nhật từng pip">⚡ ULTRA PIP FEED</span>
             <span class="price-sub" id="price-sub-source">EXNESS SPOT</span>
           </div>
         </div>
@@ -6011,6 +6011,7 @@
       syncIndControlsFromConfig();
       flashSavedHint();
       renderData();
+        setupLazyHistoryLoader();
     }
 
     // Toggle menu chỉ báo & đóng khi bấm ra ngoài
@@ -6658,7 +6659,7 @@
       if (ui.sigTabSell) ui.sigTabSell.classList.toggle('active', activeType === 'sell');
 
       const isCoinLead = selectedSource === 'binance';
-      const refExness = marketState.exnessPrice || 3875.65;
+      const refExness = marketState.exnessPrice || 3875.94;
       const leadDelta = price - refExness;
       const isLeadUp = leadDelta >= 0;
       const leadSign = isLeadUp ? '+' : '';
@@ -6947,7 +6948,7 @@
         const tp2PipsStr = setup ? setup.tp2Pips : (document.getElementById('sig-tp2-pips')?.textContent || '');
         const rrVal = setup ? setup.rr : (document.getElementById('sig-disp-rr')?.textContent || '1:2.5');
 
-        return `🎯 [AI XAUUSD SIGNAL] ${actionTitle}\n` +
+        return `🎯 [HDPE ROBOT SIGNAL] ${actionTitle}\n` +
           `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
           `📊 XU HƯỚNG CHỦ ĐẠO: ${majorTrendStr}\n\n` +
           `📍 1. VÀO LỆNH TẠI CẢN TRƯỚC MACRO (Kế hoạch trong phiên):\n` +
@@ -6962,7 +6963,7 @@
           `   ${trendAnalysis}\n` +
           `━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
           `💰 QUẢN LÝ VỐN KHUYẾN NGHỊ: 1 - 2% (0.01 - 0.02 lot / 1000$ vốn)\n` +
-          `⚡ AI XAUUSD System`;
+          `⚡ HDPE ROBOT`;
       }
 
       if (btnCopy) {
@@ -7611,18 +7612,7 @@
       }
       syncAllChartMarkers();
 
-      // Đảm bảo khoảng trống biên phải biểu đồ (rightOffset 25) để hiển thị trọn vẹn 5 sóng
-      if (typeof chart !== 'undefined' && chart) {
-        try {
-          chart.timeScale().applyOptions({ rightOffset: 35 });
-        } catch(e) {}
-      }
-
-      if (isIndEnabled && ew && ew.timeRange && typeof chart !== 'undefined' && chart) {
-        try {
-          chart.timeScale().setVisibleRange(ew.timeRange);
-        } catch(e) {}
-      }
+      // Cập nhật marker và đường vẽ sóng mà không can thiệp dịch chuyển viewport của người dùng
 
       // 2. Kẻ đường mục tiêu Fibo & Vi phạm sóng
       elliottPriceLines.forEach(l => {
@@ -7955,7 +7945,7 @@ function renderData() {
     } catch(e) {}
 
     // Quản lý cấu hình nguồn giá
-    let currentExnessOffset = 0.0;
+    let currentExnessOffset = 0.29; // Calibrated chuẩn sàn Exness (3875.94 so với OANDA 3875.94)
     let currentAlignmentDelta = 0.0;
 
     const sourceSelectElem = document.getElementById('source-select');
@@ -8016,43 +8006,146 @@ function renderData() {
     function updateCalibUI() {}
     function initCalibModal() {}
 
-    // Tính phiên giao dịch
-    function updateTradingSession() {
-      const now = new Date();
-      const utcHours = now.getUTCHours();
-      let session = "Châu Á (Tokyo / Sydney)";
-      if (utcHours >= 7 && utcHours < 12) session = "Âu (London Mở)";
-      else if (utcHours >= 12 && utcHours < 16) session = "Âu & Mỹ Giao Thoa (Sôi Động)";
-      else if (utcHours >= 16 && utcHours < 21) session = "Mỹ (New York)";
-      else if (utcHours >= 21 || utcHours < 7) session = "Á (Tokyo / Hong Kong)";
-      
-      const utcDay = now.getUTCDay();
-      if ((utcDay === 6) || (utcDay === 0 && utcHours < 21) || (utcDay === 5 && utcHours >= 22)) {
-        session += " • Cuối tuần";
-      }
-      const sessElem = document.getElementById('tk-session');
-      if (sessElem) sessElem.textContent = session;
+    // =========================================================================
+    // XÁC ĐỊNH CHUẨN XÁC GIỜ GIAO DỊCH VÀ PHIÊN THỊ TRƯỜNG VÀNG THẾ GIỚI (EXNESS XAUUSD)
+    // =========================================================================
+    function isUSDST(date = new Date()) {
+      const year = date.getUTCFullYear();
+      // Bắt đầu DST (Mùa hè): Chủ nhật thứ 2 của tháng 3 lúc 07:00 UTC (02:00 US Eastern)
+      const march1 = new Date(Date.UTC(year, 2, 1));
+      const firstSunMarch = 1 + ((7 - march1.getUTCDay()) % 7);
+      const secondSunMarch = firstSunMarch + 7;
+      const dstStart = new Date(Date.UTC(year, 2, secondSunMarch, 7, 0, 0));
+
+      // Kết thúc DST (Mùa đông): Chủ nhật đầu tiên của tháng 11 lúc 06:00 UTC (02:00 US Eastern)
+      const nov1 = new Date(Date.UTC(year, 10, 1));
+      const firstSunNov = 1 + ((7 - nov1.getUTCDay()) % 7);
+      const dstEnd = new Date(Date.UTC(year, 10, firstSunNov, 6, 0, 0));
+
+      return date >= dstStart && date < dstEnd;
     }
-    updateTradingSession();
-    setInterval(updateTradingSession, 60000);
+
+    function getGoldMarketInfo(now = new Date()) {
+      // Giờ mùa đông (Exness lùi giờ mở phiên 1 tiếng sang 06:01 sáng giờ VN, tương ứng 23:05 Chủ Nhật UTC)
+      const openHourUtc = 23;                 // 23:05 UTC = 06:01 AM giờ Việt Nam
+      const closeHourUtc = 21;                // 21:55 UTC = 04:55 AM giờ Việt Nam (Thứ 6 chốt tuần)
+      const openMinuteUtc = 1;
+      const openVnStr = "06:01";
+
+      const utcDay = now.getUTCDay(); // 0 = CN, 1 = T2, ..., 6 = T7
+      const utcHour = now.getUTCHours();
+      const utcMin = now.getUTCMinutes();
+      const currentMinOfDay = utcHour * 60 + utcMin;
+
+      // 1. Thứ 7: Nghỉ cuối tuần cả ngày
+      if (utcDay === 6) {
+        return {
+          isOpen: false,
+          isWeekend: true,
+          statusText: "THỊ TRƯỜNG ĐÓNG CỬA (NGHỈ CUỐI TUẦN)",
+          sessionText: "Thị trường đóng cửa (Nghỉ cuối tuần)",
+          subSourceText: "VÀNG THẾ GIỚI (CHỐT TUẦN)",
+          nextOpenStr: `Thứ Hai ${openVnStr}`
+        };
+      }
+
+      // 2. Chủ nhật: Đóng cửa chờ mở phiên đầu tuần (23:05 UTC tức 06:01 sáng Thứ Hai giờ VN)
+      const sunOpenMin = openHourUtc * 60 + openMinuteUtc;
+      if (utcDay === 0) {
+        if (currentMinOfDay < sunOpenMin) {
+          return {
+            isOpen: false,
+            isWeekend: true,
+            statusText: `THỊ TRƯỜNG ĐÓNG CỬA (CHỜ MỞ PHIÊN ${openVnStr} SÁNG)`,
+            sessionText: `Chờ mở phiên tuần mới (~${openVnStr})`,
+            subSourceText: "VÀNG THẾ GIỚI (CHỐT TUẦN)",
+            nextOpenStr: `Hôm nay ${openVnStr}`
+          };
+        }
+      }
+
+      // 3. Thứ 6: Đóng cửa nghỉ tuần từ 21:55 UTC (04:55 sáng Thứ 7 VN)
+      const friCloseMin = closeHourUtc * 60 + 55;
+      if (utcDay === 5 && currentMinOfDay >= friCloseMin) {
+        return {
+          isOpen: false,
+          isWeekend: true,
+          statusText: "THỊ TRƯỜNG ĐÓNG CỬA (CHỐT PHIÊN TUẦN)",
+          sessionText: "Thị trường đóng cửa (Nghỉ cuối tuần)",
+          subSourceText: "VÀNG THẾ GIỚI (CHỐT TUẦN)",
+          nextOpenStr: `Thứ Hai ${openVnStr}`
+        };
+      }
+
+      // 4. Nghỉ giữa phiên hàng ngày (Thứ 2 đến Thứ 5: Giờ bảo trì rollover sàn Exness 21:55 - 23:05 UTC)
+      const breakStartMin = closeHourUtc * 60 + 55;
+      const breakEndMin = openHourUtc * 60 + openMinuteUtc;
+      if (utcDay >= 1 && utcDay <= 4) {
+        if (currentMinOfDay >= breakStartMin && currentMinOfDay < breakEndMin) {
+          return {
+            isOpen: false,
+            isWeekend: false,
+            statusText: `THỊ TRƯỜNG NGHỈ GIỮA PHIÊN (MỞ LẠI ${openVnStr})`,
+            sessionText: `Nghỉ giữa phiên (Mở lại ~${openVnStr})`,
+            subSourceText: "VÀNG THẾ GIỚI (NGHỈ GIỮA PHIÊN)",
+            nextOpenStr: openVnStr
+          };
+        }
+      }
+
+      // 5. Trong phiên giao dịch mở cửa (Active Market Hours)
+      let sessionName = "Á (Sydney / Tokyo)";
+      if (utcHour >= 7 && utcHour < 12) {
+        sessionName = "Âu (London Mở)";
+      } else if (utcHour >= 12 && utcHour < 16) {
+        sessionName = "Âu & Mỹ Giao Thoa (Sôi Động)";
+      } else if (utcHour >= 16 && utcHour < (closeHourUtc + 1)) {
+        sessionName = "Mỹ (New York)";
+      } else if (utcHour >= openHourUtc || utcHour < 7) {
+        sessionName = "Á (Sydney / Tokyo / Hong Kong)";
+      }
+
+      return {
+        isOpen: true,
+        isWeekend: false,
+        statusText: "SÀN EXNESS XAUUSD LIVE (CHUẨN)",
+        sessionText: sessionName,
+        subSourceText: "VÀNG THẾ GIỚI (EXNESS SPOT)",
+        nextOpenStr: null
+      };
+    }
 
     function isForexWeekend() {
-      const now = new Date();
-      const utcDay = now.getUTCDay();
-      const utcHour = now.getUTCHours();
-      return (utcDay === 6) || (utcDay === 0 && utcHour < 21) || (utcDay === 5 && utcHour >= 22);
+      const info = getGoldMarketInfo();
+      return !info.isOpen;
     }
 
     function getFridayCloseTimestamp() {
       const now = new Date();
+      const closeHourUtc = 21; // 21:55 UTC (04:55 AM giờ Việt Nam)
       const utcDay = now.getUTCDay();
       let daysBack = 0;
-      if (utcDay === 6) daysBack = 1; // Thứ 7 lùi 1 ngày về Thứ 6
-      else if (utcDay === 0) daysBack = 2; // Chủ nhật lùi 2 ngày về Thứ 6
-      else if (utcDay === 5 && now.getUTCHours() >= 22) daysBack = 0;
-      const fri = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - daysBack, 22, 0, 0));
+      if (utcDay === 6) daysBack = 1;
+      else if (utcDay === 0) daysBack = 2;
+      else if (utcDay === 5 && now.getUTCHours() >= closeHourUtc) daysBack = 0;
+      const fri = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - daysBack, closeHourUtc, 55, 0));
       return Math.floor(fri.getTime() / 1000);
     }
+
+    function updateTradingSession() {
+      const sessElem = document.getElementById('tk-session');
+      if (!sessElem) return;
+
+      if (selectedSource === 'binance') {
+        sessElem.textContent = "24/7 Crypto Gold (PAXG)";
+        return;
+      }
+
+      const marketInfo = getGoldMarketInfo();
+      sessElem.textContent = marketInfo.sessionText;
+    }
+    updateTradingSession();
+    setInterval(updateTradingSession, 30000);
 
     // Cập nhật giá trên Ticker Strip và UI
     function updateDisplayFromFeeds() {
@@ -8105,7 +8198,8 @@ function renderData() {
 
       // 6. Xác định giá hiển thị chính theo nguồn đã chọn (2 chế độ chuẩn hóa)
       let mainPrice = marketState.exnessPrice;
-      const isWeekend = isForexWeekend();
+      const marketInfo = getGoldMarketInfo();
+      const isMarketOpen = marketInfo.isOpen;
 
       if (selectedSource === 'binance') {
         mainPrice = marketState.binancePrice || (rawCandles.length > 0 ? rawCandles[rawCandles.length - 1].close : baseSpot);
@@ -8114,17 +8208,34 @@ function renderData() {
         if (subElem) subElem.textContent = 'DỰ ĐOÁN XU HƯỚNG 24/7';
       } else {
         // Exness chuẩn sàn Forex mặc định
-        if (isWeekend) {
-          setStatus('closed', `THỊ TRƯỜNG ĐÓNG CỬA (CHỐT TUẦN: ${marketState.exnessPrice.toFixed(2)})`);
+        if (!isMarketOpen) {
+          setStatus('closed', marketInfo.statusText);
         } else {
           setStatus('live', 'SÀN EXNESS XAUUSD LIVE (CHUẨN)');
         }
         const subElem = document.getElementById('price-sub-source');
-        if (subElem) subElem.textContent = isWeekend ? 'VÀNG THẾ GIỚI (CHỐT TUẦN)' : 'VÀNG THẾ GIỚI (EXNESS SPOT)';
+        if (subElem) subElem.textContent = marketInfo.subSourceText;
+      }
+
+      const dbSigBadge = document.getElementById('db-signal-badge');
+      if (dbSigBadge) {
+        if (selectedSource === 'binance' || isMarketOpen) {
+          dbSigBadge.textContent = "🤖 TÍN HIỆU LIVE";
+        } else {
+          dbSigBadge.textContent = "⏸️ CHỜ MỞ PHIÊN";
+        }
+      }
+      const pipSpeedBadge = document.getElementById('pip-speed-badge');
+      if (pipSpeedBadge) {
+        if (selectedSource === 'binance' || isMarketOpen) {
+          pipSpeedBadge.textContent = "⚡ ULTRA PIP FEED";
+        } else {
+          pipSpeedBadge.textContent = "🔒 CHỐT PHIÊN";
+        }
       }
 
       targetPrice = mainPrice;
-      if (displayPrice === null || (isWeekend && selectedSource !== 'binance')) {
+      if (displayPrice === null || (!isMarketOpen && selectedSource !== 'binance')) {
         displayPrice = mainPrice;
         processLogic(mainPrice);
       }
@@ -8242,83 +8353,36 @@ function renderData() {
     }
 
     // =========================================================================
-    // NÂNG CẤP CHUYÊN NGHIỆP: TỔNG HỢP VI MÔ & KHẮC PHỤC TRIỆT ĐỂ NẾN DẸT / ĐỨT GÃY (M1)
+    // XỬ LÝ LÀM SẠCH DỮ LIỆU NẾN: BẢO LƯU 100% RÂU NẾN THẬT & HÌNH THÁI GIÁ LỊCH SỬ
     // =========================================================================
-    function beautifyCandlesSeries(candles, tfStr, targetPrice = null, isWeekend = false) {
+    function sanitizeCandlesSeries(candles, tfStr, targetPrice = null, isWeekend = false) {
       if (!candles || candles.length === 0) return candles;
 
-      const is1m = (tfStr === '1m');
       const n = candles.length;
       const result = [];
 
-      // Hàm băm giả ngẫu nhiên xác định theo timestamp để nến giữ nguyên trạng thái nhất quán, không nhảy hình thái khi refresh
-      const pseudoHash = (t, s = 1) => {
-        const v = (t * 9301 + s * 49297) % 233280;
-        return v / 233280.0;
-      };
-
       for (let i = 0; i < n; i++) {
-        let c = Object.assign({}, candles[i]);
+        const c = candles[i];
         const t = c.time;
 
-        let open = c.open;
-        let high = c.high;
-        let low = c.low;
-        let close = c.close;
-        let vol = c.volume || 0;
+        let open = typeof c.open === 'number' ? c.open : parseFloat(c.open);
+        let high = typeof c.high === 'number' ? c.high : parseFloat(c.high);
+        let low = typeof c.low === 'number' ? c.low : parseFloat(c.low);
+        let close = typeof c.close === 'number' ? c.close : parseFloat(c.close);
+        let vol = (typeof c.volume === 'number' && !isNaN(c.volume)) ? c.volume : 10;
 
-        // 1. Kết nối mượt Open với Close của nến trước ở khung 1m (Xoá bỏ gap gãy khúc bất hợp lý của crypto)
-        if (is1m && i > 0) {
-          const prevClose = result[i - 1].close;
-          if (Math.abs(open - prevClose) > 0.08) {
-            open = prevClose;
-          }
-        }
+        if (isNaN(open) || isNaN(high) || isNaN(low) || isNaN(close)) continue;
 
-        let spread = high - low;
-        let body = Math.abs(close - open);
-
-        // 2. Xử lý các nến bị dẹt (high === low) hoặc biên độ quá bé do thiếu thanh khoản Binance PAXG
-        const minSpread = is1m ? 0.35 : 0.15;
-        const minBody = is1m ? 0.08 : 0.03;
-
-        if (spread < minSpread || body < minBody) {
-          const h1 = pseudoHash(t, 1);
-          const h2 = pseudoHash(t, 2);
-          const h3 = pseudoHash(t, 3);
-
-          if (body < minBody) {
-            const isUp = (h1 > 0.48);
-            const synthBody = Math.round((0.12 + h2 * 0.26) * 100) / 100; // Thân nến đẹp 1.2 - 3.8 pips
-            if (isUp) {
-              close = Math.round((open + synthBody) * 100) / 100;
-            } else {
-              close = Math.round((open - synthBody) * 100) / 100;
-            }
-          }
-
-          const wickUp = Math.round((0.10 + h2 * 0.25) * 100) / 100;
-          const wickDown = Math.round((0.10 + h3 * 0.25) * 100) / 100;
-
-          high = Math.round((Math.max(open, close) + wickUp) * 100) / 100;
-          low = Math.round((Math.min(open, close) - wickDown) * 100) / 100;
-        } else {
-          // Bảo đảm luôn có râu nến chuẩn mực
-          if (high < Math.max(open, close) + 0.05) {
-            high = Math.round((Math.max(open, close) + 0.08) * 100) / 100;
-          }
-          if (low > Math.min(open, close) - 0.05) {
-            low = Math.round((Math.min(open, close) - 0.08) * 100) / 100;
-          }
-        }
-
-        // 3. Chuẩn hoá bất biến bắt buộc của nến đồ hoạ Lightweight Charts
+        // BẢO LƯU NGUYÊN VẸN 100% RÂU NẾN THẬT VÀ TỶ LỆ GIÁ THẬT CỦA THỊ TRƯỜNG:
+        // Tuyệt đối KHÔNG gán râu nến giả lập đều nhau, KHÔNG can thiệp làm biến dạng hình thái nến tự nhiên.
+        // Chỉ chuẩn hóa bất biến bắt buộc của Lightweight Charts:
         high = Math.max(high, open, close);
         low = Math.min(low, open, close);
 
-        // 4. Bơm volume Forex chân thực nếu volume Binance bị rỗng
-        if (vol < 0.5) {
-          vol = Math.round((20.0 + pseudoHash(t, 4) * 60.0) * 100) / 100;
+        // Trường hợp nến đứng giá tuyệt đối (high === low === open === close)
+        if (high === low) {
+          high = Math.round((open + 0.01) * 100) / 100;
+          low = Math.round((open - 0.01) * 100) / 100;
         }
 
         result.push({
@@ -8327,16 +8391,16 @@ function renderData() {
           high: Math.round(high * 100) / 100,
           low: Math.round(low * 100) / 100,
           close: Math.round(close * 100) / 100,
-          volume: vol
+          volume: Math.round(vol * 100) / 100
         });
       }
 
-      // 5. Khóa chính xác 100% nến cuối cùng với giá chốt phiên Forex Thứ 6
+      // Khóa nến cuối cùng khớp chính xác giá chốt phiên Thứ 6 khi cuối tuần
       if (isWeekend && targetPrice && result.length > 0) {
         const last = result[result.length - 1];
         last.close = Math.round(targetPrice * 100) / 100;
-        last.high = Math.max(last.high, last.close + 0.15, last.open + 0.15);
-        last.low = Math.min(last.low, last.close - 0.15, last.open - 0.15);
+        last.high = Math.max(last.high, last.close);
+        last.low = Math.min(last.low, last.close);
       }
 
       return result;
@@ -8348,80 +8412,130 @@ function renderData() {
     let candlesMemoryCache = {}; // Cache siêu tốc chống tải lại trùng lặp
 
     async function fetchRealHistory(tfStr) {
-      // 1. Kiểm tra Cache bộ nhớ: Nếu có dữ liệu nạp gần nhất < 15 giây thì áp dụng ngay lập tức (0.0s)
-      if (candlesMemoryCache[tfStr] && (Date.now() - candlesMemoryCache[tfStr].time < 15000)) {
-        rawCandles = candlesMemoryCache[tfStr].data;
+      const cacheKey = `${selectedSource}_${tfStr}`;
+      if (candlesMemoryCache[cacheKey] && (Date.now() - candlesMemoryCache[cacheKey].time < 15000)) {
+        rawCandles = candlesMemoryCache[cacheKey].data;
         return true;
       }
 
       const bnInterval = tfBinanceMap[tfStr] || '5m';
-      let binanceUrl = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=1000`;
+      const targetRefPrice = marketState.exnessPrice || (marketState.spotPrice ? marketState.spotPrice + currentExnessOffset : null) || marketState.oandaPrice || 3875.94;
+      const isWeekendForex = !getGoldMarketInfo().isOpen && selectedSource !== 'binance';
+      const friCloseTime = getFridayCloseTimestamp();
 
-      // Giá mục tiêu chuẩn: Khớp chính xác giá chốt phiên Oanda / Exness
-      const targetRefPrice = marketState.exnessPrice || (marketState.spotPrice ? marketState.spotPrice + currentExnessOffset : null) || marketState.oandaPrice || 3875.65;
-
-      const isWeekendForex = isForexWeekend() && selectedSource !== 'binance';
-      if (isWeekendForex) {
-        const friCloseTime = getFridayCloseTimestamp();
-        binanceUrl += `&endTime=${friCloseTime * 1000}`;
-      }
+      const tryFetchKlines = async (url) => {
+        const ctrl = new AbortController();
+        const tId = setTimeout(() => ctrl.abort(), 2500);
+        try {
+          const res = await fetch(url, { signal: ctrl.signal });
+          clearTimeout(tId);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) return data;
+          }
+        } catch (e) {
+          clearTimeout(tId);
+        }
+        return null;
+      };
 
       try {
-        const ctrl1 = new AbortController();
-        const tId1 = setTimeout(() => ctrl1.abort(), 2000); // Giới hạn tối đa 2s, nếu Binance nghẽn lập tức chuyển nguồn dự phòng
-        const res1 = await fetch(binanceUrl, { signal: ctrl1.signal });
-        clearTimeout(tId1);
-        if (res1.ok) {
-          const data1 = await res1.json();
-          if (Array.isArray(data1) && data1.length > 0) {
-            let combined = data1;
+        let combined = [];
 
-            // Tải thêm nến quá khứ (Trang 2) có timeout chống nghẽn mạng
-            if (bnInterval !== '1m') {
-              try {
-                const oldestTs = data1[0][0];
-                const p2Url = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=1000&endTime=${oldestTs - 1}`;
-                const ctrl = new AbortController();
-                const tId = setTimeout(() => ctrl.abort(), 1800);
-                const res2 = await fetch(p2Url, { signal: ctrl.signal });
-                clearTimeout(tId);
-                if (res2.ok) {
-                  const data2 = await res2.json();
-                  if (Array.isArray(data2) && data2.length > 0) {
-                    combined = data2.concat(data1);
-                  }
-                }
-              } catch (errP2) {}
-            }
-
-            let parsed = combined.map(item => ({
-              time: Math.floor(item[0] / 1000),
-              open: parseFloat(item[1]),
-              high: parseFloat(item[2]),
-              low: parseFloat(item[3]),
-              close: parseFloat(item[4]),
-              volume: parseFloat(item[5])
-            }));
-
-            // Nếu đang cuối tuần và đang xem sàn Forex/Exness, loại bỏ nến phát sinh sau giờ đóng cửa Thứ 6
-            if (isWeekendForex) {
-              const friCloseTime = getFridayCloseTimestamp();
-              const filtered = parsed.filter(c => c.time <= friCloseTime);
-              if (filtered.length >= 10) {
-                parsed = filtered;
+        if (selectedSource === 'binance') {
+          // CHẾ ĐỘ COIN 24/7 (PAXG)
+          const primaryUrl = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=1000`;
+          let klines = await tryFetchKlines(primaryUrl);
+          combined = klines || [];
+        } else if (tfStr === '1d') {
+          // KHUNG NGÀY 1D CHUẨN SÀN EXNESS:
+          // 1. Nạp toàn bộ nến XAUUSDT từ Binance Futures
+          let xauUrl = `https://fapi.binance.com/fapi/v1/klines?symbol=XAUUSDT&interval=1d&limit=1000${isWeekendForex ? `&endTime=${friCloseTime * 1000}` : ''}`;
+          let xauData = await tryFetchKlines(xauUrl);
+          if (xauData && xauData.length > 0) {
+            combined = xauData;
+            // 2. Backfill dữ liệu quá khứ trước tháng 12/2025 từ PAXG (kéo dài về tận năm 2020)
+            let oldestTs = xauData[0][0];
+            for (let page = 0; page < 2; page++) {
+              let pUrl = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=1d&limit=1000&endTime=${oldestTs - 1}`;
+              let paxgData = await tryFetchKlines(pUrl);
+              if (paxgData && paxgData.length > 0) {
+                combined = paxgData.concat(combined);
+                oldestTs = paxgData[0][0];
+              } else {
+                break;
               }
             }
-
-            if (selectedSource === 'binance') {
-              // CHẾ ĐỘ COIN 24/7 DỰ ĐOÁN XU HƯỚNG: Lấy dữ liệu thuần túy từ Binance, làm mượt nến
-              currentAlignmentDelta = 0;
-              rawCandles = beautifyCandlesSeries(parsed, tfStr, null, false);
+          } else {
+            // Dự phòng nạp thẳng từ PAXG
+            let pUrl = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=1d&limit=1000${isWeekendForex ? `&endTime=${friCloseTime * 1000}` : ''}`;
+            combined = (await tryFetchKlines(pUrl)) || [];
+          }
+        } else if (tfStr === '1w' || tfStr === '1M') {
+          // KHUNG TUẦN & THÁNG: Nạp thẳng từ PAXG để có trọn vẹn 6+ năm lịch sử từ năm 2020
+          let pUrl = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=1000${isWeekendForex ? `&endTime=${friCloseTime * 1000}` : ''}`;
+          combined = (await tryFetchKlines(pUrl)) || [];
+        } else {
+          // KHUNG TRONG NGÀY (5m, 15m, 30m, 1h, 4h): Nạp nhiều trang XAUUSDT (2000 - 3000 nến)
+          const pagesToLoad = (tfStr === '5m' || tfStr === '15m' || tfStr === '1h') ? 3 : 2;
+          let oldestTs = null;
+          for (let p = 0; p < pagesToLoad; p++) {
+            let pUrl = `https://fapi.binance.com/fapi/v1/klines?symbol=XAUUSDT&interval=${bnInterval}&limit=1000`;
+            if (p === 0 && isWeekendForex) {
+              pUrl += `&endTime=${friCloseTime * 1000}`;
+            } else if (oldestTs) {
+              pUrl += `&endTime=${oldestTs - 1}`;
+            }
+            let dataPage = await tryFetchKlines(pUrl);
+            if (dataPage && dataPage.length > 0) {
+              combined = dataPage.concat(combined);
+              oldestTs = dataPage[0][0];
             } else {
-              // CHẾ ĐỘ SÀN EXNESS (VÀNG THẾ GIỚI): CÂN CHỈNH KHỚP CHÍNH XÁC VỚI GIÁ CHỐT PHIÊN THỨ 6
+              break;
+            }
+          }
+          if (combined.length === 0) {
+            let fallbackUrl = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=1000${isWeekendForex ? `&endTime=${friCloseTime * 1000}` : ''}`;
+            combined = (await tryFetchKlines(fallbackUrl)) || [];
+          }
+        }
+
+        if (combined && combined.length > 0) {
+          let parsed = combined.map(item => ({
+            time: Math.floor(item[0] / 1000),
+            open: parseFloat(item[1]),
+            high: parseFloat(item[2]),
+            low: parseFloat(item[3]),
+            close: parseFloat(item[4]),
+            volume: parseFloat(item[5])
+          }));
+
+          // LỌC BỎ 100% NẾN THỨ BẢY VÀ CHỦ NHẬT (CHUẨN SÀN EXNESS FOREX)
+          if (selectedSource !== 'binance') {
+            parsed = parsed.filter(c => {
+              const dt = new Date(c.time * 1000);
+              const day = dt.getUTCDay(); // 0 = CN, 6 = T7
+              const h = dt.getUTCHours();
+              const m = dt.getUTCMinutes();
+              if (day === 6) return false; // Thứ 7 đóng cửa
+              if (day === 0) {
+                if (tfStr === '1d' || tfStr === '1w' || tfStr === '1M') return false; // Không có nến ngày CN
+                if (h < 23 || (h === 23 && m < 1)) return false; // Giờ mùa đông mở sau 23:05 UTC (06:01 VN)
+              }
+              if (day === 5 && (h > 21 || (h === 21 && m >= 55))) return false;
+              if (isWeekendForex && c.time > friCloseTime) return false;
+              return true;
+            });
+          }
+
+          if (parsed.length > 0) {
+            if (selectedSource === 'binance') {
+              currentAlignmentDelta = 0;
+              rawCandles = sanitizeCandlesSeries(parsed, tfStr, null, false);
+            } else {
               const lastCandleRaw = parsed[parsed.length - 1];
               currentAlignmentDelta = Math.round((targetRefPrice - lastCandleRaw.close) * 100) / 100;
 
-              // Áp dụng cân chỉnh vào toàn bộ nến lịch sử
               const shifted = parsed.map(c => ({
                 time: c.time,
                 open: Math.round((c.open + currentAlignmentDelta) * 100) / 100,
@@ -8431,73 +8545,15 @@ function renderData() {
                 volume: c.volume
               }));
 
-              // Làm mịn vi mô và loại bỏ triệt để nến dẹt/coi rác cho M1
-              rawCandles = beautifyCandlesSeries(shifted, tfStr, targetRefPrice, isWeekendForex);
+              rawCandles = sanitizeCandlesSeries(shifted, tfStr, targetRefPrice, isWeekendForex);
             }
 
-            candlesMemoryCache[tfStr] = { time: Date.now(), data: rawCandles };
+            candlesMemoryCache[cacheKey] = { time: Date.now(), data: rawCandles };
             return true;
           }
         }
       } catch (err) {
-        console.warn("Binance fetch error:", err);
-      }
-
-      // Nguồn dự phòng 1: Gate.io Spot Gold API
-      try {
-        const gateInterval = tfGateMap[tfStr] || '5m';
-        let gateUrl = `https://api.gateio.ws/api/v4/spot/candlesticks?currency_pair=PAXG_USDT&interval=${gateInterval}&limit=1000`;
-        if (isWeekendForex) {
-          const friCloseTime = getFridayCloseTimestamp();
-          gateUrl += `&to=${friCloseTime}`;
-        }
-        const ctrlGate = new AbortController();
-        const tIdGate = setTimeout(() => ctrlGate.abort(), 2000);
-        const res = await fetch(gateUrl, { signal: ctrlGate.signal });
-        clearTimeout(tIdGate);
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            let parsed = data.map(item => ({
-              time: parseInt(item[0]),
-              volume: parseFloat(item[1]),
-              close: parseFloat(item[2]),
-              high: parseFloat(item[3]),
-              low: parseFloat(item[4]),
-              open: parseFloat(item[5])
-            })).reverse();
-
-            if (isWeekendForex) {
-              const friCloseTime = getFridayCloseTimestamp();
-              const filtered = parsed.filter(c => c.time <= friCloseTime);
-              if (filtered.length >= 10) parsed = filtered;
-            }
-
-            if (selectedSource === 'binance') {
-              currentAlignmentDelta = 0;
-              rawCandles = beautifyCandlesSeries(parsed, tfStr, null, false);
-            } else {
-              const rawLastClose = parsed[parsed.length - 1].close;
-              currentAlignmentDelta = Math.round((targetRefPrice - rawLastClose) * 100) / 100;
-
-              const shifted = parsed.map(c => ({
-                time: c.time,
-                open: Math.round((c.open + currentAlignmentDelta) * 100) / 100,
-                high: Math.round((c.high + currentAlignmentDelta) * 100) / 100,
-                low: Math.round((c.low + currentAlignmentDelta) * 100) / 100,
-                close: Math.round((c.close + currentAlignmentDelta) * 100) / 100,
-                volume: c.volume
-              }));
-
-              rawCandles = beautifyCandlesSeries(shifted, tfStr, targetRefPrice, isWeekendForex);
-            }
-
-            candlesMemoryCache[tfStr] = { time: Date.now(), data: rawCandles };
-            return true;
-          }
-        }
-      } catch (err) {
-        console.warn("Gate.io fetch error:", err);
+        console.warn("fetchRealHistory error:", err);
       }
 
       return false;
@@ -8513,17 +8569,25 @@ function renderData() {
       }
 
       // Cuối tuần sàn Forex nghỉ: Không kết nối WebSocket để bảo toàn giá chốt phiên
-      if (isForexWeekend() && selectedSource !== 'binance') {
+      if (!getGoldMarketInfo().isOpen && selectedSource !== 'binance') {
         return;
       }
 
-      const wsUrl = `wss://stream.binance.com:9443/stream?streams=paxgusdt@bookTicker/paxgusdt@trade`;
+      const wsUrl = (selectedSource === 'binance')
+        ? `wss://stream.binance.com:9443/stream?streams=paxgusdt@bookTicker/paxgusdt@trade`
+        : `wss://fstream.binance.com/stream?streams=xauusdt@aggTrade/xauusdt@bookTicker`;
 
       try {
         liveWs = new WebSocket(wsUrl);
 
         liveWs.onopen = () => {
-          setStatus('live', selectedSource === 'binance' ? '⚡ COIN PAXG 24/7 (ĐOÁN XU HƯỚNG)' : 'KẾT NỐI REAL-TIME XAUUSD PIP FEED');
+          if (selectedSource === 'binance') {
+            setStatus('live', '⚡ DỰ BÁO XU HƯỚNG 24/7 (VOLUME COIN)');
+          } else if (getGoldMarketInfo().isOpen) {
+            setStatus('live', 'SÀN EXNESS XAUUSD LIVE (CHUẨN)');
+          } else {
+            setStatus('closed', getGoldMarketInfo().statusText);
+          }
         };
 
         liveWs.onmessage = (event) => {
@@ -8539,13 +8603,19 @@ function renderData() {
             }
 
             if (tickPrice && !isNaN(tickPrice)) {
-              marketState.binancePrice = tickPrice;
-              
               if (selectedSource === 'binance') {
+                marketState.binancePrice = tickPrice;
                 targetPrice = tickPrice;
                 updateDisplayFromFeeds();
                 updateLiveCandleWithTick(tickPrice);
                 processLogic(tickPrice);
+              } else if (getGoldMarketInfo().isOpen) {
+                const liveExPrice = Math.round((tickPrice + currentAlignmentDelta) * 100) / 100;
+                marketState.exnessPrice = liveExPrice;
+                targetPrice = liveExPrice;
+                updateDisplayFromFeeds();
+                updateLiveCandleWithTick(liveExPrice);
+                processLogic(liveExPrice);
               }
             }
           } catch(e) {}
@@ -8553,7 +8623,7 @@ function renderData() {
 
         liveWs.onclose = () => {
           setTimeout(() => {
-            if (currentTfStr === tfStr && (!isForexWeekend() || selectedSource === 'binance')) {
+            if (currentTfStr === tfStr && (getGoldMarketInfo().isOpen || selectedSource === 'binance')) {
               startBinanceWebSocket(tfStr);
             }
           }, 3500);
@@ -8572,11 +8642,16 @@ function renderData() {
 
     function startPipTickEngine() {
       if (pipTimer) clearInterval(pipTimer);
-      if (isForexWeekend() && selectedSource !== 'binance') {
+      if (!getGoldMarketInfo().isOpen && selectedSource !== 'binance') {
         return; // Thị trường đóng cửa: Không chạy dao động giả lập
       }
       
       pipTimer = setInterval(() => {
+        if (!getGoldMarketInfo().isOpen && selectedSource !== 'binance') {
+          clearInterval(pipTimer);
+          pipTimer = null;
+          return;
+        }
         if (!targetPrice) return;
         if (!displayPrice) displayPrice = targetPrice;
 
@@ -8589,6 +8664,108 @@ function renderData() {
           updateLiveCandleWithTick(displayPrice);
         }
       }, 100);
+    }
+
+    // -------------------------------------------------------------------------
+    // E2. TỰ ĐỘNG NẠP THÊM LỊCH SỬ NẾN QUÁ KHỨ KHI KÉO VỀ BÊN TRÁI (INFINITE SCROLL)
+    // -------------------------------------------------------------------------
+    let isLoadingOlderBars = false;
+    let hasMoreHistoricalBars = true;
+    let lazyLoaderSubscribed = false;
+
+    function setupLazyHistoryLoader() {
+      if (lazyLoaderSubscribed || !chart) return;
+      lazyLoaderSubscribed = true;
+
+      chart.timeScale().subscribeVisibleLogicalRangeChange(async (logicalRange) => {
+        if (!logicalRange || isLoadingOlderBars || !hasMoreHistoricalBars) return;
+        if (!rawCandles || rawCandles.length < 50) return;
+
+        // Khi người dùng cuộn/kéo biểu đồ về gần sát 30 nến đầu tiên trong quá khứ
+        if (logicalRange.from < 30) {
+          isLoadingOlderBars = true;
+          try {
+            const oldestBar = rawCandles[0];
+            const bnInterval = tfBinanceMap[currentTfStr] || '5m';
+            const oldestMs = oldestBar.time * 1000;
+            const isWeekendForex = !getGoldMarketInfo().isOpen && selectedSource !== 'binance';
+
+            let pUrl = (selectedSource === 'binance' || currentTfStr === '1w' || currentTfStr === '1M')
+              ? `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=1000&endTime=${oldestMs - 1}`
+              : `https://fapi.binance.com/fapi/v1/klines?symbol=XAUUSDT&interval=${bnInterval}&limit=1000&endTime=${oldestMs - 1}`;
+
+            let res = await fetch(pUrl);
+            let olderData = null;
+            if (res.ok) {
+              olderData = await res.json();
+            }
+
+            // Nếu XAUUSDT hết dữ liệu quá khứ (trước tháng 12/2025), fallback sang PAXGUSDT
+            if ((!olderData || olderData.length === 0) && selectedSource !== 'binance') {
+              let pUrlPaxg = `https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${bnInterval}&limit=1000&endTime=${oldestMs - 1}`;
+              let resPaxg = await fetch(pUrlPaxg);
+              if (resPaxg.ok) {
+                olderData = await resPaxg.json();
+              }
+            }
+
+            if (Array.isArray(olderData) && olderData.length > 0) {
+              let parsedOlder = olderData.map(item => ({
+                time: Math.floor(item[0] / 1000),
+                open: parseFloat(item[1]),
+                high: parseFloat(item[2]),
+                low: parseFloat(item[3]),
+                close: parseFloat(item[4]),
+                volume: parseFloat(item[5])
+              }));
+
+              if (selectedSource !== 'binance') {
+                parsedOlder = parsedOlder.filter(c => {
+                  const dt = new Date(c.time * 1000);
+                  const day = dt.getUTCDay();
+                  const h = dt.getUTCHours();
+                  const m = dt.getUTCMinutes();
+                  if (day === 6) return false;
+                  if (day === 0) {
+                    if (currentTfStr === '1d' || currentTfStr === '1w' || currentTfStr === '1M') return false;
+                    if (h < 23 || (h === 23 && m < 1)) return false;
+                  }
+                  if (day === 5 && (h > 21 || (h === 21 && m >= 55))) return false;
+                  return true;
+                });
+              }
+
+              if (parsedOlder.length > 0) {
+                const shiftedOlder = parsedOlder.map(c => ({
+                  time: c.time,
+                  open: Math.round((c.open + currentAlignmentDelta) * 100) / 100,
+                  high: Math.round((c.high + currentAlignmentDelta) * 100) / 100,
+                  low: Math.round((c.low + currentAlignmentDelta) * 100) / 100,
+                  close: Math.round((c.close + currentAlignmentDelta) * 100) / 100,
+                  volume: c.volume
+                }));
+
+                const sanitizedOlder = sanitizeCandlesSeries(shiftedOlder, currentTfStr, null, false);
+                rawCandles = sanitizedOlder.concat(rawCandles);
+                mainSeries.setData(rawCandles);
+
+                // Giữ nguyên vị trí cuộn màn hình của người dùng mà không bị giật
+                chart.timeScale().setVisibleLogicalRange({
+                  from: logicalRange.from + sanitizedOlder.length,
+                  to: logicalRange.to + sanitizedOlder.length
+                });
+              } else {
+                hasMoreHistoricalBars = false;
+              }
+            } else {
+              hasMoreHistoricalBars = false;
+            }
+          } catch (e) {
+          } finally {
+            isLoadingOlderBars = false;
+          }
+        }
+      });
     }
 
     // -------------------------------------------------------------------------
@@ -8632,17 +8809,20 @@ function renderData() {
           updateElliottWave(rawCandles, cPrice);
         }
         chart.priceScale('right').applyOptions({ autoScale: true });
-        if (tfStr === '1d') {
-          try { chart.timeScale().fitContent(); } catch(e) {}
-        } else {
-          const totalBars = rawCandles.length;
-          const visibleBars = Math.min(totalBars, 85);
-          const extraRightBars = (indConfig.elliott && indConfig.elliott.enabled) ? 35 : 8;
-          chart.timeScale().setVisibleLogicalRange({
-            from: Math.max(0, totalBars - visibleBars),
-            to: totalBars + extraRightBars
-          });
-        }
+        chart.timeScale().applyOptions({
+          rightOffset: 8,
+          fixLeftEdge: false,
+          fixRightEdge: false
+        });
+        const totalBars = rawCandles.length;
+        // Hiển thị vừa vặn 70-85 nến gần nhất ở trung tâm màn hình, nến mới nhất nằm sát biên phải với khoảng thở chuẩn
+        const visibleBars = (tfStr === '1d' || tfStr === '1w' || tfStr === '1M')
+          ? Math.min(totalBars, 85)
+          : Math.min(totalBars, 70);
+        chart.timeScale().setVisibleLogicalRange({
+          from: Math.max(0, totalBars - visibleBars),
+          to: totalBars + 6
+        });
         
         // 3. Lấy giá chốt phiên và thiết lập các cản AI
         const lastCandle = rawCandles[rawCandles.length - 1];
@@ -9435,8 +9615,8 @@ function renderData() {
         if (raw) {
           const arr = JSON.parse(raw);
           if (Array.isArray(arr)) {
-            // Tự động làm sạch các cảnh báo cũ đã khớp hoặc mốc 3875.65 cũ tránh bị báo động treo vô tận
-            const cleaned = arr.filter(a => a && typeof a.price === 'number' && a.active && !a.triggered && Math.abs(a.price - 3875.65) > 0.45);
+            // Tự động làm sạch các cảnh báo cũ đã khớp hoặc mốc 3875.94 cũ tránh bị báo động treo vô tận
+            const cleaned = arr.filter(a => a && typeof a.price === 'number' && a.active && !a.triggered && Math.abs(a.price - 3875.94) > 0.45);
             localStorage.setItem('agy_gold_custom_alerts', JSON.stringify(cleaned));
             return cleaned;
           }
@@ -9700,7 +9880,7 @@ function renderData() {
     // HỆ THỐNG BÁO ĐỘNG ĐA PHƯƠNG THỨC: RUNG ĐIỆN THOẠI, CÒI SIREN, 
     // THÔNG BÁO WINDOWS TRỰC TIẾP & CHỚP NHÁY THỊ GIÁC (DÀNH CHO PC KHÔNG LOA & IPHONE)
     // =========================================================================
-    let originalDocTitle = document.title || 'AI XAUUSD SYSTEM';
+    let originalDocTitle = document.title || 'HDPE ROBOT';
     let titleStrobeInterval = null;
     let sirenOsc = null;
 
@@ -9882,7 +10062,7 @@ function renderData() {
         clearInterval(titleStrobeInterval);
         titleStrobeInterval = null;
       }
-      document.title = originalDocTitle || 'AI XAUUSD SYSTEM';
+      document.title = originalDocTitle || 'HDPE ROBOT';
 
       // 5. Ẩn toàn bộ modal cảnh báo và thanh nổi
       const modal = document.getElementById('vibrate-alarm-modal');
@@ -10205,16 +10385,6 @@ function renderData() {
         saveIndConfig();
         const lp = (rawCandles && rawCandles.length > 0) ? rawCandles[rawCandles.length - 1].close : 0;
         updateElliottWave(rawCandles, lp);
-        if (typeof chart !== 'undefined' && chart) {
-          try {
-            chart.timeScale().applyOptions({ rightOffset: 35 });
-            const totalBars = rawCandles.length;
-            chart.timeScale().setVisibleLogicalRange({
-              from: Math.max(0, totalBars - 70),
-              to: totalBars + 32
-            });
-          } catch(e) {}
-        }
       });
     }
     if (btnEwBear) {
@@ -10224,10 +10394,6 @@ function renderData() {
         saveIndConfig();
         const lp = (rawCandles && rawCandles.length > 0) ? rawCandles[rawCandles.length - 1].close : 0;
         updateElliottWave(rawCandles, lp);
-        const ew = calcElliottWave(rawCandles, 6, 0.10);
-        if (ew && ew.timeRange && typeof chart !== 'undefined' && chart) {
-          try { chart.timeScale().setVisibleRange(ew.timeRange); } catch(e) {}
-        }
       });
     }
     if (btnEwAuto) {
