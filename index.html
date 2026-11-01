@@ -9,7 +9,7 @@
   <title>AI XAUUSD System - Real World Gold Data</title>
   <script>
     // Tự động ép trình duyệt khách hàng tải bản mới nhất, không bao giờ kẹt cache cũ
-    const BUILD_VERSION = "2026.11.01.0120";
+    const BUILD_VERSION = "2026.11.01.0745";
     try {
       const lastVer = localStorage.getItem('xauusd_client_ver');
       if (lastVer !== BUILD_VERSION) {
@@ -3458,6 +3458,145 @@
         font-size: 11px !important;
       }
     }
+
+        /* =========================================================================
+       MỤC THỐNG KÊ LƯỢT TRUY CẬP & ONLINE (GỌN GÀNG, CHUẨN XÁC)
+       ========================================================================= */
+    .news-traffic-box {
+      margin-top: 8px;
+      padding: 8px 10px;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.75) 0%, rgba(10, 15, 26, 0.95) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.22);
+      border-radius: 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      transition: border-color 0.2s;
+    }
+    .news-traffic-box:hover {
+      border-color: rgba(59, 130, 246, 0.45);
+    }
+    .news-traffic-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+    .traffic-header-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .traffic-header-icon {
+      font-size: 12px;
+    }
+    .traffic-header-title {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #93c5fd;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .traffic-online-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 2px 7px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #34d399;
+      font-family: var(--font-mono);
+      cursor: default;
+    }
+    .traffic-online-dot {
+      width: 6.5px;
+      height: 6.5px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #10b981;
+      animation: trafficPulseGreen 1.4s infinite;
+    }
+    @keyframes trafficPulseGreen {
+      0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1.2); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .traffic-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px 6px;
+    }
+    .traffic-grid-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 5px;
+      padding: 4px 7px;
+      font-size: 10px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .traffic-grid-item:hover {
+      background: rgba(30, 41, 59, 0.7);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    .traffic-grid-item.traffic-item-highlight {
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+    .stat-lbl {
+      color: #94a3b8;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .stat-num {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      color: #f8fafc;
+      font-size: 10.5px;
+    }
+    .traffic-item-highlight .stat-num {
+      color: #fbbf24;
+    }
+
+    /* Light Theme Styles */
+    body.light-theme .news-traffic-box {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+    body.light-theme .traffic-header-title {
+      color: #1e40af;
+    }
+    body.light-theme .traffic-grid-item {
+      background: #ffffff;
+      border-color: #e2e8f0;
+    }
+    body.light-theme .traffic-grid-item:hover {
+      background: #f1f5f9;
+      border-color: #93c5fd;
+    }
+    body.light-theme .stat-lbl {
+      color: #64748b;
+    }
+    body.light-theme .stat-num {
+      color: #0f172a;
+    }
+    body.light-theme .traffic-grid-item.traffic-item-highlight {
+      background: #fef3c7;
+      border-color: #fde68a;
+    }
+    body.light-theme .traffic-item-highlight .stat-num {
+      color: #b45309;
+    }
+
   </style>
 </head>
 <body>
@@ -4169,6 +4308,51 @@
               <span id="news-last-updated">⏱️ Cập nhật tự động: Vừa xong</span>
               <span style="color:#60a5fa; font-weight:700;">● Tác động trực tiếp XAU/USD</span>
             </div>
+
+            <!-- =====================================================================
+                 MỤC NHỎ CUỐI TIN TỨC: THỐNG KÊ LƯỢT TRUY CẬP & ONLINE
+                 ===================================================================== -->
+            <div class="news-traffic-box" id="news-traffic-section">
+              <div class="news-traffic-header">
+                <div class="traffic-header-left">
+                  <span class="traffic-header-icon">📊</span>
+                  <span class="traffic-header-title">LƯU LƯỢNG &amp; TRUY CẬP</span>
+                </div>
+                <div class="traffic-online-badge" id="traffic-online-badge" title="Số lượng người dùng đang hoạt động trực tuyến thời gian thực">
+                  <span class="traffic-online-dot"></span>
+                  <span class="traffic-online-lbl">Đang Online:</span>
+                  <span class="traffic-online-num" id="stat-online-num">101</span>
+                </div>
+              </div>
+
+              <!-- Lưới thống kê 6 mốc: Ngày, Tuần, Tháng, Năm, Tổng, Lượt xem -->
+              <div class="traffic-grid">
+                <div class="traffic-grid-item" title="Số lượt truy cập trong ngày hôm nay (+100 ảo)">
+                  <span class="stat-lbl">📅 Hôm nay:</span>
+                  <span class="stat-num" id="stat-today-num">101</span>
+                </div>
+                <div class="traffic-grid-item" title="Số lượt truy cập trong tuần này (+100 ảo)">
+                  <span class="stat-lbl">🗓️ Tuần này:</span>
+                  <span class="stat-num" id="stat-week-num">101</span>
+                </div>
+                <div class="traffic-grid-item" title="Số lượt truy cập trong tháng này (+100 ảo)">
+                  <span class="stat-lbl">📆 Tháng này:</span>
+                  <span class="stat-num" id="stat-month-num">101</span>
+                </div>
+                <div class="traffic-grid-item" title="Số lượt truy cập trong năm (+100 ảo)">
+                  <span class="stat-lbl">📈 Năm này:</span>
+                  <span class="stat-num" id="stat-year-num">101</span>
+                </div>
+                <div class="traffic-grid-item traffic-item-highlight" title="Tổng lượt truy cập tích lũy (+100 ảo)">
+                  <span class="stat-lbl">🌐 Tổng truy cập:</span>
+                  <span class="stat-num" id="stat-total-num">101</span>
+                </div>
+                <div class="traffic-grid-item" title="Tổng số lượt xem trang (+100 ảo)">
+                  <span class="stat-lbl">👁️ Lượt xem:</span>
+                  <span class="stat-num" id="stat-pv-num">101</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -4418,7 +4602,8 @@
     </div>
   </div>
 
-    <!-- THANH TẮT BÁO ĐỘNG NHANH NỔI TRÊN MÀN HÌNH (DỄ DÀNG TẮT CHỚP NHÁY / ESC) -->
+    
+  <!-- THANH TẮT BÁO ĐỘNG NHANH NỔI TRÊN MÀN HÌNH (DỄ DÀNG TẮT CHỚP NHÁY / ESC) -->
   <div id="alarm-dismiss-floating-bar" class="alarm-floating-bar" style="display:none;" title="Chạm để tắt báo động ngay (hoặc bấm ESC)">
     <span class="alarm-floating-pulse">🚨</span>
     <span id="alarm-floating-text">BÁO ĐỘNG: GIÁ ĐÃ KHỚP!</span>
@@ -9084,6 +9269,169 @@
         });
       }
     });
+
+    
+                // =========================================================================
+    // HỆ THỐNG THỐNG KÊ LƯỢT TRUY CẬP & ONLINE TOÀN CẦU (ĐỒNG BỘ GITHUB PAGES)
+    // CƠ CHẾ: MẶC ĐỊNH +100 ẢO, 1 MÁY/IP = 101 ONLINE, TỰ ĐỘNG ĐỒNG BỘ TOÀN CẦU
+    // =========================================================================
+    const SITE_NAMESPACE = 'vuvanthien_giaodichvang';
+    const VIRTUAL_OFFSET = 100; // Mặc định +100 ảo
+
+    function getISOWeekString(d) {
+      const target = new Date(d.valueOf());
+      const dayNr = (d.getDay() + 6) % 7;
+      target.setDate(target.getDate() - dayNr + 3);
+      const firstThursday = target.valueOf();
+      target.setMonth(0, 1);
+      if (target.getDay() !== 4) {
+        target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
+      }
+      const weekNum = 1 + Math.ceil((firstThursday - target) / 604800000);
+      return `${d.getFullYear()}-W${weekNum}`;
+    }
+
+    let trafficStats = {
+      online: 1,
+      today: 1,
+      week: 1,
+      month: 1,
+      year: 1,
+      total: 1,
+      pv: 1
+    };
+
+    // Hàm gọi API đếm bảo đảm không bao giờ làm gián đoạn trang web
+    async function fetchCounter(action, key) {
+      try {
+        const url = `https://countapi.mileshilliard.com/api/v1/${action}/${key}`;
+        const res = await fetch(url, { method: 'GET', mode: 'cors' });
+        if (res.ok) {
+          const data = await res.json();
+          return typeof data.value === 'number' ? data.value : null;
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    async function initTrafficEngine() {
+      // 1. Tải cache nhanh từ localStorage (hiển thị tức thì 0.01s)
+      try {
+        const raw = localStorage.getItem('agy_traffic_stats_global_v1');
+        if (raw) {
+          trafficStats = Object.assign(trafficStats, JSON.parse(raw));
+        }
+      } catch(e) {}
+      renderTrafficStats();
+
+      // 2. Chuẩn bị các mốc thời gian
+      const now = new Date();
+      const todayStr = `${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, '0')}_${String(now.getDate()).padStart(2, '0')}`;
+      const weekStr = getISOWeekString(now);
+      const monthStr = `${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, '0')}`;
+      const yearStr = `${now.getFullYear()}`;
+
+      // 3. Đồng bộ Đang Online (Cửa sổ 3 phút: mỗi máy/IP chỉ hit 1 lần trong 3 phút)
+      const onlineWindow = Math.floor(Date.now() / 180000);
+      const onlineKey = `${SITE_NAMESPACE}_online_${onlineWindow}`;
+      const hasPingedWindow = sessionStorage.getItem('agy_last_online_win') === String(onlineWindow);
+
+      if (!hasPingedWindow) {
+        sessionStorage.setItem('agy_last_online_win', String(onlineWindow));
+        const val = await fetchCounter('hit', onlineKey);
+        if (val) trafficStats.online = Math.max(1, val);
+      } else {
+        const val = await fetchCounter('get', onlineKey);
+        if (val) trafficStats.online = Math.max(1, val);
+      }
+      renderTrafficStats();
+
+      // 4. Đồng bộ Lượt xem trang (Pageviews - PV)
+      const pvKey = `${SITE_NAMESPACE}_pv`;
+      fetchCounter('hit', pvKey).then(val => {
+        if (val) {
+          trafficStats.pv = val;
+          renderTrafficStats();
+        }
+      });
+
+      // 5. Đồng bộ Hôm nay / Tuần này / Tháng này / Năm này / Tổng truy cập (Mỗi máy chỉ hit 1 lần)
+      const lastToday = localStorage.getItem('agy_last_hit_today');
+      const lastWeek = localStorage.getItem('agy_last_hit_week');
+      const lastMonth = localStorage.getItem('agy_last_hit_month');
+      const lastYear = localStorage.getItem('agy_last_hit_year');
+      const isNewSession = !sessionStorage.getItem('agy_session_visited_global');
+
+      const todayAction = (lastToday !== todayStr) ? 'hit' : 'get';
+      const weekAction = (lastWeek !== weekStr) ? 'hit' : 'get';
+      const monthAction = (lastMonth !== monthStr) ? 'hit' : 'get';
+      const yearAction = (lastYear !== yearStr) ? 'hit' : 'get';
+      const totalAction = isNewSession ? 'hit' : 'get';
+
+      if (todayAction === 'hit') localStorage.setItem('agy_last_hit_today', todayStr);
+      if (weekAction === 'hit') localStorage.setItem('agy_last_hit_week', weekStr);
+      if (monthAction === 'hit') localStorage.setItem('agy_last_hit_month', monthStr);
+      if (yearAction === 'hit') localStorage.setItem('agy_last_hit_year', yearStr);
+      if (isNewSession) sessionStorage.setItem('agy_session_visited_global', '1');
+
+      Promise.all([
+        fetchCounter(todayAction, `${SITE_NAMESPACE}_today_${todayStr}`),
+        fetchCounter(weekAction, `${SITE_NAMESPACE}_week_${weekStr}`),
+        fetchCounter(monthAction, `${SITE_NAMESPACE}_month_${monthStr}`),
+        fetchCounter(yearAction, `${SITE_NAMESPACE}_year_${yearStr}`),
+        fetchCounter(totalAction, `${SITE_NAMESPACE}_total_visits`)
+      ]).then(([td, wk, mo, yr, tt]) => {
+        if (td !== null) trafficStats.today = td;
+        if (wk !== null) trafficStats.week = wk;
+        if (mo !== null) trafficStats.month = mo;
+        if (yr !== null) trafficStats.year = yr;
+        if (tt !== null) trafficStats.total = tt;
+
+        try {
+          localStorage.setItem('agy_traffic_stats_global_v1', JSON.stringify(trafficStats));
+        } catch(e) {}
+        renderTrafficStats();
+      });
+
+      // Heartbeat định kỳ 2 phút để duy trì trạng thái Online cho máy đang xem
+      setInterval(async () => {
+        const curWin = Math.floor(Date.now() / 180000);
+        const winKey = `${SITE_NAMESPACE}_online_${curWin}`;
+        if (sessionStorage.getItem('agy_last_online_win') !== String(curWin)) {
+          sessionStorage.setItem('agy_last_online_win', String(curWin));
+          const val = await fetchCounter('hit', winKey);
+          if (val) trafficStats.online = Math.max(1, val);
+        } else {
+          const val = await fetchCounter('get', winKey);
+          if (val) trafficStats.online = Math.max(1, val);
+        }
+        renderTrafficStats();
+      }, 120000);
+    }
+
+    function renderTrafficStats() {
+      const format = (n) => (VIRTUAL_OFFSET + (parseInt(n) || 1)).toLocaleString('vi-VN');
+
+      const elOnline = document.getElementById('stat-online-num');
+      const elToday = document.getElementById('stat-today-num');
+      const elWeek = document.getElementById('stat-week-num');
+      const elMonth = document.getElementById('stat-month-num');
+      const elYear = document.getElementById('stat-year-num');
+      const elTotal = document.getElementById('stat-total-num');
+      const elPv = document.getElementById('stat-pv-num');
+
+      // 1 máy đang vào = 100 ảo + 1 = 101 Online
+      if (elOnline) elOnline.textContent = (VIRTUAL_OFFSET + (parseInt(trafficStats.online) || 1)).toLocaleString('vi-VN');
+      if (elToday) elToday.textContent = format(trafficStats.today);
+      if (elWeek) elWeek.textContent = format(trafficStats.week);
+      if (elMonth) elMonth.textContent = format(trafficStats.month);
+      if (elYear) elYear.textContent = format(trafficStats.year);
+      if (elTotal) elTotal.textContent = format(trafficStats.total);
+      if (elPv) elPv.textContent = format(trafficStats.pv);
+    }
+
+    initTrafficEngine();
+
 
     renderWinRateStats('day');
 
