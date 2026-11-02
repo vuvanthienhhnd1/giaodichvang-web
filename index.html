@@ -9,7 +9,7 @@
   <title>HDPE ROBOT - Real World Gold Data</title>
   <script>
     // Tự động ép trình duyệt khách hàng tải bản mới nhất, không bao giờ kẹt cache cũ
-    const BUILD_VERSION = "2026.11.02.1830";
+    const BUILD_VERSION = "2026.11.02.1930";
     try {
       const lastVer = localStorage.getItem('xauusd_client_ver');
       if (lastVer !== BUILD_VERSION) {
@@ -1777,6 +1777,28 @@
 
     /* News & Risk Card */
     /* Light Theme for Economic Calendar */
+    body.light-theme .econ-btn-back {
+      background: #eff6ff;
+      border-color: #93c5fd;
+      color: #1d4ed8;
+    }
+    body.light-theme .econ-btn-back:hover {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    body.light-theme .econ-modal-close {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+    body.light-theme .econ-mobile-footer-bar {
+      background: rgba(255, 255, 255, 0.96);
+      border-top-color: #cbd5e1;
+    }
+    body.light-theme .econ-btn-mobile-return {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+    }
     body.light-theme .econ-calendar-modal-box {
       background: #ffffff !important;
       border-color: #cbd5e1 !important;
@@ -2591,6 +2613,68 @@
       border-bottom: 1px solid #1e2638;
       flex-shrink: 0;
     }
+    /* Nút Quay Lại và Thanh Điều Hướng Đóng Lịch Kinh Tế */
+    .econ-head-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .econ-head-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+    .econ-btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(37, 99, 235, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.45);
+      color: #60a5fa;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .econ-btn-back:hover {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #3b82f6;
+    }
+    .econ-btn-back .econ-back-icon {
+      font-size: 14px;
+      font-weight: 900;
+    }
+    .econ-modal-close {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      color: #f1f5f9;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .econ-modal-close:hover {
+      background: rgba(239, 68, 68, 0.4);
+      color: #fff;
+      border-color: #ef4444;
+    }
+    .econ-mobile-footer-bar {
+      display: none;
+    }
     .econ-head-badge {
       background: rgba(37, 99, 235, 0.25);
       color: #60a5fa;
@@ -3010,13 +3094,39 @@
       background: #1d4ed8;
     }
     @media (max-width: 768px) {
+      .econ-modal-head {
+        padding: 8px 10px !important;
+        gap: 6px !important;
+      }
+      .econ-head-left {
+        gap: 6px !important;
+      }
+      .econ-btn-back {
+        padding: 6px 10px !important;
+        font-size: 11.5px !important;
+      }
+      .econ-title-sub-pc, .econ-head-badge {
+        display: none !important;
+      }
+      .econ-title-main {
+        font-size: 12.5px !important;
+      }
+      .econ-vtoggle-btn {
+        padding: 4px 6px !important;
+        font-size: 10px !important;
+      }
+      .econ-modal-close {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 14px !important;
+      }
       .econ-filter-bar {
         gap: 6px;
-        padding: 10px 12px;
+        padding: 8px 10px;
       }
       .econ-tab-btn {
-        padding: 6px 12px;
-        font-size: 12px;
+        padding: 6px 10px;
+        font-size: 11.5px;
       }
       .econ-footer-meta {
         flex-direction: column;
@@ -3026,7 +3136,42 @@
         padding: 10px 12px;
       }
       .econ-modal-body {
-        padding: 8px 12px 60px 12px !important;
+        padding: 8px 10px 70px 10px !important;
+      }
+      /* Nút Thoát / Quay lại nổi bật dưới đáy màn hình điện thoại */
+      .econ-mobile-footer-bar {
+        display: flex !important;
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px 12px;
+        background: rgba(13, 17, 26, 0.96);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        z-index: 50;
+        margin: 12px -10px -70px -10px;
+      }
+      .econ-btn-mobile-return {
+        width: 100%;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.55);
+      }
+      .econ-btn-mobile-return:active {
+        transform: scale(0.98);
       }
     }
 
@@ -5093,13 +5238,6 @@
         </svg>
       </button>
 
-      <!-- NÚT CUỘN ĐẾN TIN TỨC THẾ GIỚI & CẢNH BÁO RỦI RO -->
-      <button class="tool-btn" id="btn-news-toggle" title="Tin Tức Thế Giới & Cảnh Báo Rủi Ro (Live 24/7)">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-          <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-1 14H5c-.55 0-1-.45-1-1s.45-1 1-1h14c.55 0 1 .45 1 1s-.45 1-1 1zm0-3H5V7h14v8zM7 9h5v3H7zm6 0h4v1h-4zm0 2h4v1h-4z"/>
-        </svg>
-      </button>
-
       <!-- 2. NÚT LỊCH SỬ MỐC DỮ LIỆU MACRO QUAN TRỌNG & CƠ SỞ NHẬN ĐỊNH VÙNG GIÁ TIẾP THEO -->
       <button class="tool-btn" id="btn-macro-history" title="Lịch Sử Mốc Giá Macro & Cơ Sở Nhận Định Vùng Giá Tiếp Theo">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
@@ -5974,17 +6112,25 @@
     <div class="macro-modal-box macro-fullscreen-box econ-calendar-modal-box">
       <!-- Header -->
       <div class="macro-modal-head econ-modal-head">
-        <div class="macro-modal-title" style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size: 18px;">📅</span>
-          <span>LỊCH KINH TẾ (ECONOMIC CALENDAR)</span>
-          <span class="econ-head-badge">MetaTrader 5 &amp; ForexFactory</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:10px;">
-          <div class="econ-view-toggle">
-            <button class="econ-vtoggle-btn active" id="btn-econ-view-table" title="Chế độ Bảng chuẩn MT5">📊 Bảng MT5 Chuẩn</button>
-            <button class="econ-vtoggle-btn" id="btn-econ-view-tv" title="Chế độ TradingView Live toàn cầu">🌐 TradingView Live</button>
+        <div class="econ-head-left">
+          <!-- Nút Quay Lại nổi bật chuẩn di động & máy tính -->
+          <button class="econ-btn-back" id="btn-back-econ-modal" title="Quay lại biểu đồ (ESC)">
+            <span class="econ-back-icon">←</span>
+            <span class="econ-back-text">Quay lại</span>
+          </button>
+          <div class="macro-modal-title econ-modal-title-wrap">
+            <span style="font-size: 17px;">📅</span>
+            <span class="econ-title-main">LỊCH KINH TẾ</span>
+            <span class="econ-title-sub-pc">(ECONOMIC CALENDAR)</span>
+            <span class="econ-head-badge">MT5 / ForexFactory</span>
           </div>
-          <button class="macro-modal-close" id="btn-close-econ-modal" title="Đóng lịch kinh tế (ESC)">✕</button>
+        </div>
+        <div class="econ-head-right">
+          <div class="econ-view-toggle">
+            <button class="econ-vtoggle-btn active" id="btn-econ-view-table" title="Chế độ Bảng chuẩn MT5">📊 Bảng MT5</button>
+            <button class="econ-vtoggle-btn" id="btn-econ-view-tv" title="Chế độ TradingView Live toàn cầu">🌐 Live TV</button>
+          </div>
+          <button class="macro-modal-close econ-modal-close" id="btn-close-econ-modal" title="Đóng lịch kinh tế (ESC)">✕</button>
         </div>
       </div>
 
@@ -6111,6 +6257,13 @@
         <!-- Chế độ 2: TradingView Live Embed Container -->
         <div id="econ-view-tv-wrapper" style="display: none; width: 100%; height: 560px; border-radius: 8px; overflow: hidden;">
           <iframe id="econ-tv-iframe" style="width: 100%; height: 100%; border: none;" src="about:blank"></iframe>
+        </div>
+
+        <!-- Thanh Nút Thoát / Quay Lại Lớn ở Chân Modal Dành Riêng Cho Điện Thoại -->
+        <div class="econ-mobile-footer-bar">
+          <button class="econ-btn-mobile-return" id="btn-mobile-return-econ">
+            <span>←</span> QUAY LẠI BIỂU ĐỒ &amp; MÀN HÌNH CHÍNH
+          </button>
         </div>
       </div>
     </div>
@@ -9740,7 +9893,11 @@ function renderData() {
       if (savedMView === 'dash' || savedMView === 'chart') currentMobileView = savedMView;
     } catch(e) {}
 
+    let lastActiveMobileNav = 'btn-nav-chart';
     function setMobileActiveNav(activeId) {
+      if (activeId !== 'btn-nav-calendar') {
+        lastActiveMobileNav = activeId;
+      }
       [btnNavChart, btnNavSignals, btnNavNews, btnNavCalendar].forEach(btn => {
         if (btn) btn.classList.toggle('active', btn.id === activeId);
       });
@@ -12409,7 +12566,9 @@ function renderData() {
     function initEconomicCalendar() {
       const modal = document.getElementById('modal-economic-calendar');
       const btnCalendar = document.getElementById('btn-economic-calendar');
+      const btnBack = document.getElementById('btn-back-econ-modal');
       const btnClose = document.getElementById('btn-close-econ-modal');
+      const btnMobileReturn = document.getElementById('btn-mobile-return-econ');
       const btnOpenStrip = document.getElementById('btn-open-calendar-strip');
       const btnOpenAction = document.getElementById('btn-open-calendar-action');
       const btnNavCal = document.getElementById('btn-nav-calendar');
@@ -12427,9 +12586,17 @@ function renderData() {
         if (!modal) return;
         modal.classList.remove('open');
         modal.style.display = 'none';
+
+        // Khôi phục nút đang kích hoạt trên thanh điều hướng di động (trở lại Biểu đồ hoặc Vùng mua bán)
+        if (typeof setMobileActiveNav === 'function' && typeof lastActiveMobileNav !== 'undefined') {
+          setMobileActiveNav(lastActiveMobileNav);
+        }
       }
 
       if (btnCalendar) btnCalendar.addEventListener('click', openModal);
+      if (btnBack) btnBack.addEventListener('click', closeModal);
+      if (btnClose) btnClose.addEventListener('click', closeModal);
+      if (btnMobileReturn) btnMobileReturn.addEventListener('click', closeModal);
       if (btnOpenStrip) btnOpenStrip.addEventListener('click', openModal);
       if (btnOpenAction) {
         btnOpenAction.addEventListener('click', (e) => {
@@ -12443,7 +12610,6 @@ function renderData() {
           openModal();
         });
       }
-      if (btnClose) btnClose.addEventListener('click', closeModal);
       if (modal) {
         modal.addEventListener('click', (e) => {
           if (e.target === modal) closeModal();
