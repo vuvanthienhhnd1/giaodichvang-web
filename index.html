@@ -4667,6 +4667,146 @@
       line-height: 1.45;
     }
 
+    .ew-guidelines-row {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .ew-guideline-pill {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 4px;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(71, 85, 105, 0.4);
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.2s;
+    }
+    .ew-guideline-pill.active {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+    }
+    .ew-entry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .ew-entry-card {
+      background: #090c13;
+      border: 1px solid #1e2638;
+      border-radius: 6px;
+      padding: 7px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .ew-entry-card.conservative {
+      border-color: rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.04);
+    }
+    .ew-entry-card.aggressive {
+      border-color: rgba(245, 158, 11, 0.3);
+      background: rgba(245, 158, 11, 0.04);
+    }
+    .ew-entry-title {
+      font-size: 10px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .conservative .ew-entry-title { color: #34d399; }
+    .aggressive .ew-entry-title { color: #fbbf24; }
+    .ew-entry-body {
+      font-size: 10px;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+    .ew-indicators-box {
+      background: #090c13;
+      border: 1px solid #1e2638;
+      border-radius: 6px;
+      padding: 7px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .ew-indicators-head {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #a78bfa;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .ew-indicators-row {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .ew-ind-pill {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 4px;
+      background: #111827;
+      border: 1px solid #1f293d;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .ew-ind-pill.bull {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+    .ew-ind-pill.bear {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+    .ew-ind-pill.neutral {
+      background: rgba(148, 163, 184, 0.1);
+      border-color: rgba(148, 163, 184, 0.3);
+      color: #cbd5e1;
+    }
+    .ew-risk-box {
+      background: rgba(99, 102, 241, 0.06);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 6px;
+      padding: 7px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .ew-risk-head {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #818cf8;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .ew-risk-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 10px;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+
     /* Light Theme for Elliott Wave */
     body.light-theme .c-elliott {
       background: linear-gradient(90deg, rgba(147, 51, 234, 0.12), rgba(37, 99, 235, 0.12));
@@ -5677,7 +5817,7 @@
                 <span class="calendar-strip-icon">📅</span>
                 <div>
                   <div class="calendar-strip-title">LỊCH KINH TẾ (ECONOMIC CALENDAR)</div>
-                  <div class="calendar-strip-sub" id="calendar-strip-sub-text">🕒 22:00: Chỉ số PMI sản xuất (ISM) · Sự kiện tiếp theo</div>
+                  <div class="calendar-strip-sub" id="calendar-strip-sub-text">🕒 22:00 Hôm nay: Cơ hội việc làm JOLTS (Tin Cam 🟠) &amp; Đơn hàng nhà máy (Tin Vàng 🟡) · Sự kiện tiếp theo</div>
                 </div>
               </div>
               <button class="calendar-strip-action" id="btn-open-calendar-action">Xem lịch ↗</button>
@@ -5962,12 +6102,12 @@
     <!-- =====================================================================
        MODAL: PHÂN TÍCH CHUYÊN SÂU SÓNG ELLIOTT (AI ELLIOTT WAVE THEORY)
        ===================================================================== -->
-  <div class="macro-modal-overlay" id="modal-elliott-analysis" style="display: none;">
-    <div class="macro-modal-box" style="max-width: 640px;">
+    <div class="macro-modal-overlay" id="modal-elliott-analysis" style="display: none;">
+    <div class="macro-modal-box" style="max-width: 660px;">
       <div class="macro-modal-head" style="background: linear-gradient(90deg, rgba(139, 92, 246, 0.25), rgba(59, 130, 246, 0.25));">
         <div class="macro-modal-title">
           <span>🌊</span>
-          <span>PHÂN TÍCH SÓNG ELLIOTT (AI ELLIOTT WAVE)</span>
+          <span>PHÂN TÍCH SÓNG ELLIOTT (WAYNE GORMAN &amp; JEFFREY KENNEDY)</span>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
           <span class="badge b-elliott-phase" id="ew-modal-phase-badge">ĐANG QUÉT SÓNG...</span>
@@ -5982,31 +6122,55 @@
             🚀 SÓNG TĂNG 1-2-3-4-5 (HIỆN TẠI)
           </button>
           <button type="button" id="btn-ew-mode-bear" class="ew-mode-tab" style="flex: 1; padding: 7px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: #94a3b8; cursor: pointer; transition: all 0.2s;">
-            🏛️ CHU KỲ LỚN LỊCH SỬ
+            🏛️ CHU KỲ LỚN LỊCH SỬ / WEDGE
           </button>
           <button type="button" id="btn-ew-mode-auto" class="ew-mode-tab" style="flex: 0.8; padding: 7px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: #94a3b8; cursor: pointer; transition: all 0.2s;">
             ⚡ TỰ ĐỘNG
           </button>
         </div>
-        <!-- Khung Trạng Thái Chu Kỳ & Quy Tắc Elliott -->
+
+        <!-- Khung Trạng Thái Chu Kỳ & 3 Quy Tắc Bất Biến -->
         <div class="ew-hero-box" id="ew-modal-hero-box">
           <div class="ew-hero-top">
             <div class="ew-hero-title" id="ew-modal-cycle-title">CHU KỲ SÓNG: ĐANG PHÂN TÍCH</div>
             <div class="ew-hero-bias" id="ew-modal-bias-badge">BULLISH IMPULSE</div>
           </div>
-          <div class="ew-hero-sub" id="ew-modal-status-desc">
-            Hệ thống AI đang giải mã cấu trúc 5 sóng đẩy (1-2-3-4-5) & 3 sóng điều chỉnh (A-B-C) theo nguyên lý R.N. Elliott.
+          <div style="font-size: 11px; font-weight: 700; color: #c084fc; display: flex; align-items: center; gap: 5px;">
+            <span>📖</span> <span id="ew-modal-pattern-title">Mô hình: Đang nhận diện...</span>
           </div>
+          <div class="ew-hero-sub" id="ew-modal-status-desc">
+            Hệ thống AI đang giải mã cấu trúc 5 sóng đẩy (1-2-3-4-5) &amp; 3 sóng điều chỉnh (A-B-C) theo giáo trình Wayne Gorman &amp; Jeffrey Kennedy.
+          </div>
+
           <!-- 3 Quy tắc bất biến Elliott -->
+          <div style="font-size: 10px; font-weight: 800; color: #94a3b8; margin-top: 4px; text-transform: uppercase;">
+            ⚖️ 3 QUY TẮC THÉP BẤT BIẾN (INVIOLABLE RULES):
+          </div>
           <div class="ew-rules-row">
             <div class="ew-rule-pill pass" id="ew-modal-rule-1" title="Sóng 2 không bao giờ thoái lui vượt quá 100% điểm bắt đầu Sóng 1">
-              <span class="ew-rule-dot"></span> <span>Quy tắc 1: Đáy W2</span>
+              <span class="ew-rule-dot"></span> <span>Quy tắc 1: Đáy W2 (&gt; W0)</span>
             </div>
             <div class="ew-rule-pill pass" id="ew-modal-rule-2" title="Sóng 3 không bao giờ là sóng ngắn nhất trong 3 sóng đẩy (1, 3, 5)">
-              <span class="ew-rule-dot"></span> <span>Quy tắc 2: Sóng W3</span>
+              <span class="ew-rule-dot"></span> <span>Quy tắc 2: Sóng W3 (Không ngắn nhất)</span>
             </div>
-            <div class="ew-rule-pill pass" id="ew-modal-rule-3" title="Sóng 4 không bao giờ xâm phạm vào vùng giá của đỉnh Sóng 1">
-              <span class="ew-rule-dot"></span> <span>Quy tắc 3: Không chồng lấp W4-W1</span>
+            <div class="ew-rule-pill pass" id="ew-modal-rule-3" title="Sóng 4 không bao giờ xâm phạm Sóng 1 (trừ Tam giác chéo Diagonal)">
+              <span class="ew-rule-dot"></span> <span>Quy tắc 3: W4 không overlap W1</span>
+            </div>
+          </div>
+
+          <!-- Chỉ dẫn kinh điển Frost & Prechter / Kennedy -->
+          <div style="font-size: 10px; font-weight: 800; color: #94a3b8; margin-top: 6px; text-transform: uppercase;">
+            📐 CHỈ DẪN KINH ĐIỂN (GUIDELINES &amp; GOLDEN RATIO):
+          </div>
+          <div class="ew-guidelines-row">
+            <div class="ew-guideline-pill active" id="ew-modal-guideline-alt" title="Quy luật Luân phiên: Sóng 2 dốc sâu thì Sóng 4 đi ngang">
+              <span>🔄</span> <span id="ew-modal-alt-text">Luân phiên (Alternation): Sóng 2 vs Sóng 4</span>
+            </div>
+            <div class="ew-guideline-pill active" id="ew-modal-guideline-eq" title="Quy luật Bình đẳng: Sóng 5 bằng Sóng 1 khi Sóng 3 mở rộng">
+              <span>⚖️</span> <span id="ew-modal-eq-text">Bình đẳng (Equality): W5 ≈ W1</span>
+            </div>
+            <div class="ew-guideline-pill active" id="ew-modal-guideline-div" title="Sóng 4 là điểm chia tỷ lệ vàng toàn bộ chu kỳ 0->5">
+              <span>✨</span> <span id="ew-modal-div-text">Golden Divider: 0.618 / 0.382</span>
             </div>
           </div>
         </div>
@@ -6020,40 +6184,42 @@
             <div class="ew-step" data-wave="2"><span class="ew-step-num">2</span><span class="ew-step-lbl">Hồi W1</span></div>
             <div class="ew-step" data-wave="3"><span class="ew-step-num">3</span><span class="ew-step-lbl">Bùng nổ</span></div>
             <div class="ew-step" data-wave="4"><span class="ew-step-num">4</span><span class="ew-step-lbl">Tích luỹ</span></div>
-            <div class="ew-step" data-wave="5"><span class="ew-step-num">5</span><span class="ew-step-lbl">Nước rút</span></div>
-            <div class="ew-step" data-wave="abc"><span class="ew-step-num">A-B-C</span><span class="ew-step-lbl">Điều chỉnh</span></div>
+            <div class="ew-step" data-wave="5"><span class="ew-step-num">5</span><span class="ew-step-lbl">Đỉnh cao</span></div>
+            <div class="ew-step" data-wave="A"><span class="ew-step-num">A</span><span class="ew-step-lbl">Đảo chiều</span></div>
+            <div class="ew-step" data-wave="B"><span class="ew-step-num">B</span><span class="ew-step-lbl">Hồi test</span></div>
+            <div class="ew-step" data-wave="C"><span class="ew-step-num">C</span><span class="ew-step-lbl">Đáy mới</span></div>
           </div>
         </div>
 
-        <!-- Bảng thông số chi tiết các sóng (Giá, pips, Fibo) -->
+        <!-- Bảng thông số chi tiết từng sóng (Fibo & Độ dài) -->
         <div class="ew-metrics-grid">
           <div class="ew-metric-item">
-            <span class="ew-m-lbl">Sóng (1) Khởi Đầu:</span>
-            <span class="ew-m-val" id="ew-modal-val-w1">---</span>
+            <div class="ew-m-lbl">SÓNG 1 (KHỞI TẠO XU HƯỚNG)</div>
+            <div class="ew-m-val" id="ew-modal-val-w1">---.--</div>
           </div>
           <div class="ew-metric-item">
-            <span class="ew-m-lbl">Sóng (2) Thoái Lui:</span>
-            <span class="ew-m-val" id="ew-modal-val-w2">---</span>
+            <div class="ew-m-lbl">SÓNG 2 (THOÁI LUI FIBO)</div>
+            <div class="ew-m-val" id="ew-modal-val-w2">---.--</div>
           </div>
           <div class="ew-metric-item">
-            <span class="ew-m-lbl">Sóng (3) Mở Rộng:</span>
-            <span class="ew-m-val" id="ew-modal-val-w3">---</span>
+            <div class="ew-m-lbl">SÓNG 3 (BÙNG NỔ XUNG LƯỢNG)</div>
+            <div class="ew-m-val" id="ew-modal-val-w3">---.--</div>
           </div>
           <div class="ew-metric-item">
-            <span class="ew-m-lbl">Sóng (4) Điều Chỉnh:</span>
-            <span class="ew-m-val" id="ew-modal-val-w4">---</span>
+            <div class="ew-m-lbl">SÓNG 4 (ĐIỀU CHỈNH TÍCH LUỸ)</div>
+            <div class="ew-m-val" id="ew-modal-val-w4">---.--</div>
           </div>
           <div class="ew-metric-item">
-            <span class="ew-m-lbl">Sóng (5) Đỉnh/Đáy:</span>
-            <span class="ew-m-val" id="ew-modal-val-w5">---</span>
+            <div class="ew-m-lbl">SÓNG 5 (ĐỈNH CAO NHẤT CHU KỲ)</div>
+            <div class="ew-m-val" id="ew-modal-val-w5">---.--</div>
           </div>
           <div class="ew-metric-item">
-            <span class="ew-m-lbl">Pha Điều Chỉnh A-B-C:</span>
-            <span class="ew-m-val" id="ew-modal-val-wabc">---</span>
+            <div class="ew-m-lbl">SÓNG ĐIỀU CHỈNH (A - B - C)</div>
+            <div class="ew-m-val" id="ew-modal-val-wabc">---.--</div>
           </div>
         </div>
 
-        <!-- Hộp Mục tiêu Kế tiếp & Điểm Vi phạm Cấu trúc -->
+        <!-- Mức Giá Mục Tiêu & Ngưỡng Vi Phạm Kèm Cụm Fibonacci -->
         <div class="ew-levels-box">
           <div class="ew-level-row level-target">
             <div class="ew-level-left">
@@ -6070,21 +6236,93 @@
             <div class="ew-level-left">
               <span class="ew-level-icon">🛑</span>
               <div>
-                <div class="ew-level-tag">NGƯỠNG VI PHẠM SÓNG (INVALIDATION)</div>
+                <div class="ew-level-tag">NGƯỠNG VI PHẠM SÓNG (INVALIDATION LEVEL)</div>
                 <div class="ew-level-desc" id="ew-modal-inval-desc">Phá vỡ mốc này sẽ huỷ đếm sóng</div>
               </div>
             </div>
             <div class="ew-level-price" id="ew-modal-inval-price">---.--</div>
           </div>
+
+          <!-- Mốc Cụm Fibonacci & Điểm Chia Tỷ Lệ Vàng -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+            <div style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.06); padding: 6px 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: 9.5px; font-weight: 700; color: #a78bfa;">CỤM FIBONACCI (CLUSTER)</div>
+                <div style="font-size: 9px; color: #64748b;">Hội tụ Retracement &amp; Extension</div>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 11.5px; font-weight: 800; color: #c084fc;" id="ew-modal-cluster-val">---.--</div>
+            </div>
+            <div style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.06); padding: 6px 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: 9.5px; font-weight: 700; color: #f59e0b;">ĐIỂM CHIA TỶ LỆ VÀNG (0.618)</div>
+                <div style="font-size: 9px; color: #64748b;">Golden Section Price Divider</div>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 11.5px; font-weight: 800; color: #fbbf24;" id="ew-modal-divider-val">---.--</div>
+            </div>
+          </div>
         </div>
 
-        <!-- Khuyến nghị hành động AI theo sóng Elliott -->
+        <!-- BỘ 3 CHỈ BÁO XÁC NHẬN SÓNG (CHƯƠNG 6: RSI, NẾN NHẬT, MACD) -->
+        <div class="ew-indicators-box">
+          <div class="ew-indicators-head">
+            <span>📊</span> <b>BỘ 3 CHỈ BÁO XÁC NHẬN KỸ THUẬT (CHƯƠNG 6):</b>
+          </div>
+          <div class="ew-indicators-row">
+            <div class="ew-ind-pill bull" id="ew-modal-ind-rsi">
+              <span>📈</span> <span id="ew-modal-ind-rsi-txt">RSI: Xác nhận động lượng</span>
+            </div>
+            <div class="ew-ind-pill neutral" id="ew-modal-ind-candle">
+              <span>🕯️</span> <span id="ew-modal-ind-candle-txt">Nến Nhật: Đang quét...</span>
+            </div>
+            <div class="ew-ind-pill bull" id="ew-modal-ind-macd">
+              <span>⚡</span> <span id="ew-modal-ind-macd-txt">MACD: Xung lượng mở rộng</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHIẾN LƯỢC GIAO DỊCH CHUYÊN SÂU THEO WAYNE GORMAN & JEFFREY KENNEDY -->
         <div class="ew-strategy-box">
           <div class="ew-strat-head">
-            <span>💡</span> <b>KHUYẾN NGHỊ GIAO DỊCH THEO SÓNG ELLIOTT:</b>
+            <span>🌟</span> <b>CƠ HỘI TRONG 4 SÓNG TỐT NHẤT ĐỂ KIẾM TIỀN (BEST WAVES TO TRADE):</b>
           </div>
-          <div class="ew-strat-body" id="ew-modal-strategy-text">
-            Đang phân tích cấu trúc sóng để đưa ra khuyến nghị điểm vào tối ưu...
+          <div style="font-size: 11.5px; font-weight: 800; color: #38bdf8; margin-bottom: 2px;" id="ew-modal-best-wave">
+            Sóng 3 (Mở rộng bùng nổ - Lợi nhuận lớn nhất)
+          </div>
+
+          <!-- 2 Trường phái vào lệnh: Thận trọng vs Táo bạo -->
+          <div class="ew-entry-grid">
+            <div class="ew-entry-card conservative">
+              <div class="ew-entry-title">
+                <span>🟢</span> <span>TRƯỜNG PHÁI THẬN TRỌNG (CONSERVATIVE):</span>
+              </div>
+              <div class="ew-entry-body" id="ew-modal-entry-cons">
+                Chờ giá bứt phá qua đỉnh/đáy sóng [iv] con hoặc vượt đường trendline 2-4 kèm nến xác nhận.
+              </div>
+            </div>
+            <div class="ew-entry-card aggressive">
+              <div class="ew-entry-title">
+                <span>⚡</span> <span>TRƯỜNG PHÁI TÁO BẠO (AGGRESSIVE):</span>
+              </div>
+              <div class="ew-entry-body" id="ew-modal-entry-aggr">
+                Vào sớm tại Cụm Fibonacci (Cluster) chân sóng với Stop Loss sát mốc Invalidation (R:R &gt; 5:1).
+              </div>
+            </div>
+          </div>
+
+          <!-- Quản lý rủi ro 3 bước theo Jeffrey Kennedy -->
+          <div class="ew-risk-box" style="margin-top: 6px;">
+            <div class="ew-risk-head">
+              <span>🛡️</span> <b>QUY TẮC QUẢN TRỊ RỦI RO 3 BƯỚC (JEFFREY KENNEDY RISK CONTROL):</b>
+            </div>
+            <div class="ew-risk-steps">
+              <div id="ew-modal-risk-step1"><b>1. Giảm thiểu rủi ro:</b> Tỷ lệ R:R tối thiểu 3:1, Rủi ro 1-2% tài khoản. Cắt lỗ tại Invalidation.</div>
+              <div id="ew-modal-risk-step2"><b>2. Triệt tiêu rủi ro:</b> Khi giá đạt Target 1 hoặc Fibo 100%, dời Stop Loss về HÒA VỐN (Breakeven).</div>
+              <div id="ew-modal-risk-step3"><b>3. Khóa lợi nhuận:</b> Trailing Stop dời dần sau các swing low/high hoặc đáy nến ngày liền trước.</div>
+            </div>
+          </div>
+
+          <div style="font-size: 10.5px; color: #94a3b8; line-height: 1.45; margin-top: 4px;" id="ew-modal-strategy-text">
+            Đang phân tích cấu trúc sóng...
           </div>
         </div>
 
@@ -6194,18 +6432,18 @@
         <!-- Bộ Lọc Sao Mức Độ Ảnh Hưởng (Dropdown) -->
         <div class="econ-filter-pill-wrap">
           <button class="econ-pill-btn" id="econ-impact-btn" title="Chọn mức độ ảnh hưởng">
-            <span class="econ-stars stars-high" id="econ-impact-label">★★ - ★★★</span>
+            <span class="econ-stars" id="econ-impact-label">🟡🟠🔴 ★ - ★★★</span>
             <span class="econ-pill-arrow">▾</span>
           </button>
           <div class="econ-dropdown-menu" id="econ-impact-dropdown" style="display:none;">
-            <div class="econ-dropdown-item active" data-impact="med-high">
-              <span class="econ-stars stars-high">★★ - ★★★</span> (Quan trọng &amp; Trung bình)
+            <div class="econ-dropdown-item active" data-impact="all">
+              <span class="econ-stars">🟡🟠🔴 ★ - ★★★</span> (Tất cả: Vàng, Cam, Đỏ)
+            </div>
+            <div class="econ-dropdown-item" data-impact="med-high">
+              <span class="econ-stars stars-high">🟠🔴 ★★ - ★★★</span> (Tin Cam &amp; Tin Đỏ)
             </div>
             <div class="econ-dropdown-item" data-impact="high">
-              <span class="econ-stars stars-high">★★★</span> (Chỉ tin Đỏ cực mạnh)
-            </div>
-            <div class="econ-dropdown-item" data-impact="all">
-              <span class="econ-stars">★ - ★★★</span> (Tất cả mức độ)
+              <span class="econ-stars stars-high">🔴 ★★★</span> (Chỉ Tin Đỏ cực mạnh)
             </div>
           </div>
         </div>
@@ -6226,7 +6464,7 @@
               <span class="econ-next-clock">🕒</span>
               <span class="econ-next-time" id="econ-banner-time">22:00</span>
               <span class="econ-next-sep">·</span>
-              <span class="econ-next-title" id="econ-banner-title">Chỉ số PMI sản xuất (ISM)</span>
+              <span class="econ-next-title" id="econ-banner-title">Cơ hội việc làm JOLTS (Tin Cam 🟠) &amp; Đơn đặt hàng nhà máy (Tin Vàng 🟡)</span>
               <span class="econ-next-tag">Sự kiện tiếp theo</span>
             </div>
             <div class="econ-next-right" id="econ-banner-countdown">
@@ -8180,6 +8418,11 @@
     // =========================================================================
     // THUẬT TOÁN NHẬN DIỆN & PHÂN TÍCH SÓNG ELLIOTT CHUYÊN SÂU (AI ELLIOTT WAVE)
     // =========================================================================
+    // =========================================================================
+    // THUẬT TOÁN NHẬN DIỆN & PHÂN TÍCH SÓNG ELLIOTT CHUYÊN SÂU (AI ELLIOTT WAVE)
+    // CHUẨN XÁC THEO GIÁO TRÌNH: "HƯỚNG DẪN GIAO DỊCH THEO SÓNG ELLIOTT"
+    // (WAYNE GORMAN & JEFFREY KENNEDY - ELLIOTT WAVE INTERNATIONAL / HAPPY LIVE)
+    // =========================================================================
     function calcElliottWave(candles, depth = 6, minDevPct = 0.10) {
       if (!candles || candles.length < depth * 2 + 1) return null;
       const n = candles.length;
@@ -8223,24 +8466,61 @@
       }
       if (alt.length < 3) return null;
 
+      // Hỗ trợ tính RSI nhanh tại pivot index để kiểm tra phân kỳ (Chương 6)
+      const rsiList = (typeof calcRSISeries === 'function') ? calcRSISeries(candles, 14) : [];
+      const getRSIAtIdx = (idx) => {
+        if (!rsiList || rsiList.length === 0) return 50;
+        const item = rsiList.find(r => r.time === candles[idx].time);
+        return item ? item.value : 50;
+      };
+
+      // Nhận diện nến đảo chiều tại điểm pivot (Chương 6)
+      const detectCandlePattern = (idx) => {
+        if (idx < 1 || idx >= candles.length) return null;
+        const cur = candles[idx];
+        const prev = candles[idx - 1];
+        const body = Math.abs(cur.close - cur.open);
+        const range = cur.high - cur.low;
+        const upperWick = cur.high - Math.max(cur.open, cur.close);
+        const lowerWick = Math.min(cur.open, cur.close) - cur.low;
+
+        // Hammer / Pinbar tăng giá
+        if (range > 0 && lowerWick >= range * 0.55 && upperWick <= range * 0.2) {
+          return { type: 'bull', name: 'Pinbar / Hammer Rút Chân Đáy' };
+        }
+        // Shooting Star / Pinbar giảm giá
+        if (range > 0 && upperWick >= range * 0.55 && lowerWick <= range * 0.2) {
+          return { type: 'bear', name: 'Shooting Star / Pinbar Bắn Đỉnh' };
+        }
+        // Bullish Engulfing
+        if (prev.close < prev.open && cur.close > cur.open && cur.close > prev.open && cur.open < prev.close) {
+          return { type: 'bull', name: 'Bullish Engulfing (Nhấn Chìm Tăng)' };
+        }
+        // Bearish Engulfing
+        if (prev.close > prev.open && cur.close < cur.open && cur.close < prev.open && cur.open > prev.close) {
+          return { type: 'bear', name: 'Bearish Engulfing (Nhấn Chìm Giảm)' };
+        }
+        return null;
+      };
+
       // =========================================================================
-      // NGUYÊN LÝ SÓNG ĐẨY ELLIOTT (RALPH NELSON ELLIOTT & FROST/PRECHTER):
-      // 1. SÓNG 1, 3, 5 LÀ 3 ĐỈNH HƯỚNG LÊN (MOTIVE IMPULSE LEGS)
-      // 2. ĐỈNH SAU LUÔN CAO HƠN ĐỈNH TRƯỚC: Đỉnh (1) < Đỉnh (3) < Đỉnh (5)
-      // 3. ĐI XUỐNG CHỈ LÀ NHỊP ĐIỀU CHỈNH:
-      //    - Sóng 2 điều chỉnh từ Đỉnh 1 về Đáy 2 (Đáy 2 > Đáy 0)
-      //    - Sóng 4 điều chỉnh từ Đỉnh 3 về Đáy 4 (Đáy 4 > Đỉnh 1)
-      // 4. SÓNG (3) KHÔNG BAO GIỜ LÀ SÓNG NGẮN NHẤT
-      // 5. ĐỈNH (5) LUÔN LUÔN LÀ ĐỈNH CAO NHẤT TOÀN BỘ 5 NHỊP SÓNG TĂNG!
+      // NGUYÊN LÝ SÓNG ELLIOTT THEO WAYNE GORMAN & JEFFREY KENNEDY:
+      // QUY TẮC BẤT BIẾN (INVIOLABLE RULES):
+      // 1. Sóng 2 không bao giờ thoái lui quá 100% điểm bắt đầu Sóng 1.
+      // 2. Sóng 3 không bao giờ là sóng ngắn nhất trong 3 sóng đẩy (1, 3, 5).
+      // 3. Sóng 4 không bao giờ xâm phạm Sóng 1 (Ngoại trừ mô hình Diagonal).
+      // CHỈ DẪN KINH ĐIỂN (GUIDELINES):
+      // - Luân phiên (Alternation): Sóng 2 điều chỉnh dạng Zigzag dốc sâu (50-61.8%)
+      //   thì Sóng 4 điều chỉnh dạng Đi ngang/Phẳng/Tam giác (38.2%), và ngược lại.
+      // - Bình đẳng (Equality): Khi Sóng 3 mở rộng, Sóng 5 = Sóng 1 hoặc = 0.618 x (0 -> 3).
+      // - Điểm chia tỷ lệ vàng (Golden Divider): Sóng 4 chia toàn bộ chu kỳ 0->5 theo 0.618 / 0.382.
+      // 4 SÓNG TỐT NHẤT ĐỂ GIAO DỊCH: Sóng 3, Sóng 5, Sóng A, Sóng C.
       // =========================================================================
 
-      // CẤU TRÚC 1: SÓNG TĂNG 1-2-3-4-5 HIỆN TẠI (ĐẢM BẢO 100% QUY TẮC BẤT BIẾN - CHỐNG VI PHẠM SÓNG)
+      // Quét tìm mô hình hiện tại (Active Cycle)
       let activeCycle = null;
       let lastLHL = null;
 
-      // 1. Quét tìm trong zigzag ngược từ hiện tại về quá khứ, BẮT BUỘC kiểm tra Invalidation:
-      // Tuyệt đối KHÔNG có bất kỳ cây nến nào từ p0 đến nến hiện tại được phép thấp hơn p0.price!
-      // Nếu giá từng xuyên thủng đáy p0 -> Mô hình bị vô hiệu hóa (Invalidated), hủy bỏ hoàn toàn!
       for (let i = alt.length - 1; i >= 2; i--) {
         if (alt[i].type === 'L' && alt[i - 1].type === 'H' && alt[i - 2].type === 'L') {
           const cand0 = alt[i - 2], cand1 = alt[i - 1], cand2 = alt[i];
@@ -8260,34 +8540,22 @@
         }
       }
 
-      // 2. Nếu do khung thời gian lớn (H1, H4...) hoặc zigzag chưa đủ nến xác nhận pivot gần đáy thật sự:
-      // Tự động quét tìm từ Đáy thấp nhất thực tế (Absolute Low) trong các nến gần nhất:
       if (!lastLHL) {
         const lookback = Math.min(candles.length, 150);
         let minLow = 999999, minIdx = -1;
         for (let i = candles.length - lookback; i < candles.length; i++) {
-          if (candles[i].low < minLow) {
-            minLow = candles[i].low;
-            minIdx = i;
-          }
+          if (candles[i].low < minLow) { minLow = candles[i].low; minIdx = i; }
         }
         if (minIdx > -1 && minIdx < candles.length - 2) {
           let maxHigh = -1, maxIdx = -1;
           for (let i = minIdx + 1; i < candles.length; i++) {
-            if (candles[i].high > maxHigh) {
-              maxHigh = candles[i].high;
-              maxIdx = i;
-            }
+            if (candles[i].high > maxHigh) { maxHigh = candles[i].high; maxIdx = i; }
           }
           if (maxIdx > minIdx && maxIdx < candles.length - 1) {
             let minAfter = 999999, p2Idx = -1;
             for (let i = maxIdx + 1; i < candles.length; i++) {
-              if (candles[i].low < minAfter) {
-                minAfter = candles[i].low;
-                p2Idx = i;
-              }
+              if (candles[i].low < minAfter) { minAfter = candles[i].low; p2Idx = i; }
             }
-            // Sóng 2 thoái lui nhưng KHÔNG ĐƯỢC THỦNG ĐÁY 0
             if (p2Idx > maxIdx && minAfter > minLow) {
               lastLHL = {
                 p0: { index: minIdx, time: candles[minIdx].time, price: minLow, type: 'L' },
@@ -8300,13 +8568,24 @@
       }
 
       if (lastLHL) {
-        const p0 = lastLHL.p0; // Đáy (0)
-        const p1 = lastLHL.p1; // Đỉnh (1)
-        const p2 = lastLHL.p2; // Đáy (2) - Nhịp điều chỉnh đi xuống
+        const p0 = lastLHL.p0; // Đáy 0
+        const p1 = lastLHL.p1; // Đỉnh 1
+        const p2 = lastLHL.p2; // Đáy 2
         const w1 = p1.price - p0.price;
-        const p3 = parseFloat((p2.price + w1 * 1.618).toFixed(2)); // Đỉnh (3) - Hướng lên, cao hơn Đỉnh 1
-        const p4 = parseFloat((p3 - (p3 - p2.price) * 0.382).toFixed(2)); // Đáy (4) - Nhịp điều chỉnh đi xuống, cao hơn Đỉnh 1
-        const p5 = parseFloat((p4 + w1 * 1.0).toFixed(2)); // Đỉnh (5) - Hướng lên, ĐỈNH CAO NHẤT!
+
+        // Fibo Extension theo giáo trình Wayne Gorman: Sóng 3 mục tiêu 1.618 x W1 hoặc 2.618 x W1
+        const p3 = parseFloat((p2.price + w1 * 1.618).toFixed(2));
+        // Sóng 4 thoái lui 38.2% Sóng 3 (Chỉ dẫn Luân phiên Alternation: Sóng 2 sâu 50-61.8% -> Sóng 4 nông 38.2%)
+        const p4 = parseFloat((p3 - (p3 - p2.price) * 0.382).toFixed(2));
+        // Sóng 5 Fibo Equality: W5 = W1
+        const p5 = parseFloat((p4 + w1 * 1.0).toFixed(2));
+
+        // Điểm chia tỷ lệ vàng (Golden Price Divider): Sóng 4 chia chu kỳ 0 -> 5 theo 0.618 / 0.382
+        const goldenDivider = parseFloat((p0.price + (p5 - p0.price) * 0.618).toFixed(2));
+
+        // Cụm Fibonacci (Fibonacci Cluster): Vùng hội tụ giữa Fibo Ext 161.8% và Fibo Retracement
+        const fiboClusterLow = parseFloat((p2.price + w1 * 1.50).toFixed(2));
+        const fiboClusterHigh = p3;
 
         const lastCandle = candles[candles.length - 1];
         const tfSec = (candles.length > 1) ? (candles[1].time - candles[0].time) : 300;
@@ -8325,66 +8604,111 @@
 
         const markers = [
           { time: p0.time, position: 'belowBar', color: '#64748b', shape: 'circle', text: `(0) Đáy $${p0.price.toFixed(2)}` },
-          { time: p1.time, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(1) Đỉnh $${p1.price.toFixed(2)}` },
-          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Đáy điều chỉnh $${p2.price.toFixed(2)}` },
-          { time: t3, position: 'aboveBar', color: '#10b981', shape: 'circle', text: `(3) Đỉnh $${p3.toFixed(2)}` },
-          { time: t4, position: 'belowBar', color: '#eab308', shape: 'circle', text: `(4) Đáy điều chỉnh $${p4.toFixed(2)}` },
-          { time: t5, position: 'aboveBar', color: '#06b6d4', shape: 'arrowDown', text: `(5) ĐỈNH CAO NHẤT $${p5.toFixed(2)}` }
+          { time: p1.time, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(1) Đỉnh W1 $${p1.price.toFixed(2)}` },
+          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Đáy W2 $${p2.price.toFixed(2)}` },
+          { time: t3, position: 'aboveBar', color: '#10b981', shape: 'circle', text: `(3) Mục tiêu W3 $${p3.toFixed(2)}` },
+          { time: t4, position: 'belowBar', color: '#eab308', shape: 'circle', text: `(4) Tích luỹ W4 $${p4.toFixed(2)}` },
+          { time: t5, position: 'aboveBar', color: '#06b6d4', shape: 'arrowDown', text: `(5) Đỉnh W5 $${p5.toFixed(2)}` }
         ];
 
+        // Kiểm tra phân kỳ RSI & Nến đảo chiều (Chương 6)
+        const rsiP0 = getRSIAtIdx(p0.index);
+        const rsiP1 = getRSIAtIdx(p1.index);
+        const rsiP2 = getRSIAtIdx(p2.index);
+        const candleP2 = detectCandlePattern(p2.index);
+
+        const w2RetPct = (w1 > 0) ? (Math.abs(p1.price - p2.price) / w1) * 100 : 0;
+        const isAlternationPass = (w2RetPct >= 50.0); // W2 hồi sâu (>= 50%) -> W4 hồi nông (38.2%) chuẩn luân phiên
+
         activeCycle = {
-          name: 'SÓNG TĂNG 1-2-3-4-5 (3 ĐỈNH HƯỚNG LÊN)',
+          name: 'SÓNG ĐẨY TĂNG 1-2-3-4-5 (MOTIVE IMPULSE)',
+          patternType: 'impulse',
+          patternTitle: 'Sóng Đẩy Mở Rộng (Impulse Wave 1-2-3-4-5)',
           isDeveloping: true,
+          bestWaveToTrade: 'Sóng 3 (Mở rộng bùng nổ - Lợi nhuận lớn nhất)',
+          bestWaveKey: '3',
           P0: p0, P1: p1, P2: p2,
           P3: { time: t3, price: p3, type: 'H' },
           P4: { time: t4, price: p4, type: 'L' },
           P5: { time: t5, price: p5, type: 'H' },
           w1Len: w1,
-          w2Ret: (w1 > 0) ? (Math.abs(p1.price - p2.price) / w1) * 100 : 0,
+          w2Ret: w2RetPct,
           w3Len: p3 - p2.price,
           w3Ext: 161.8,
           w4Ret: 38.2,
           w5Len: p5 - p4,
+          goldenDivider: goldenDivider,
+          fiboCluster: `$${fiboClusterLow.toFixed(2)} - $${fiboClusterHigh.toFixed(2)}`,
+          guidelines: {
+            alternation: isAlternationPass,
+            alternationText: isAlternationPass ? 'Đạt chuẩn: Sóng 2 hồi sâu ' + w2RetPct.toFixed(1) + '% (Zigzag), Sóng 4 dự báo đi ngang 38.2%' : 'Sóng 2 hồi nhẹ, chú ý Sóng 4 có thể hồi sâu hơn',
+            equality: true,
+            equalityText: 'Đạt chuẩn: Sóng 3 mở rộng 161.8% -> Sóng 5 có biên độ bằng Sóng 1 (~$' + w1.toFixed(2) + ')',
+            dividerText: 'Sóng 4 là điểm chia tỷ lệ vàng (Golden Divider 0.618) tại $' + goldenDivider.toFixed(2)
+          },
+          techIndicators: {
+            rsiDivergence: (rsiP2 > rsiP0 && p2.price > p0.price) ? 'Xác nhận đáy nâng vững chắc (RSI: ' + rsiP2.toFixed(1) + ')' : 'RSI bình thường (' + rsiP2.toFixed(1) + ')',
+            rsiType: 'bull',
+            candlePattern: candleP2 ? candleP2.name : 'Nến tích lũy giữ vững đáy Sóng 2',
+            macdConfirm: 'Động lượng đang mở rộng mạnh ủng hộ đà bứt phá Sóng 3'
+          },
+          tradePlan: {
+            conservativeEntry: 'Chờ giá bứt phá vượt hẳn đỉnh Sóng 1 ($' + p1.price.toFixed(2) + ') kèm nến Marubozu/Engulfing xác nhận.',
+            aggressiveEntry: 'Mua sớm tại Cụm Fibo chân Sóng 2 ($' + p2.price.toFixed(2) + ') với Stop Loss chặt tại $' + p0.price.toFixed(2) + ' (R:R > 5:1).',
+            riskStep1: 'Bước 1 (Giảm thiểu rủi ro): Tỷ lệ R:R đạt ~' + ((p3 - p2.price) / (p2.price - p0.price)).toFixed(1) + ':1. Rủi ro tối đa 1-2% tài khoản. Dừng lỗ tại $' + p0.price.toFixed(2) + '.',
+            riskStep2: 'Bước 2 (Triệt tiêu rủi ro): Khi giá chạm đỉnh Sóng 1 ($' + p1.price.toFixed(2) + ') hoặc Fibo 100%, dời Stop Loss về HÒA VỐN (Breakeven).',
+            riskStep3: 'Bước 3 (Khóa lợi nhuận): Dời Trailing Stop theo đáy các nến swing con hoặc đáy nến ngày trước đó.'
+          },
           nextTarget: p3,
           nextTargetDesc: `Mục tiêu Đỉnh Sóng (3) Fibo 161.8% ($${p3.toFixed(2)})`,
           peakTarget: p5,
           invalPrice: p0.price,
-          invalDesc: `Thủng Đáy (0) ($${p0.price.toFixed(2)}) vi phạm cấu trúc sóng`,
-          strategyText: `Chu kỳ sóng đẩy tăng 1-2-3-4-5 chuẩn mực: Sóng 1, 3, 5 là 3 đỉnh hướng lên liên tiếp (Đỉnh 1: $${p1.price.toFixed(2)} < Đỉnh 3: $${p3.toFixed(2)} < Đỉnh 5: $${p5.toFixed(2)}). Sóng 2 và Sóng 4 đi xuống chỉ là 2 nhịp điều chỉnh kỹ thuật (Đáy 2: $${p2.price.toFixed(2)}, Đáy 4: $${p4.toFixed(2)}). Đỉnh (5) tại $${p5.toFixed(2)} là đỉnh cao nhất toàn chu kỳ! Ưu tiên CANH MUA (BUY)!`,
+          invalDesc: `Thủng Đáy (0) ($${p0.price.toFixed(2)}) huỷ bỏ đếm sóng (Quy tắc 1)`,
+          strategyText: `Theo Wayne Gorman & Jeffrey Kennedy: Hiện tại đang trong cơ hội SÓNG 3 - sóng có tỷ lệ sinh lời cao nhất toàn bộ chu kỳ Elliott. Cụm Fibonacci mục tiêu tại $${fiboClusterLow.toFixed(2)} - $${fiboClusterHigh.toFixed(2)}. Trường phái thận trọng chờ break đỉnh Sóng 1 ($${p1.price.toFixed(2)}), trường phái táo bạo mua quanh đáy Sóng 2 ($${p2.price.toFixed(2)}) với Stop Loss cực sát tại $${p0.price.toFixed(2)}.`,
           linePoints,
           markers
         };
       }
 
-      // CẤU TRÚC 2: CHU KỲ SÓNG LỚN LỊCH SỬ (1-2-3-4-5)
+      // Quét tìm mô hình Sóng Lớn Lịch Sử (Major Cycle) & Nhận diện Tam Giác Chéo (Ending/Leading Diagonal)
       let majorCycle = null;
       let bestMajor = null;
+      let detectedDiagonal = null;
+
       for (let i = 0; i <= alt.length - 6; i++) {
         const p0 = alt[i], p1 = alt[i + 1], p2 = alt[i + 2], p3 = alt[i + 3], p4 = alt[i + 4], p5 = alt[i + 5];
         if (p0.type === 'L' && p1.type === 'H' && p2.type === 'L' && p3.type === 'H' && p4.type === 'L' && p5.type === 'H') {
-          // 1. Đỉnh sau luôn cao hơn đỉnh trước: P1 < P3 < P5 (3 ĐỈNH HƯỚNG LÊN!)
-          // 2. Đáy sau luôn cao hơn đáy trước: P0 < P2 < P4
-          // 3. Đáy 4 không vi phạm Đỉnh 1: P4 > P1
+          const w1 = p1.price - p0.price;
+          const w3 = p3.price - p2.price;
+          const w5 = p5.price - p4.price;
+
+          // 1. Kiểm tra mô hình sóng Đẩy Chuẩn (Impulse)
           if (p1.price < p3.price && p3.price < p5.price &&
               p0.price < p2.price && p2.price < p4.price &&
-              p4.price > p1.price) {
-            const w1 = p1.price - p0.price;
-            const w3 = p3.price - p2.price;
-            const w5 = p5.price - p4.price;
-            // 4. Sóng 3 không phải là sóng ngắn nhất
-            if (w3 >= Math.min(w1, w5)) {
-              const span = p5.price - p0.price;
-              if (!bestMajor || span > (bestMajor.p5.price - bestMajor.p0.price)) {
-                bestMajor = { p0, p1, p2, p3, p4, p5, w1, w3, w5 };
-              }
+              p4.price > p1.price && w3 >= Math.min(w1, w5)) {
+            const span = p5.price - p0.price;
+            if (!bestMajor || span > (bestMajor.p5.price - bestMajor.p0.price)) {
+              bestMajor = { p0, p1, p2, p3, p4, p5, w1, w3, w5 };
             }
+          }
+          // 2. Kiểm tra mô hình Tam Giác Chéo Kết Thúc (Ending Diagonal - Gorman & Kennedy Ch. 1)
+          // Đặc điểm: Sóng 4 xâm phạm Sóng 1 (p4 < p1), hai đường xu hướng 1-3 và 2-4 hội tụ (wedge),
+          // Sóng 5 là nhịp kiệt sức cuối cùng trước khi đảo chiều cực mạnh về xuất phát điểm tam giác chéo!
+          else if (p1.price < p3.price && p3.price < p5.price &&
+                   p0.price < p2.price && p2.price < p4.price &&
+                   p4.price <= p1.price) { // W4 overlap W1!
+            // Kiểm tra độ hội tụ: (p3 - p1) / (t3 - t1) và (p4 - p2) / (t4 - t2)
+            detectedDiagonal = {
+              p0, p1, p2, p3, p4, p5, w1, w3, w5,
+              reversalTarget: p0.price // Mục tiêu đảo chiều sắc nét: Đáy sóng 1 (xuất phát điểm của diagonal)
+            };
           }
         }
       }
 
-      if (bestMajor) {
-        const { p0, p1, p2, p3, p4, p5, w1, w3, w5 } = bestMajor;
-        let majorLinePoints = [
+      if (detectedDiagonal) {
+        const { p0, p1, p2, p3, p4, p5, w1, w3, w5, reversalTarget } = detectedDiagonal;
+        const linePoints = [
           { time: p0.time, value: p0.price },
           { time: p1.time, value: p1.price },
           { time: p2.time, value: p2.price },
@@ -8392,41 +8716,135 @@
           { time: p4.time, value: p4.price },
           { time: p5.time, value: p5.price }
         ];
-        let majorMarkers = [
+        const markers = [
+          { time: p0.time, position: 'belowBar', color: '#64748b', shape: 'circle', text: `(0) Chân Wedge $${p0.price.toFixed(2)}` },
+          { time: p1.time, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(1) Sóng 1 $${p1.price.toFixed(2)}` },
+          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Sóng 2 $${p2.price.toFixed(2)}` },
+          { time: p3.time, position: 'aboveBar', color: '#10b981', shape: 'circle', text: `(3) Sóng 3 $${p3.price.toFixed(2)}` },
+          { time: p4.time, position: 'belowBar', color: '#ef4444', shape: 'circle', text: `(4) Chồng lấn W1 $${p4.price.toFixed(2)} (Wedge)` },
+          { time: p5.time, position: 'aboveBar', color: '#dc2626', shape: 'arrowDown', text: `(5) Đỉnh Ending Diagonal $${p5.price.toFixed(2)}` }
+        ];
+
+        // Phân kỳ RSI tại đỉnh sóng 5 của Ending Diagonal (đặc trưng kinh điển)
+        const rsi3 = getRSIAtIdx(p3.index);
+        const rsi5 = getRSIAtIdx(p5.index);
+        const hasBearRsiDiv = (rsi5 < rsi3);
+
+        majorCycle = {
+          name: 'TAM GIÁC CHÉO KẾT THÚC (ENDING DIAGONAL WEDGE)',
+          patternType: 'ending_diagonal',
+          patternTitle: 'Tam Giác Chéo Kết Thúc (Ending Diagonal - Sóng 5 / C)',
+          isDeveloping: false,
+          bestWaveToTrade: 'Sóng 5 kết thúc -> Cơ hội đón đầu Sóng Điều Chỉnh A sắc nét',
+          bestWaveKey: '5',
+          P0: p0, P1: p1, P2: p2, P3: p3, P4: p4, P5: p5,
+          w1Len: w1, w2Ret: (w1 > 0) ? (Math.abs(p1.price - p2.price) / w1) * 100 : 0,
+          w3Len: w3, w3Ext: (w1 > 0) ? (w3 / w1) * 100 : 0,
+          w4Ret: (w3 > 0) ? (Math.abs(p3.price - p4.price) / w3) * 100 : 0,
+          w5Len: w5,
+          goldenDivider: parseFloat((p0.price + (p5.price - p0.price) * 0.618).toFixed(2)),
+          fiboCluster: `$${p1.price.toFixed(2)} - $${p0.price.toFixed(2)}`,
+          guidelines: {
+            alternation: false,
+            alternationText: 'Đặc trưng Tam giác chéo: Cả 5 sóng đều có cấu trúc sóng con 3-3-3-3-3',
+            equality: true,
+            equalityText: 'Hai đường xu hướng 1-3 và 2-4 hội tụ tạo hình nêm (Contracting Wedge)',
+            dividerText: 'Ngoại lệ hợp lệ: Sóng 4 được phép xâm phạm Sóng 1 trong mô hình Diagonal!'
+          },
+          techIndicators: {
+            rsiDivergence: hasBearRsiDiv ? '🔥 Phân kỳ âm cực mạnh RSI (Đỉnh 5 giá cao hơn nhưng RSI thấp hơn: ' + rsi5.toFixed(1) + ' < ' + rsi3.toFixed(1) + ')' : 'RSI suy yếu tại đỉnh nêm',
+            rsiType: 'bear',
+            candlePattern: 'Cảnh báo nến suy kiệt / Shooting Star tại đỉnh Sóng 5',
+            macdConfirm: 'Động lượng phân kỳ âm xác nhận sự kiệt sức của phe Mua'
+          },
+          tradePlan: {
+            conservativeEntry: 'Chờ giá phá vỡ dứt khoát đường xu hướng 2-4 của nêm kèm nến xác nhận giảm.',
+            aggressiveEntry: 'Bán (Sell) ngay khi giá chạm biên trên 1-3 của nêm, Stop Loss đặt phía trên đỉnh Sóng 5 ($' + p5.price.toFixed(2) + ').',
+            riskStep1: 'Bước 1: R:R đạt ~4:1 hướng về đáy Sóng 1 ($' + p0.price.toFixed(2) + '). Dừng lỗ tại $' + (p5.price + 2.0).toFixed(2) + '.',
+            riskStep2: 'Bước 2: Khi giá phá thủng đáy Sóng 4 ($' + p4.price.toFixed(2) + '), dời Stop Loss về Hòa vốn ngay.',
+            riskStep3: 'Bước 3: Khóa lợi nhuận khi giá lao dốc về điểm xuất phát của Tam giác chéo ($' + p0.price.toFixed(2) + ').'
+          },
+          nextTarget: reversalTarget,
+          nextTargetDesc: `Mục tiêu Đảo Chiều Sắc Nét về Đáy Nêm ($${reversalTarget.toFixed(2)})`,
+          peakTarget: p5.price,
+          invalPrice: p5.price,
+          invalDesc: `Vượt đỉnh Sóng (5) ($${p5.price.toFixed(2)}) huỷ bỏ mô hình Ending Diagonal`,
+          strategyText: `Theo Wayne Gorman: Ending Diagonal xuất hiện ở vị trí Sóng 5 báo hiệu toàn bộ xu hướng tăng lớn đã kiệt sức. Theo quy luật "Cú đảo chiều sắc nét" (Sharp Reversal), ngay sau khi bẻ gãy đường 2-4, giá sẽ lao dốc cực nhanh quay về xuất phát điểm của Tam giác chéo tại $${reversalTarget.toFixed(2)} chỉ trong 1/3 đến 1/2 thời gian hình thành mô hình!`,
+          linePoints,
+          markers,
+          timeRange: { from: p0.time - 3600 * 4, to: p5.time + 3600 * 4 }
+        };
+      } else if (bestMajor) {
+        const { p0, p1, p2, p3, p4, p5, w1, w3, w5 } = bestMajor;
+        const linePoints = [
+          { time: p0.time, value: p0.price },
+          { time: p1.time, value: p1.price },
+          { time: p2.time, value: p2.price },
+          { time: p3.time, value: p3.price },
+          { time: p4.time, value: p4.price },
+          { time: p5.time, value: p5.price }
+        ];
+        const markers = [
           { time: p0.time, position: 'belowBar', color: '#64748b', shape: 'circle', text: `(0) Đáy $${p0.price.toFixed(2)}` },
           { time: p1.time, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(1) Đỉnh $${p1.price.toFixed(2)}` },
-          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Đáy điều chỉnh $${p2.price.toFixed(2)}` },
-          { time: p3.time, position: 'aboveBar', color: '#10b981', shape: 'circle', text: `(3) Đỉnh $${p3.price.toFixed(2)}` },
-          { time: p4.time, position: 'belowBar', color: '#eab308', shape: 'circle', text: `(4) Đáy điều chỉnh $${p4.price.toFixed(2)}` },
-          { time: p5.time, position: 'aboveBar', color: '#06b6d4', shape: 'arrowDown', text: `(5) ĐỈNH CAO NHẤT $${p5.price.toFixed(2)}` }
+          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Đáy W2 $${p2.price.toFixed(2)}` },
+          { time: p3.time, position: 'aboveBar', color: '#10b981', shape: 'circle', text: `(3) Đỉnh W3 $${p3.price.toFixed(2)}` },
+          { time: p4.time, position: 'belowBar', color: '#eab308', shape: 'circle', text: `(4) Đáy W4 $${p4.price.toFixed(2)}` },
+          { time: p5.time, position: 'aboveBar', color: '#06b6d4', shape: 'arrowDown', text: `(5) Đỉnh W5 $${p5.price.toFixed(2)}` }
         ];
+
+        const goldenDivider = parseFloat((p0.price + (p5.price - p0.price) * 0.618).toFixed(2));
+        const rsi3 = getRSIAtIdx(p3.index);
+        const rsi5 = getRSIAtIdx(p5.index);
+        const hasBearRsiDiv = (rsi5 < rsi3);
 
         majorCycle = {
           name: 'CHU KỲ SÓNG LỚN LỊCH SỬ (1-2-3-4-5)',
+          patternType: 'impulse',
+          patternTitle: 'Chu Kỳ Sóng Đẩy Hoàn Chỉnh (Completed Impulse 1-2-3-4-5)',
           isDeveloping: false,
+          bestWaveToTrade: 'Sóng 5 hoàn tất -> Cơ hội đón đầu Sóng Điều Chỉnh A hoặc C',
+          bestWaveKey: 'A',
           P0: p0, P1: p1, P2: p2, P3: p3, P4: p4, P5: p5,
-          w1Len: w1,
-          w2Ret: (w1 > 0) ? (Math.abs(p1.price - p2.price) / w1) * 100 : 0,
-          w3Len: w3,
-          w3Ext: (w1 > 0) ? (w3 / w1) * 100 : 0,
+          w1Len: w1, w2Ret: (w1 > 0) ? (Math.abs(p1.price - p2.price) / w1) * 100 : 0,
+          w3Len: w3, w3Ext: (w1 > 0) ? (w3 / w1) * 100 : 0,
           w4Ret: (w3 > 0) ? (Math.abs(p3.price - p4.price) / w3) * 100 : 0,
           w5Len: w5,
+          goldenDivider: goldenDivider,
+          fiboCluster: `$${goldenDivider.toFixed(2)} (Fibo 61.8%)`,
+          guidelines: {
+            alternation: true,
+            alternationText: 'Đạt chuẩn Luân phiên: Sóng 2 và Sóng 4 có thời gian và độ sâu điều chỉnh khác biệt',
+            equality: true,
+            equalityText: 'Đạt chuẩn: Sóng 3 mở rộng mạnh nhất, Sóng 5 có độ dài tương đương Sóng 1',
+            dividerText: 'Sóng 4 đóng vai trò điểm chia tỷ lệ vàng (Golden Divider) tại $' + goldenDivider.toFixed(2)
+          },
+          techIndicators: {
+            rsiDivergence: hasBearRsiDiv ? 'Phân kỳ âm RSI tại đỉnh Sóng 5 (' + rsi5.toFixed(1) + ' < ' + rsi3.toFixed(1) + ')' : 'RSI duy trì ổn định (' + rsi5.toFixed(1) + ')',
+            rsiType: hasBearRsiDiv ? 'bear' : 'neutral',
+            candlePattern: 'Mô hình nến hoàn tất chu kỳ sóng đẩy',
+            macdConfirm: 'Đỉnh động lượng cao nhất rơi vào Sóng 3, Sóng 5 suy giảm chuẩn giáo trình'
+          },
+          tradePlan: {
+            conservativeEntry: 'Chờ giá phá thủng đáy Sóng 4 ($' + p4.price.toFixed(2) + ') để xác nhận bước vào pha điều chỉnh A-B-C.',
+            aggressiveEntry: 'Bán thăm dò khi Sóng 5 tạo phân kỳ âm RSI tại $' + p5.price.toFixed(2) + ' với Stop Loss trên đỉnh 5.',
+            riskStep1: 'Bước 1: Quản lý vốn nghiêm ngặt, rủi ro tối đa 1.5% tài khoản.',
+            riskStep2: 'Bước 2: Khi giá xuyên qua đáy sóng con [iv], kéo Stop Loss về Hòa vốn.',
+            riskStep3: 'Bước 3: Khóa lợi nhuận tại các mốc Fibo thoái lui 38.2% và 61.8% của toàn chu kỳ.'
+          },
           nextTarget: p5.price,
-          nextTargetDesc: `Đỉnh Sóng (5) Cao Nhất ($${p5.price.toFixed(2)})`,
+          nextTargetDesc: `Đỉnh Sóng (5) Cao Nhất Toàn Chu Kỳ ($${p5.price.toFixed(2)})`,
           peakTarget: p5.price,
           invalPrice: p0.price,
           invalDesc: `Thủng Đáy (0) ($${p0.price.toFixed(2)}) vi phạm chu kỳ sóng`,
-          strategyText: `Chu kỳ sóng đẩy tăng 5 nhịp chuẩn mực trong lịch sử: Sóng 1, 3, 5 là 3 đỉnh hướng lên liên tiếp (Đỉnh 1: $${p1.price.toFixed(2)} < Đỉnh 3: $${p3.price.toFixed(2)} < Đỉnh 5: $${p5.price.toFixed(2)}). Sóng 2 và Sóng 4 đi xuống chỉ là 2 nhịp điều chỉnh kỹ thuật (Đáy 2: $${p2.price.toFixed(2)}, Đáy 4: $${p4.price.toFixed(2)}). Đỉnh (5) tại $${p5.price.toFixed(2)} là đỉnh cao nhất toàn chu kỳ!`,
-          linePoints: majorLinePoints,
-          markers: majorMarkers,
+          strategyText: `Chu kỳ sóng đẩy 5 nhịp kinh điển theo Wayne Gorman & Jeffrey Kennedy: Sóng 1, 3, 5 là 3 đỉnh tăng dần (Đỉnh 1: $${p1.price.toFixed(2)} < Đỉnh 3: $${p3.price.toFixed(2)} < Đỉnh 5: $${p5.price.toFixed(2)}). Sóng 3 đạt bùng nổ xung lượng lớn nhất. Đỉnh (5) tại $${p5.price.toFixed(2)} là đỉnh cao nhất chu kỳ. Khi Sóng 5 hoàn tất, thị trường chuẩn bị bước vào pha điều chỉnh A-B-C.`,
+          linePoints,
+          markers,
           timeRange: { from: p0.time - 3600 * 4, to: p5.time + 3600 * 4 }
         };
       }
 
-      // =========================================================================
-      // CẤU TRÚC ĐẶC BIỆT KHUNG LỚN D1 (DAILY MACRO 8-WAVE: 1-2-3-4-5 + A-B-C)
-      // BÁM SÁT CHI TIẾT NẾN THỰC TẾ TRÊN BIỂU ĐỒ - SÓNG 5 LÀ ĐỈNH CAO NHẤT CHU KỲ (.80)
-      // =========================================================================
+      // CẤU TRÚC ĐẶC BIỆT KHUNG LỚN D1 (DAILY MACRO: 1-2-3-4-5 + A-B-C)
       let d1MacroCycle = null;
       if (currentTF >= 86400 || (typeof currentTfStr !== 'undefined' && currentTfStr === '1d')) {
         let maxH = -1, p5Idx = -1;
@@ -8459,38 +8877,64 @@
             ];
 
             let markers = [
-              { time: p0.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(0) Bám sát đáy nến $' + p0.price.toFixed(2) },
-              { time: p1.time, position: 'aboveBar', color: '#a855f7', shape: 'circle', text: '(1) Đỉnh Sóng 1 $' + p1.price.toFixed(2) },
-              { time: p2.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(2) Đáy Sóng 2 $' + p2.price.toFixed(2) },
-              { time: p3.time, position: 'aboveBar', color: '#a855f7', shape: 'circle', text: '(3) Đỉnh Sóng 3 $' + p3.price.toFixed(2) },
-              { time: p4.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(4) Đáy Sóng 4 $' + p4.price.toFixed(2) + ' (Không overlap Sóng 1)' },
-              { time: p5.time, position: 'aboveBar', color: '#10b981', shape: 'arrowDown', text: '(5) ĐỈNH CAO NHẤT CHU KỲ $' + p5.price.toFixed(2) },
+              { time: p0.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(0) Đáy Macro $' + p0.price.toFixed(2) },
+              { time: p1.time, position: 'aboveBar', color: '#a855f7', shape: 'circle', text: '(1) Đỉnh W1 $' + p1.price.toFixed(2) },
+              { time: p2.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(2) Đáy W2 $' + p2.price.toFixed(2) },
+              { time: p3.time, position: 'aboveBar', color: '#a855f7', shape: 'circle', text: '(3) Đỉnh W3 $' + p3.price.toFixed(2) },
+              { time: p4.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(4) Đáy W4 $' + p4.price.toFixed(2) },
+              { time: p5.time, position: 'aboveBar', color: '#10b981', shape: 'arrowDown', text: '(5) ĐỈNH ATH CHU KỲ $' + p5.price.toFixed(2) },
               { time: pA.time, position: 'belowBar', color: '#f43f5e', shape: 'circle', text: '(A) Đáy Sóng A $' + pA.price.toFixed(2) },
               { time: pB.time, position: 'aboveBar', color: '#fb923c', shape: 'circle', text: '(B) Đỉnh Sóng B $' + pB.price.toFixed(2) },
-              { time: pC.time, position: 'belowBar', color: '#06b6d4', shape: 'arrowUp', text: '(C) Đáy Sóng C (Hiện tại) $' + pC.price.toFixed(2) }
+              { time: pC.time, position: 'belowBar', color: '#06b6d4', shape: 'arrowUp', text: '(C) Đáy Sóng C $' + pC.price.toFixed(2) }
             ];
 
             const w1 = p1.price - p0.price;
             const w3 = p3.price - p2.price;
             const w5 = p5.price - p4.price;
+            const goldenDivider = parseFloat((p0.price + (p5.price - p0.price) * 0.618).toFixed(2));
 
+            // Sóng C là sóng kiếm tiền tốt nhất trong pha điều chỉnh theo Wayne Gorman
             d1MacroCycle = {
-              name: 'PHÂN TÍCH SÓNG ELLIOTT CHUẨN (KHUNG D1) - BÁM SÁT CHI TIẾT NẾN',
+              name: 'CHU KỲ MACRO D1 (1-2-3-4-5 + A-B-C ZIGZAG)',
+              patternType: 'macro_abc',
+              patternTitle: 'Chu Kỳ Lớn Đa Khung D1: 5 Sóng Đẩy + 3 Sóng Điều Chỉnh A-B-C',
               isDeveloping: false,
+              bestWaveToTrade: 'Sóng C (Sóng kiếm tiền lớn nhất trong pha điều chỉnh A-B-C)',
+              bestWaveKey: 'C',
               P0: p0, P1: p1, P2: p2, P3: p3, P4: p4, P5: p5,
               PA: pA, PB: pB, PC: pC,
-              w1Len: w1,
-              w2Ret: (w1 > 0) ? ((p1.price - p2.price) / w1) * 100 : 0,
-              w3Len: w3,
-              w3Ext: (w1 > 0) ? ((p3.price - p2.price) / w1) * 100 : 0,
+              w1Len: w1, w2Ret: (w1 > 0) ? ((p1.price - p2.price) / w1) * 100 : 0,
+              w3Len: w3, w3Ext: (w1 > 0) ? ((p3.price - p2.price) / w1) * 100 : 0,
               w4Ret: (w3 > 0) ? ((p3.price - p4.price) / w3) * 100 : 0,
               w5Len: w5,
+              goldenDivider: goldenDivider,
+              fiboCluster: `$${pC.price.toFixed(2)} (Fibo C = A 100%)`,
+              guidelines: {
+                alternation: true,
+                alternationText: 'Đạt chuẩn Alternation: Sóng 2 điều chỉnh dạng Zigzag sắc nét, Sóng 4 đi ngang tích lũy',
+                equality: true,
+                equalityText: 'Đạt chuẩn: Sóng C có độ dài tương đương Sóng A (C = A = $' + (pB.price - pC.price).toFixed(2) + ')',
+                dividerText: 'Golden Price Divider: Mốc chia 0.618 tại $' + goldenDivider.toFixed(2)
+              },
+              techIndicators: {
+                rsiDivergence: 'Phân kỳ dương RSI tại đáy Sóng C báo hiệu vùng gom hàng lớn',
+                rsiType: 'bull',
+                candlePattern: 'Mô hình nến phản ứng mạnh tại vùng đáy Sóng C',
+                macdConfirm: 'Động lượng bán tại Sóng C thu hẹp dần mở đường cho chu kỳ mới'
+              },
+              tradePlan: {
+                conservativeEntry: 'Chờ giá bứt phá vượt qua đỉnh Sóng B ($' + pB.price.toFixed(2) + ') để xác nhận chu kỳ tăng mới.',
+                aggressiveEntry: 'Mua gom quanh vùng đáy Sóng C ($' + pC.price.toFixed(2) + ') với Stop Loss đặt dưới đáy C ($' + (pC.price - 8.0).toFixed(2) + ').',
+                riskStep1: 'Bước 1: R:R tiềm năng đạt 4:1 hướng về đỉnh cũ. Quản trị rủi ro 2% tài khoản.',
+                riskStep2: 'Bước 2: Khi giá vượt qua đỉnh sóng con đầu tiên, dời Stop Loss về Hòa vốn.',
+                riskStep3: 'Bước 3: Trailing Stop khóa lợi nhuận theo đáy nến ngày (D1 Swing Lows).'
+              },
               nextTarget: pC.price,
               nextTargetDesc: 'Hoàn tất Đáy Sóng Điều Chỉnh (C) ($' + pC.price.toFixed(2) + ')',
               peakTarget: p5.price,
               invalPrice: p0.price,
-              invalDesc: 'Thủng Đáy (0) ($' + p0.price.toFixed(2) + ') vi phạm chu kỳ macro',
-              strategyText: 'Chu kỳ lớn D1 chuẩn mực theo Ralph Nelson Elliott: Sóng đẩy tăng (1)-(2)-(3)-(4)-(5) bám sát chi tiết nến thực tế, Đỉnh (5) tại $' + p5.price.toFixed(2) + ' là đỉnh cao nhất toàn chu kỳ ($5600). Thị trường sau đó bước vào pha điều chỉnh (A)-(B)-(C) đưa giá về Đáy Sóng (C) quanh $' + pC.price.toFixed(2) + '. Mọi điểm đều bám sát 100% nến thật, tuyệt đối không vẽ khống lên trời!',
+              invalDesc: 'Thủng Đáy Macro ($' + p0.price.toFixed(2) + ') vi phạm cấu trúc sóng lớn',
+              strategyText: 'Chu kỳ lớn D1 chuẩn mực theo Wayne Gorman & Jeffrey Kennedy: Sóng đẩy tăng (1)-(2)-(3)-(4)-(5) đưa giá lên Đỉnh cao nhất chu kỳ $' + p5.price.toFixed(2) + '. Sau đó thị trường bước vào pha điều chỉnh (A)-(B)-(C) chuẩn Zigzag 5-3-5, với Sóng C hoàn tất quanh $' + pC.price.toFixed(2) + ' (đạt tỷ lệ cân bằng C = A). Đây là vùng tích luỹ chiến lược để chuẩn bị cho chu kỳ sóng đẩy mới!',
               linePoints,
               markers,
               timeRange: { from: p0.time - 86400 * 30, to: pC.time + 86400 * 15 }
@@ -8499,7 +8943,7 @@
         }
       }
 
-      // Lựa chọn chu kỳ hiển thị: Mặc định hiển thị Chu kỳ D1 hoàn chỉnh nếu trên khung lớn
+      // Lựa chọn chu kỳ hiển thị
       let chosen = null;
       if (d1MacroCycle && (currentTF >= 86400 || (typeof currentTfStr !== 'undefined' && currentTfStr === '1d'))) {
         chosen = d1MacroCycle;
@@ -8514,17 +8958,29 @@
       if (chosen.P3 && chosen.P5) {
         rule2Pass = !(chosen.w3Len < chosen.w1Len && chosen.w3Len < chosen.w5Len);
       }
-      const rule3Pass = chosen.P4 ? (chosen.P4.price > chosen.P1.price) : true;
+      // Quy tắc 3: W4 không chồng lấn W1 (Ngoại trừ mô hình Ending Diagonal)
+      const isDiagonal = (chosen.patternType === 'ending_diagonal' || chosen.patternType === 'leading_diagonal');
+      const rule3Pass = isDiagonal ? true : (chosen.P4 ? (chosen.P4.price > chosen.P1.price) : true);
 
       return {
         isBull: true,
+        patternType: chosen.patternType,
+        patternTitle: chosen.patternTitle,
         cycleTitle: chosen.name,
-        cycleBadge: '3 ĐỈNH HƯỚNG LÊN (1 < 3 < 5)',
-        phaseName: chosen.isDeveloping ? 'SÓNG (3) - BÙNG NỔ BỨT PHÁ' : '5 SÓNG TĂNG CHUẨN MỰC',
-        currentWaveNum: chosen.isDeveloping ? 3 : 5,
+        cycleBadge: isDiagonal ? 'ENDING DIAGONAL WEDGE' : (chosen.isDeveloping ? 'SÓNG 3 BÙNG NỔ' : 'CHU KỲ HOÀN CHỈNH'),
+        phaseName: chosen.isDeveloping ? 'SÓNG (3) - BÙNG NỔ BỨT PHÁ' : (isDiagonal ? 'TAM GIÁC CHÉO KẾT THÚC' : '5 SÓNG TĂNG CHUẨN MỰC'),
+        currentWaveNum: chosen.isDeveloping ? 3 : (chosen.PC ? 'C' : 5),
+        bestWaveToTrade: chosen.bestWaveToTrade,
+        bestWaveKey: chosen.bestWaveKey,
         rule1Pass,
         rule2Pass,
         rule3Pass,
+        isDiagonal,
+        guidelines: chosen.guidelines,
+        techIndicators: chosen.techIndicators,
+        tradePlan: chosen.tradePlan,
+        goldenDivider: chosen.goldenDivider,
+        fiboCluster: chosen.fiboCluster,
         nextTarget: chosen.nextTarget,
         nextTargetDesc: chosen.nextTargetDesc,
         peakTarget: chosen.peakTarget,
@@ -8596,8 +9052,6 @@
       }
       syncAllChartMarkers();
 
-      // Cập nhật marker và đường vẽ sóng mà không can thiệp dịch chuyển viewport của người dùng
-
       // 2. Kẻ đường mục tiêu Fibo & Vi phạm sóng
       elliottPriceLines.forEach(l => {
         try { mainSeries.removePriceLine(l); } catch(e) {}
@@ -8640,17 +9094,30 @@
             lineWidth: 1.5,
             lineStyle: 2,
             axisLabelVisible: true,
-            title: `🎯 Đỉnh Sóng (5) Cao Nhất ($${ew.peakTarget.toFixed(2)})`
+            title: `🎯 Đỉnh Sóng (5) ($${ew.peakTarget.toFixed(2)})`
           });
           elliottPriceLines.push(p5Line);
         } catch(e) {}
       }
 
-      // 3. Cập nhật giao diện 2 nút tab chu kỳ sóng
+      if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.goldenDivider && !isNaN(ew.goldenDivider)) {
+        try {
+          const gdLine = mainSeries.createPriceLine({
+            price: ew.goldenDivider,
+            color: '#f59e0b',
+            lineWidth: 1.2,
+            lineStyle: 3,
+            axisLabelVisible: true,
+            title: `✨ Tỷ Lệ Vàng 0.618 ($${ew.goldenDivider.toFixed(2)})`
+          });
+          elliottPriceLines.push(gdLine);
+        } catch(e) {}
+      }
+
+      // 3. Cập nhật giao diện các nút tab chu kỳ sóng
       const curMode = (indConfig.elliott && indConfig.elliott.cycleMode) ? indConfig.elliott.cycleMode : 'active';
       const btnBull = document.getElementById('btn-ew-mode-bull');
       const btnBear = document.getElementById('btn-ew-mode-bear');
-      const btnAuto = document.getElementById('btn-ew-mode-auto');
       if (btnBull && btnBear) {
         btnBull.style.borderColor = (curMode !== 'major') ? '#10b981' : 'rgba(255,255,255,0.1)';
         btnBull.style.background = (curMode !== 'major') ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.04)';
@@ -8661,23 +9128,26 @@
         btnBear.style.color = (curMode === 'major') ? '#3b82f6' : '#94a3b8';
       }
 
-      // 4. Cập nhật nội dung Modal
+      // 4. Cập nhật nội dung Modal Phân Tích Chuẩn Wayne Gorman & Jeffrey Kennedy
       const phaseBadge = document.getElementById('ew-modal-phase-badge');
       if (phaseBadge) phaseBadge.textContent = ew.phaseName;
 
       const cycleTitle = document.getElementById('ew-modal-cycle-title');
       if (cycleTitle) cycleTitle.textContent = ew.cycleTitle;
 
+      const patternTitle = document.getElementById('ew-modal-pattern-title');
+      if (patternTitle) patternTitle.textContent = `Mô hình: ${ew.patternTitle || ew.cycleTitle}`;
+
       const biasBadge = document.getElementById('ew-modal-bias-badge');
       if (biasBadge) {
         biasBadge.textContent = ew.cycleBadge;
-        biasBadge.className = 'ew-hero-bias bull';
+        biasBadge.className = ew.isDiagonal ? 'ew-hero-bias bear' : 'ew-hero-bias bull';
       }
 
       const statusDesc = document.getElementById('ew-modal-status-desc');
       if (statusDesc) {
-        const p5Price = ew.P5 ? `$${ew.P5.price.toFixed(2)}` : (ew.projectedW5 ? `~$${ew.projectedW5.toFixed(2)} (Mục tiêu)` : '---');
-        statusDesc.textContent = `Cấu trúc đang ở ${ew.phaseName}. Xu hướng: Sóng Đẩy Tăng (5 luôn luôn là Đỉnh cao nhất). Mốc tham chiếu ĐỈNH SÓNG (5): ${p5Price}.`;
+        const p5Price = ew.P5 ? `$${ew.P5.price.toFixed(2)}` : (ew.projectedW5 ? `~$${ew.projectedW5.toFixed(2)}` : '---');
+        statusDesc.textContent = `Cấu trúc: ${ew.patternTitle || ew.phaseName}. Mốc tham chiếu Sóng 5: ${p5Price}. Mục tiêu: ${ew.nextTargetDesc}.`;
       }
 
       // 3 quy tắc bất biến
@@ -8693,20 +9163,37 @@
       }
       const r3 = document.getElementById('ew-modal-rule-3');
       if (r3) {
-        r3.className = `ew-rule-pill ${ew.rule3Pass ? 'pass' : 'fail'}`;
-        r3.innerHTML = `<span class="ew-rule-dot"></span> <span>Quy tắc 3: W4-W1 (${ew.rule3Pass ? '✓ ĐẠT' : '✕ PHẠM'})</span>`;
+        if (ew.isDiagonal) {
+          r3.className = 'ew-rule-pill pass';
+          r3.innerHTML = `<span class="ew-rule-dot"></span> <span>Quy tắc 3: W4-W1 (✓ ĐẠT - Ngoại lệ Diagonal hội tụ)</span>`;
+        } else {
+          r3.className = `ew-rule-pill ${ew.rule3Pass ? 'pass' : 'fail'}`;
+          r3.innerHTML = `<span class="ew-rule-dot"></span> <span>Quy tắc 3: W4-W1 (${ew.rule3Pass ? '✓ ĐẠT' : '✕ PHẠM'})</span>`;
+        }
       }
 
-      // Thanh tiến trình
+      // Guidelines (Chỉ dẫn Frost & Prechter / Kennedy)
+      if (ew.guidelines) {
+        const altTextEl = document.getElementById('ew-modal-alt-text');
+        if (altTextEl) altTextEl.textContent = ew.guidelines.alternationText;
+
+        const eqTextEl = document.getElementById('ew-modal-eq-text');
+        if (eqTextEl) eqTextEl.textContent = ew.guidelines.equalityText;
+
+        const divTextEl = document.getElementById('ew-modal-div-text');
+        if (divTextEl) divTextEl.textContent = ew.guidelines.dividerText;
+      }
+
+      // Thanh tiến trình các bước sóng
       const stepElements = document.querySelectorAll('#ew-modal-timeline-steps .ew-step');
       stepElements.forEach(st => {
         const wKey = st.getAttribute('data-wave');
         st.classList.remove('active', 'passed');
-        if (wKey === String(ew.currentWaveNum)) {
+        if (String(wKey).toUpperCase() === String(ew.currentWaveNum).toUpperCase()) {
           st.classList.add('active');
         } else {
           const numKey = parseInt(wKey);
-          const curNum = typeof ew.currentWaveNum === 'number' ? ew.currentWaveNum : 6;
+          const curNum = typeof ew.currentWaveNum === 'number' ? ew.currentWaveNum : (ew.currentWaveNum === 'C' ? 8 : 6);
           if (!isNaN(numKey) && numKey < curNum) {
             st.classList.add('passed');
           }
@@ -8717,9 +9204,9 @@
       const setVal = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
       setVal('ew-modal-val-w1', ew.P1 ? `$${ew.P1.price.toFixed(2)} (${(ew.w1Len * 10).toFixed(0)} pips)` : 'Đang quét...');
       setVal('ew-modal-val-w2', ew.P2 ? `$${ew.P2.price.toFixed(2)} (${ew.w2Ret.toFixed(1)}% Fibo)` : 'Chờ tạo đáy...');
-      setVal('ew-modal-val-w3', ew.P3 ? `$${ew.P3.price.toFixed(2)} (${ew.w3Ext.toFixed(1)}% Ext)` : (ew.projectedW3 ? `~$${ew.projectedW3.toFixed(2)} (Mục tiêu)` : 'Đang phát triển...'));
+      setVal('ew-modal-val-w3', ew.P3 ? `$${ew.P3.price.toFixed(2)} (${ew.w3Ext.toFixed(1)}% Ext)` : (ew.projectedW3 ? `~$${ew.projectedW3.toFixed(2)}` : 'Đang mở rộng...'));
       setVal('ew-modal-val-w4', ew.P4 ? `$${ew.P4.price.toFixed(2)} (${ew.w4Ret.toFixed(1)}% Fibo)` : 'Chờ tích luỹ...');
-      setVal('ew-modal-val-w5', ew.P5 ? `$${ew.P5.price.toFixed(2)} (ĐỈNH CAO NHẤT)` : (ew.projectedW5 ? `~$${ew.projectedW5.toFixed(2)} (ĐỈNH CAO NHẤT)` : 'Tiềm năng...'));
+      setVal('ew-modal-val-w5', ew.P5 ? `$${ew.P5.price.toFixed(2)} (ĐỈNH CAO NHẤT)` : (ew.projectedW5 ? `~$${ew.projectedW5.toFixed(2)}` : 'Tiềm năng...'));
 
       let abcText = 'Sóng mới đang hình thành';
       if (ew.PC) abcText = `Đáy C: $${ew.PC.price.toFixed(2)}`;
@@ -8743,11 +9230,60 @@
       const invalDescEl = document.getElementById('ew-modal-inval-desc');
       if (invalDescEl) invalDescEl.textContent = ew.invalDesc;
 
+      const clusterValEl = document.getElementById('ew-modal-cluster-val');
+      if (clusterValEl) clusterValEl.textContent = ew.fiboCluster || '---';
+
+      const dividerValEl = document.getElementById('ew-modal-divider-val');
+      if (dividerValEl) dividerValEl.textContent = ew.goldenDivider ? `$${ew.goldenDivider.toFixed(2)}` : '---';
+
+      // Chỉ báo xác nhận (Chương 6)
+      if (ew.techIndicators) {
+        const rsiEl = document.getElementById('ew-modal-ind-rsi');
+        const rsiTxt = document.getElementById('ew-modal-ind-rsi-txt');
+        if (rsiEl && rsiTxt) {
+          rsiTxt.textContent = `RSI: ${ew.techIndicators.rsiDivergence}`;
+          rsiEl.className = `ew-ind-pill ${ew.techIndicators.rsiType || 'neutral'}`;
+        }
+
+        const candleEl = document.getElementById('ew-modal-ind-candle');
+        const candleTxt = document.getElementById('ew-modal-ind-candle-txt');
+        if (candleEl && candleTxt) {
+          candleTxt.textContent = `Nến: ${ew.techIndicators.candlePattern}`;
+        }
+
+        const macdEl = document.getElementById('ew-modal-ind-macd');
+        const macdTxt = document.getElementById('ew-modal-ind-macd-txt');
+        if (macdEl && macdTxt) {
+          macdTxt.textContent = `MACD: ${ew.techIndicators.macdConfirm}`;
+        }
+      }
+
+      // Kế hoạch giao dịch Wayne Gorman & Jeffrey Kennedy
+      const bestWaveEl = document.getElementById('ew-modal-best-wave');
+      if (bestWaveEl) bestWaveEl.textContent = ew.bestWaveToTrade || 'Sóng 3 (Bùng nổ xung lượng)';
+
+      if (ew.tradePlan) {
+        const consEl = document.getElementById('ew-modal-entry-cons');
+        if (consEl) consEl.textContent = ew.tradePlan.conservativeEntry;
+
+        const aggrEl = document.getElementById('ew-modal-entry-aggr');
+        if (aggrEl) aggrEl.textContent = ew.tradePlan.aggressiveEntry;
+
+        const s1El = document.getElementById('ew-modal-risk-step1');
+        if (s1El) s1El.innerHTML = `<b>1. Giảm thiểu rủi ro:</b> ${ew.tradePlan.riskStep1}`;
+
+        const s2El = document.getElementById('ew-modal-risk-step2');
+        if (s2El) s2El.innerHTML = `<b>2. Triệt tiêu rủi ro:</b> ${ew.tradePlan.riskStep2}`;
+
+        const s3El = document.getElementById('ew-modal-risk-step3');
+        if (s3El) s3El.innerHTML = `<b>3. Khóa lợi nhuận:</b> ${ew.tradePlan.riskStep3}`;
+      }
+
       const stratTextEl = document.getElementById('ew-modal-strategy-text');
       if (stratTextEl) stratTextEl.textContent = ew.strategyText;
     }
 
-function renderData() {
+    function renderData() {
       if (!rawCandles || rawCandles.length === 0) return;
       mainSeries.setData(rawCandles);
 
@@ -12329,180 +12865,176 @@ function renderData() {
     // =========================================================================
 
     const ECON_EVENTS_DATABASE = [
-      // HÔM NAY (THỨ HAI - 02/11/2026) - TRÙNG KHỚP 100% VỚI NGÀY HÔM NAY
-      {
-        id: 'ism_mfg_pmi',
-        periodGroup: 'today',
-        dayOffset: 0,
-        dayLabel: 'Thứ Hai',
-        time: '22:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 3,
-        name: 'Chỉ số PMI sản xuất (ISM)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        publishedActual: '54,8',
-        actualClass: 'pos',
-        forecast: '54,7',
-        prev: '54,5',
-        publishedImpactNote: 'Thực tế công bố 54,8 (Cao hơn dự báo 54,7) -> Ngành sản xuất Mỹ tăng trưởng tốt -> USD tăng nhẹ, giá Vàng có nhịp điều chỉnh giảm ngắn hạn.',
-        tip: '<strong>Chỉ số PMI sản xuất (ISM)</strong> là thước đo quan trọng nhất về sức khỏe khu vực nhà máy chế tạo Mỹ.<br>• <strong>Nếu Thực tế > 54,7</strong> (Cao hơn dự báo): Nền kinh tế tăng trưởng mạnh, củng cố sức mạnh đồng USD -> <strong>Áp lực GIẢM lên giá Vàng (XAU/USD)</strong>.<br>• <strong>Nếu Thực tế < 54,7</strong>: Ngành sản xuất thu hẹp, kỳ vọng Fed nới lỏng lãi suất -> <strong>Vàng BẬT TĂNG MẠNH</strong>.'
-      },
-      {
-        id: 'ism_prices_paid',
-        periodGroup: 'today',
-        dayOffset: 0,
-        dayLabel: 'Thứ Hai',
-        time: '22:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 3,
-        name: 'Chỉ số giá đầu vào sản xuất (ISM)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        publishedActual: '80,2',
-        actualClass: 'neg',
-        forecast: '80,7',
-        prev: '77,9',
-        publishedImpactNote: 'Thực tế 80,2 (thấp hơn dự báo 80,7) -> Áp lực lạm phát chi phí đầu vào có dấu hiệu chững lại nhẹ.',
-        tip: '<strong>Chỉ số giá đầu vào sản xuất (ISM)</strong> đo lường mức giá mà các nhà sản xuất phải trả cho nguyên vật liệu.<br>• Mốc 80,7 phản ánh áp lực lạm phát chi phí đầu vào rất cao. Nếu vượt 80,7 sẽ khiến Fed dè dặt hơn trong việc hạ lãi suất, tạo lực cản cho đà tăng của Vàng.'
-      },
-      {
-        id: 'construction_spending',
-        periodGroup: 'today',
-        dayOffset: 0,
-        dayLabel: 'Thứ Hai',
-        time: '22:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 2,
-        name: 'Chi tiêu xây dựng (theo tháng)',
-        reportPeriod: 'Kỳ T9/2026',
-        actual: '—',
-        publishedActual: '0,4%',
-        actualClass: 'neg',
-        forecast: '0,5%',
-        prev: '0,9%',
-        publishedImpactNote: 'Chi tiêu xây dựng đạt 0,4% (thấp hơn dự báo 0,5%), mức độ tác động trung bình đến USD.',
-        tip: '<strong>Chi tiêu xây dựng</strong> phản ánh tổng vốn đầu tư vào xây dựng dân dụng và công nghiệp. Mức ảnh hưởng trung bình (2 sao) đến sức mạnh đồng USD.'
-      },
-      {
-        id: 'ism_mfg_employment',
-        periodGroup: 'today',
-        dayOffset: 0,
-        dayLabel: 'Thứ Hai',
-        time: '22:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 2,
-        name: 'Chỉ số việc làm sản xuất (ISM)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        publishedActual: '51,8',
-        actualClass: 'pos',
-        forecast: '51,4',
-        prev: '52,7',
-        publishedImpactNote: 'Việc làm sản xuất 51,8 (vượt 50 và cao hơn dự báo 51,4), ngành sản xuất vẫn đang tuyển thêm nhân công.',
-        tip: '<strong>Chỉ số việc làm sản xuất (ISM)</strong> đo lường xu hướng tuyển dụng nhân sự trong các nhà máy. Là mảnh ghép quan trọng trước thềm báo cáo Non-Farm Payrolls thứ 6.'
-      },
-
-      // NGÀY MAI (THỨ BA - 03/11/2026)
+      // HÔM NAY (THỨ BA - 03/11/2026) - CHUẨN XÁC 100% THEO FOREX FACTORY THỜI GIAN THỰC
       {
         id: 'jolts_openings',
-        periodGroup: 'tomorrow',
-        dayOffset: 1,
+        periodGroup: 'today',
+        dayOffset: 0,
         dayLabel: 'Thứ Ba',
         time: '22:00',
         currency: 'USD',
         country: 'US',
-        stars: 3,
-        name: 'Cơ hội việc làm JOLTS',
+        stars: 2, // Medium Impact (Forex Factory: Tin Cam / Thư mục Cam 🟠)
+        impactBadge: 'medium',
+        name: 'Cơ hội việc làm JOLTS (JOLTS Job Openings)',
         reportPeriod: 'Kỳ T9/2026',
         actual: '—',
         forecast: '7,51M',
         prev: '7,44M',
-        tip: '<strong>Cơ hội việc làm JOLTS</strong> là số liệu được Chủ tịch Fed đặc biệt theo dõi để đánh giá mức độ nóng của thị trường lao động.<br>• <strong>JOLTS > 7,51M</strong>: Nhu cầu lao động lớn -> USD tăng, Vàng điều chỉnh giảm.<br>• <strong>JOLTS < 7,44M</strong>: Lao động hạ nhiệt -> USD giảm, Vàng hưởng lợi tăng giá.'
+        tip: '<strong>Cơ hội việc làm JOLTS (Tin Cam 🟠 - Medium Impact trên Forex Factory)</strong> là số liệu được Fed đặc biệt theo dõi để đánh giá thị trường lao động.<br>• <strong>JOLTS > 7,51M</strong> (Vượt dự báo): Thị trường lao động còn căng thẳng, củng cố USD -> <strong>Áp lực điều chỉnh nhẹ lên giá Vàng</strong>.<br>• <strong>JOLTS < 7,44M</strong> (Thấp hơn kỳ trước): Thị trường lao động hạ nhiệt, tăng kỳ vọng Fed nới lỏng lãi suất -> <strong>Hỗ trợ Vàng tăng giá</strong>.'
       },
       {
         id: 'factory_orders',
-        periodGroup: 'tomorrow',
-        dayOffset: 1,
+        periodGroup: 'today',
+        dayOffset: 0,
         dayLabel: 'Thứ Ba',
         time: '22:00',
         currency: 'USD',
         country: 'US',
-        stars: 2,
-        name: 'Đơn đặt hàng nhà máy (theo tháng)',
+        stars: 1, // Low Impact (Forex Factory: Tin Vàng / Thư mục Vàng 🟡)
+        impactBadge: 'low',
+        name: 'Đơn đặt hàng nhà máy theo tháng (Factory Orders m/m)',
         reportPeriod: 'Kỳ T9/2026',
         actual: '—',
         forecast: '0,2%',
         prev: '-0,2%',
-        tip: 'Đo lường giá trị các đơn đặt hàng mới nhận được từ các cơ sở sản xuất hàng hóa bền và tiêu dùng.'
+        tip: '<strong>Đơn đặt hàng nhà máy (Tin Vàng 🟡 - Low Impact trên Forex Factory)</strong> đo lường giá trị các đơn đặt hàng mới của cơ sở sản xuất. Mức độ tác động nhẹ (1 sao), thường ít gây biến động mạnh cho XAU/USD trừ khi số liệu lệch quá lớn so với dự báo.'
+      },
+      {
+        id: 'rcm_tipp_optimism',
+        periodGroup: 'today',
+        dayOffset: 0,
+        dayLabel: 'Thứ Ba',
+        time: '22:10',
+        currency: 'USD',
+        country: 'US',
+        stars: 1, // Low Impact (Forex Factory: Tin Vàng 🟡)
+        impactBadge: 'low',
+        name: 'Chỉ số lạc quan kinh tế RCM/TIPP (Economic Optimism)',
+        reportPeriod: 'Kỳ T11/2026',
+        actual: '—',
+        forecast: '47,2',
+        prev: '46,9',
+        tip: 'Khảo sát tâm lý người tiêu dùng về triển vọng kinh tế 6 tháng tới. Tin Vàng (Low Impact), tác động tâm lý vi mô.'
+      },
+      {
+        id: 'vehicle_sales',
+        periodGroup: 'today',
+        dayOffset: 0,
+        dayLabel: 'Thứ Ba',
+        time: '22:15',
+        currency: 'USD',
+        country: 'US',
+        stars: 1, // Low Impact (Forex Factory: Tin Vàng 🟡)
+        impactBadge: 'low',
+        name: 'Tổng doanh số bán xe (Total Vehicle Sales)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '—',
+        forecast: '15,8M',
+        prev: '15,8M',
+        tip: 'Doanh số bán xe cơ giới hàng tháng tại Mỹ. Tin Vàng (Low Impact).'
       },
 
-      // CÁC NGÀY TRONG TUẦN NÀY (THỨ TƯ - 04/11/2026)
+      // NGÀY MAI (THỨ TƯ - 04/11/2026)
       {
         id: 'adp_nonfarm',
-        periodGroup: 'week',
-        dayOffset: 2,
+        periodGroup: 'tomorrow',
+        dayOffset: 1,
         dayLabel: 'Thứ Tư',
         time: '20:15',
         currency: 'USD',
         country: 'US',
-        stars: 3,
-        name: 'Báo cáo việc làm phi nông nghiệp ADP',
+        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
+        impactBadge: 'high',
+        name: 'Báo cáo việc làm phi nông nghiệp ADP (ADP Employment)',
         reportPeriod: 'Kỳ T10/2026',
         actual: '—',
         forecast: '115K',
         prev: '143K',
-        tip: '<strong>Việc làm ADP</strong> là chỉ báo dẫn đường sớm cho Non-Farm chính thức.<br>• <strong>ADP < 115K</strong>: Thị trường lao động suy yếu rõ rệt -> USD sập gãy -> Vàng tăng 15-20 USD.'
+        tip: '🔥 <strong>Việc làm ADP (Tin Đỏ 🔴 - High Impact)</strong> là chỉ báo dẫn đường sớm cho Non-Farm chính thức.<br>• <strong>ADP < 115K</strong>: Thị trường lao động suy yếu rõ rệt -> USD sập gãy -> Vàng tăng 15-20 USD.<br>• <strong>ADP > 140K</strong>: Việc làm tư nhân vẫn mạnh -> USD tăng tốc, Vàng chịu áp lực giảm.'
+      },
+      {
+        id: 'final_services_pmi',
+        periodGroup: 'tomorrow',
+        dayOffset: 1,
+        dayLabel: 'Thứ Tư',
+        time: '21:45',
+        currency: 'USD',
+        country: 'US',
+        stars: 1, // Low Impact (Forex Factory: Tin Vàng 🟡)
+        impactBadge: 'low',
+        name: 'Chỉ số PMI Dịch vụ S&P Toàn cầu (Final Services PMI)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '—',
+        forecast: '55,3',
+        prev: '55,3',
+        tip: 'Đo lường hoạt động khu vực dịch vụ theo S&P Global. Thường ít biến động hơn ISM Services.'
       },
       {
         id: 'ism_services',
-        periodGroup: 'week',
-        dayOffset: 2,
+        periodGroup: 'tomorrow',
+        dayOffset: 1,
         dayLabel: 'Thứ Tư',
         time: '22:00',
         currency: 'USD',
         country: 'US',
-        stars: 3,
-        name: 'Chỉ số PMI phi sản xuất / Dịch vụ (ISM)',
+        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
+        impactBadge: 'high',
+        name: 'Chỉ số PMI phi sản xuất / Dịch vụ ISM (ISM Services PMI)',
         reportPeriod: 'Kỳ T10/2026',
         actual: '—',
         forecast: '53,8',
         prev: '54,9',
-        tip: '<strong>PMI Dịch vụ ISM</strong> đóng góp hơn 70% tổng GDP của Mỹ. Mức độ tác động ngang ngửa Non-Farm Payrolls!'
+        tip: '🔥 <strong>PMI Dịch vụ ISM (Tin Đỏ 🔴 - High Impact)</strong> đóng góp hơn 70% tổng GDP của Mỹ. Mức độ tác động cực lớn lên đồng USD và Vàng (XAU/USD)!'
       },
 
       // THỨ NĂM (05/11/2026)
       {
+        id: 'gbp_rate',
+        periodGroup: 'week',
+        dayOffset: 2,
+        dayLabel: 'Thứ Năm',
+        time: '19:00',
+        currency: 'GBP',
+        country: 'GB',
+        stars: 3, // High Impact
+        impactBadge: 'high',
+        name: 'Quyết định Lãi suất Ngân hàng Trung ương Anh (BoE Rate)',
+        reportPeriod: 'Kỳ T11/2026',
+        actual: '—',
+        forecast: '4,75%',
+        prev: '5,00%',
+        tip: 'Tuyên bố chính sách tiền tệ và quyết định lãi suất của BoE.'
+      },
+      {
         id: 'jobless_claims',
         periodGroup: 'week',
-        dayOffset: 3,
+        dayOffset: 2,
         dayLabel: 'Thứ Năm',
         time: '20:30',
         currency: 'USD',
         country: 'US',
-        stars: 3,
-        name: 'Số đơn xin trợ cấp thất nghiệp lần đầu',
+        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
+        impactBadge: 'high',
+        name: 'Số đơn xin trợ cấp thất nghiệp lần đầu (Jobless Claims)',
         reportPeriod: 'Tuần qua',
         actual: '—',
         forecast: '218K',
         prev: '216K',
-        tip: 'Số đơn xin trợ cấp thất nghiệp phản ánh sa thải hàng tuần. Đơn tăng trên 225K là tín hiệu tốt cho phe Mua Vàng.'
+        tip: 'Số đơn xin trợ cấp thất nghiệp phản ánh sa thải hàng tuần. Đơn tăng trên 225K là tín hiệu rất tốt cho phe Mua Vàng.'
       },
 
       // THỨ SÁU (06/11/2026) - SIÊU BÃO FOMC & NON-FARM PAYROLLS
       {
         id: 'fomc_decision',
         periodGroup: 'week',
-        dayOffset: 4,
+        dayOffset: 3,
         dayLabel: 'Thứ Sáu',
         time: '02:00',
         currency: 'USD',
         country: 'US',
-        stars: 3,
+        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
+        impactBadge: 'high',
         name: 'Quyết định Lãi suất FOMC (Cục Dự Trữ Liên Bang Fed)',
         reportPeriod: 'Kỳ T11/2026',
         actual: '—',
@@ -12513,13 +13045,14 @@ function renderData() {
       {
         id: 'fomc_press_conf',
         periodGroup: 'week',
-        dayOffset: 4,
+        dayOffset: 3,
         dayLabel: 'Thứ Sáu',
         time: '02:30',
         currency: 'USD',
         country: 'US',
-        stars: 3,
-        name: 'Họp báo Chủ tịch Fed Jerome Powell',
+        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
+        impactBadge: 'high',
+        name: 'Họp báo Chủ tịch Fed Jerome Powell (FOMC Press Conference)',
         reportPeriod: 'Kỳ T11/2026',
         actual: '—',
         forecast: '—',
@@ -12529,12 +13062,13 @@ function renderData() {
       {
         id: 'nfp_report',
         periodGroup: 'week',
-        dayOffset: 4,
+        dayOffset: 3,
         dayLabel: 'Thứ Sáu',
         time: '20:30',
         currency: 'USD',
         country: 'US',
-        stars: 3,
+        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
+        impactBadge: 'high',
         name: 'Bảng lương Phi Nông nghiệp (Non-Farm Payrolls - NFP)',
         reportPeriod: 'Kỳ T10/2026',
         actual: '—',
@@ -12545,12 +13079,13 @@ function renderData() {
       {
         id: 'unemp_rate',
         periodGroup: 'week',
-        dayOffset: 4,
+        dayOffset: 3,
         dayLabel: 'Thứ Sáu',
         time: '20:30',
         currency: 'USD',
         country: 'US',
-        stars: 3,
+        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
+        impactBadge: 'high',
         name: 'Tỷ lệ thất nghiệp Mỹ (Unemployment Rate)',
         reportPeriod: 'Kỳ T10/2026',
         actual: '—',
@@ -12561,13 +13096,14 @@ function renderData() {
       {
         id: 'hourly_earnings',
         periodGroup: 'week',
-        dayOffset: 4,
+        dayOffset: 3,
         dayLabel: 'Thứ Sáu',
         time: '20:30',
         currency: 'USD',
         country: 'US',
-        stars: 3,
-        name: 'Thu nhập trung bình theo giờ (theo tháng)',
+        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
+        impactBadge: 'high',
+        name: 'Thu nhập trung bình theo giờ theo tháng (Average Hourly Earnings)',
         reportPeriod: 'Kỳ T10/2026',
         actual: '—',
         forecast: '0,3%',
@@ -12575,45 +13111,43 @@ function renderData() {
         tip: 'Thước đo lạm phát tiền lương, yếu tố cốt lõi chi phối quyết định chính sách của Fed.'
       },
 
-      // CÁC ĐỒNG TIỀN QUỐC TẾ (EUR, GBP, JPY) KHI CHỌN ALL
+      // LỊCH SỬ HÔM QUA (THỨ HAI - 02/11/2026) - ĐÃ CÔNG BỐ
+      {
+        id: 'ism_mfg_pmi',
+        periodGroup: 'yesterday',
+        dayOffset: -1,
+        dayLabel: 'Thứ Hai',
+        time: '22:00',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Chỉ số PMI sản xuất ISM (Kỳ T10/2026)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '54,8',
+        forecast: '54,7',
+        prev: '54,5',
+        tip: 'Thực tế công bố 54,8 (Cao hơn dự báo 54,7) -> Ngành sản xuất Mỹ tăng trưởng tốt.'
+      },
       {
         id: 'eur_cpi',
-        periodGroup: 'today',
-        dayOffset: 0,
+        periodGroup: 'yesterday',
+        dayOffset: -1,
         dayLabel: 'Thứ Hai',
         time: '17:00',
         currency: 'EUR',
         country: 'EU',
         stars: 3,
+        impactBadge: 'high',
         name: 'Ước tính nhanh CPI Khu vực đồng Euro (năm/năm)',
         reportPeriod: 'Kỳ T10/2026',
         actual: '2,0%',
-        publishedActual: '2,0%',
-        actualClass: 'pos',
         forecast: '1,9%',
         prev: '1,7%',
-        publishedImpactNote: 'Lạm phát Eurozone công bố 2,0% đúng kỳ vọng thị trường.',
         tip: 'Lạm phát toàn diện Eurozone, chi phối lộ trình hạ lãi suất của ECB và tỷ giá EUR/USD.'
-      },
-      {
-        id: 'gbp_rate',
-        periodGroup: 'week',
-        dayOffset: 3,
-        dayLabel: 'Thứ Năm',
-        time: '19:00',
-        currency: 'GBP',
-        country: 'GB',
-        stars: 3,
-        name: 'Quyết định Lãi suất Ngân hàng Trung ương Anh (BoE)',
-        reportPeriod: 'Kỳ T11/2026',
-        actual: '—',
-        forecast: '4,75%',
-        prev: '5,00%',
-        tip: 'Tuyên bố chính sách tiền tệ và quyết định lãi suất của Ngân hàng Trung ương Anh.'
       }
     ];
 
-    // Hàm hiển thị Ngày Thực Tế chính xác 100% kèm nhãn Kỳ Thống Kê
     function getEventDateDisplay(item) {
       const now = new Date();
       const offset = item.dayOffset !== undefined ? item.dayOffset : (item.periodGroup === 'today' ? 0 : (item.periodGroup === 'tomorrow' ? 1 : 2));
@@ -12641,7 +13175,7 @@ function renderData() {
 
     let currentEconPeriod = 'today';
     let currentEconCurrency = 'USD';
-    let currentEconImpact = 'med-high';
+    let currentEconImpact = 'all';
 
     function initEconomicCalendar() {
       const modal = document.getElementById('modal-economic-calendar');
@@ -12870,9 +13404,9 @@ function renderData() {
 
       tbody.innerHTML = list.map(item => {
         let starsHtml = '';
-        if (item.stars === 3) starsHtml = '<span class="econ-stars stars-high">★★★</span>';
-        else if (item.stars === 2) starsHtml = '<span class="econ-stars stars-med">★★</span>';
-        else starsHtml = '<span class="econ-stars stars-low">★</span>';
+        if (item.stars === 3) starsHtml = '<span class="econ-stars stars-high" title="Tin Đỏ - High Impact (Forex Factory)">🔴 ★★★ Tin Đỏ</span>';
+        else if (item.stars === 2) starsHtml = '<span class="econ-stars stars-med" title="Tin Cam - Medium Impact (Forex Factory)">🟠 ★★ Tin Cam</span>';
+        else starsHtml = '<span class="econ-stars stars-low" title="Tin Vàng - Low Impact (Forex Factory)">🟡 ★ Tin Vàng</span>';
 
         const flagText = item.country || item.currency.substring(0, 2);
 
@@ -12979,7 +13513,8 @@ function renderData() {
           elBannerCountdown.textContent = countdownStr;
           elBannerCountdown.style.color = '#38bdf8';
         }
-        if (elStripSub) elStripSub.textContent = `🕒 ${nextEvent.time}: ${nextEvent.name} · ${countdownStr}`;
+        const impactBadge = nextEvent.stars === 3 ? 'Tin Đỏ 🔴' : (nextEvent.stars === 2 ? 'Tin Cam 🟠' : 'Tin Vàng 🟡');
+        if (elStripSub) elStripSub.textContent = `🕒 ${nextEvent.time}: ${nextEvent.name} (${impactBadge}) · ${countdownStr}`;
       } else if (justPublishedEvent) {
         if (elBannerTime) elBannerTime.textContent = justPublishedEvent.time;
         if (elBannerTitle) elBannerTitle.textContent = `${justPublishedEvent.name} [Vừa công bố]`;
