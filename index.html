@@ -5507,79 +5507,48 @@
           <div class="ind-section">
             <div class="ind-group-title">🌊 SÓNG ELLIOTT &amp; ĐƯỜNG XU HƯỚNG TRENDLINE (TL SÓNG)</div>
 
-            <!-- 1. SÓNG ELLIOTT -->
+            <!-- 1. SÓNG ELLIOTT & TP MỤC TIÊU (GỘP CHUNG 1 NÚT) -->
             <div class="ind-card-item">
               <div class="ind-card-main">
                 <label class="ind-label-area">
-                  <input type="checkbox" id="chk-elliott" checked>
+                  <input type="checkbox" id="chk-elliott">
                   <span class="ind-color-badge" style="background:#8b5cf6;"></span>
-                  <span id="title-elliott">Sóng Elliott (1-2-3-4-5, A-B-C)</span>
+                  <span id="title-elliott" style="font-weight:700; color:#c084fc;">Sóng Elliott &amp; TP Sóng</span>
                 </label>
                 <button class="ind-gear-btn" data-target="box-elliott" title="Chỉnh thông số Sóng Elliott">⚙️</button>
               </div>
               <div class="ind-params-box" id="box-elliott">
+                <div style="font-size: 10px; color: #cbd5e1; line-height: 1.45; margin-bottom: 6px;">
+                  🎯 <b>Sóng Elliott &amp; TP Sóng:</b> Vẽ chu kỳ sóng (1-2-3-4-5, A-B-C) và tự động kẻ đường <b>TP Mục Tiêu Sóng</b> chốt lời. Tắt/bật đồng bộ trong 1 nút duy nhất.
+                </div>
                 <div class="param-field">
                   <label>Chu kỳ quét đỉnh đáy (Depth):</label>
-                  <input type="number" id="inp-ew-depth" min="3" max="30" value="8">
+                  <input type="number" id="inp-ew-depth" min="3" max="30" value="6">
                 </div>
                 <div class="param-field">
                   <label>Độ nhạy biên độ sóng (%):</label>
-                  <input type="number" id="inp-ew-dev" min="0.05" max="1.5" step="0.05" value="0.2">
-                </div>
-                <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
-                  <label style="display:flex; align-items:center; gap:6px; font-size:11px; cursor:pointer;">
-                    <input type="checkbox" id="chk-ew-lines" checked>
-                    <span>Kẻ đường sóng Zigzag trên biểu đồ</span>
-                  </label>
-                  <label style="display:flex; align-items:center; gap:6px; font-size:11px; cursor:pointer;">
-                    <input type="checkbox" id="chk-ew-labels" checked>
-                    <span>Hiện nhãn sóng (1)-(2)-(3)-(4)-(5), (A-B-C)</span>
-                  </label>
-                  <label style="display:flex; align-items:center; gap:6px; font-size:11px; cursor:pointer;">
-                    <input type="checkbox" id="chk-ew-targets" checked>
-                    <span>Hiện đường mục tiêu Fibo &amp; Vi phạm sóng</span>
-                  </label>
+                  <input type="number" id="inp-ew-dev" min="0.05" max="1.5" step="0.05" value="0.12">
                 </div>
               </div>
             </div>
 
-            <!-- 2. ĐƯỜNG TRENDLINE TAM GIÁC (NỐI ĐỈNH & ĐÁY - TL SÓNG TRANG 1 & 2) -->
+            <!-- 2. ĐƯỜNG TRENDLINE TAM GIÁC / NÊM (CHỈ BÁO ĐỘC LẬP HOÀN TOÀN) -->
             <div class="ind-card-item">
               <div class="ind-card-main">
                 <label class="ind-label-area">
-                  <input type="checkbox" id="chk-ew-trendlines" checked>
+                  <input type="checkbox" id="chk-trendline" checked>
                   <span class="ind-color-badge" style="background:#06b6d4;"></span>
-                  <span id="title-ew-trendlines" style="font-weight:700; color:#38bdf8;">Kẻ Trendline Tam Giác / Nêm</span>
+                  <span id="title-trendline" style="font-weight:700; color:#38bdf8;">Kẻ Trendline Tam Giác / Nêm</span>
                 </label>
                 <button class="ind-gear-btn" data-target="box-trendline" title="Xem chi tiết Trendline Tam Giác">⚙️</button>
               </div>
               <div class="ind-params-box" id="box-trendline">
                 <div style="font-size: 10px; color: #cbd5e1; line-height: 1.45; margin-bottom: 6px;">
-                  📐 <b>Trendline Tam Giác / Nêm (TL Sóng Trang 1 &amp; 2):</b> Tự động tính toán trên khung nến đang mở, kẻ các tia thẳng tuyệt đối (không gãy khúc) bám sát các đỉnh đáy trong số nến quan sát.
+                  📐 <b>Trendline Tam Giác / Nêm (Khung nến đang mở):</b> Tự động nối đỉnh/đáy thành các tia thẳng bám sát nến theo khung thời gian mở, đánh dấu điểm chạm ○ và tên mô hình. Hoạt động độc lập, không phụ thuộc vào Sóng Elliott.
                 </div>
                 <div class="ind-row" style="display:flex; justify-content:space-between; align-items:center;">
                   <span style="font-size: 10px; color:#94a3b8;">Số nến quan sát (Lookback):</span>
-                  <input type="number" id="inp-ew-lookback" value="60" min="20" max="200" step="5" style="width:50px; background:#1e293b; color:#fff; border:1px solid #334155; border-radius:4px; padding:2px 4px; text-align:center; font-size:11px;">
-                </div>
-              </div>
-            </div>
-
-            <!-- 3. HỆ THỐNG 3 MỨC VÀO LỆNH ENTRY 1-2-3 & STOP LOSS (TL SÓNG TRANG 5) -->
-            <div class="ind-card-item">
-              <div class="ind-card-main">
-                <label class="ind-label-area">
-                  <input type="checkbox" id="chk-ew-entries" checked>
-                  <span class="ind-color-badge" style="background:#10b981;"></span>
-                  <span id="title-ew-entries" style="font-weight:700; color:#34d399;">3 Điểm Vào Lệnh Entry 1-2-3 &amp; SL</span>
-                </label>
-                <button class="ind-gear-btn" data-target="box-entries" title="Xem chi tiết 3 mức vào lệnh">⚙️</button>
-              </div>
-              <div class="ind-params-box" id="box-entries">
-                <div style="font-size: 10px; color: #cbd5e1; line-height: 1.55;">
-                  <div>⚡ <b style="color:#f472b6;">Entry 1 (Mạo hiểm):</b> Phá vỡ cấu trúc sóng cấp 4 (Fibo 23.6%)</div>
-                  <div>🛡️ <b style="color:#fbbf24;">Entry 2 (An toàn):</b> Phá vỡ cấu trúc sóng cấp 3 (Fibo 50%)</div>
-                  <div>💎 <b style="color:#34d399;">Entry 3 (Rất an toàn):</b> Phá vỡ Trendline 2-4 (Sóng cấp 2)</div>
-                  <div>🛑 <b style="color:#ef4444;">Stop Loss:</b> Đỉnh Sóng 5 (hoặc Đáy Sóng C)</div>
+                  <input type="number" id="inp-trendline-lookback" value="60" min="20" max="200" step="5" style="width:50px; background:#1e293b; color:#fff; border:1px solid #334155; border-radius:4px; padding:2px 4px; text-align:center; font-size:11px;">
                 </div>
               </div>
             </div>
@@ -7046,7 +7015,8 @@
       vol: { enabled: true, maPeriod: 20 },
       rsi: { enabled: false, period: 14, ob: 70, os: 30 },
       autofibo: { enabled: false, lookback: 90 },
-      elliott: { enabled: true, depth: 6, minDev: 0.12, lookback: 60, showLines: true, showLabels: true, showTargets: true, showTrendlines: true, showEntries: true, cycleMode: 'active' }
+      elliott: { enabled: false, depth: 6, minDev: 0.12, cycleMode: 'active' },
+      trendline: { enabled: true, lookback: 60 }
     };
 
     // Đảm bảo khởi động sạch: Xoá cài đặt chỉ báo cũ và cảnh báo thử nghiệm cũ nếu có
@@ -7075,7 +7045,8 @@
             vol: Object.assign({}, defaultIndConfig.vol, parsed.vol),
             rsi: Object.assign({}, defaultIndConfig.rsi, parsed.rsi),
             autofibo: Object.assign({}, defaultIndConfig.autofibo, parsed.autofibo),
-            elliott: Object.assign({}, defaultIndConfig.elliott, parsed.elliott)
+            elliott: Object.assign({}, defaultIndConfig.elliott, parsed.elliott),
+            trendline: Object.assign({}, defaultIndConfig.trendline, parsed.trendline)
           };
         }
       } catch (e) {}
@@ -7239,28 +7210,34 @@
     let elliottPriceLines = [];
     let elliottEntryPriceLines = [];
     let elliottWaveMarkers = [];
+    let trendlineMarkers = [];
     let supertrendMarkers = [];
 
-    // Bộ quản lý gộp Marker thống nhất giữa SuperTrend, Sóng Elliott & Touchpoints Trendline
+    // Bộ quản lý gộp Marker thống nhất (SuperTrend, Sóng Elliott, Trendline - Độc lập 100%)
     function syncAllChartMarkers() {
       let combined = [];
       if (indConfig.supertrend && indConfig.supertrend.enabled && supertrendMarkers && supertrendMarkers.length > 0) {
         combined = combined.concat(supertrendMarkers);
       }
-      if (elliottWaveMarkers && elliottWaveMarkers.length > 0) {
-        const cTimes = (rawCandles && rawCandles.length > 0) ? new Set(rawCandles.map(c => c.time)) : null;
-        const validEw = cTimes ? elliottWaveMarkers.filter(m => cTimes.has(m.time)) : elliottWaveMarkers;
-        combined = combined.concat(validEw);
+      if (indConfig.elliott && indConfig.elliott.enabled && elliottWaveMarkers && elliottWaveMarkers.length > 0) {
+        combined = combined.concat(elliottWaveMarkers);
+      }
+      if (indConfig.trendline && indConfig.trendline.enabled && trendlineMarkers && trendlineMarkers.length > 0) {
+        combined = combined.concat(trendlineMarkers);
+      }
+      const cTimes = (rawCandles && rawCandles.length > 0) ? new Set(rawCandles.map(c => c.time)) : null;
+      if (cTimes) {
+        combined = combined.filter(m => cTimes.has(m.time));
       }
       combined.sort((a, b) => a.time - b.time);
       try {
         mainSeries.setMarkers(combined);
       } catch(e) {}
 
-      // Gán markers Sóng Elliott trực tiếp lên elliottSeries nếu cần
+      // Gán markers Sóng Elliott trực tiếp lên elliottSeries nếu có
       if (typeof elliottSeries !== 'undefined' && elliottSeries && typeof elliottSeries.setMarkers === 'function') {
         try {
-          if (indConfig.elliott && indConfig.elliott.enabled && (indConfig.elliott.showLabels !== false) && elliottWaveMarkers && elliottWaveMarkers.length > 0) {
+          if (indConfig.elliott && indConfig.elliott.enabled && elliottWaveMarkers && elliottWaveMarkers.length > 0) {
             elliottSeries.setMarkers(elliottWaveMarkers);
           } else {
             elliottSeries.setMarkers([]);
@@ -7521,15 +7498,13 @@
       setInp('inp-fibo-lb', indConfig.autofibo.lookback);
 
       if (indConfig.elliott) {
-        setChk('chk-elliott', indConfig.elliott.enabled);
-        setInp('inp-ew-depth', indConfig.elliott.depth || 8);
-        setInp('inp-ew-dev', indConfig.elliott.minDev || 0.2);
-        setInp('inp-ew-lookback', indConfig.elliott.lookback || 60);
-        setChk('chk-ew-lines', indConfig.elliott.showLines !== false);
-        setChk('chk-ew-labels', indConfig.elliott.showLabels !== false);
-        setChk('chk-ew-targets', indConfig.elliott.showTargets !== false);
-        setChk('chk-ew-trendlines', indConfig.elliott.showTrendlines !== false);
-        setChk('chk-ew-entries', indConfig.elliott.showEntries !== false);
+        setChk('chk-elliott', !!indConfig.elliott.enabled);
+        setInp('inp-ew-depth', indConfig.elliott.depth || 6);
+        setInp('inp-ew-dev', indConfig.elliott.minDev || 0.12);
+      }
+      if (indConfig.trendline) {
+        setChk('chk-trendline', !!indConfig.trendline.enabled);
+        setInp('inp-trendline-lookback', indConfig.trendline.lookback || 60);
       }
       setText('val-fibo-lb', indConfig.autofibo.lookback);
 
@@ -7564,25 +7539,27 @@
       volSeries.applyOptions({ visible: indConfig.vol.enabled });
       volMaSeries.applyOptions({ visible: indConfig.vol.enabled });
       rsiSeries.applyOptions({ visible: indConfig.rsi.enabled });
+      const isEwOn = !!(indConfig.elliott && indConfig.elliott.enabled);
+      const isTlOn = !!(indConfig.trendline && indConfig.trendline.enabled);
+
       if (typeof elliottSeries !== 'undefined') {
-        elliottSeries.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.enabled && indConfig.elliott.showLines) });
+        elliottSeries.applyOptions({ visible: isEwOn });
       }
       if (typeof elliottTrendline24Series !== 'undefined') {
-        elliottTrendline24Series.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false) });
+        elliottTrendline24Series.applyOptions({ visible: isTlOn });
       }
       if (typeof elliottChannelSeries !== 'undefined') {
-        elliottChannelSeries.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false) });
+        elliottChannelSeries.applyOptions({ visible: isTlOn });
       }
       if (typeof trendlineInnerUpperSeries !== 'undefined') {
-        trendlineInnerUpperSeries.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false) });
+        trendlineInnerUpperSeries.applyOptions({ visible: isTlOn });
       }
       if (typeof trendlineInnerLowerSeries !== 'undefined') {
-        trendlineInnerLowerSeries.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false) });
+        trendlineInnerLowerSeries.applyOptions({ visible: isTlOn });
       }
-      const isAnyElliottActive = !!(indConfig.elliott && (indConfig.elliott.enabled || indConfig.elliott.showTrendlines !== false || indConfig.elliott.showEntries !== false));
       const btnEwToolbar = document.getElementById('btn-elliott-modal');
       if (btnEwToolbar) {
-        btnEwToolbar.style.display = isAnyElliottActive ? 'flex' : 'none';
+        btnEwToolbar.style.display = isEwOn ? 'flex' : 'none';
       }
 
       updateRsiPriceLines();
@@ -7640,46 +7617,23 @@
     bindCheck('chk-bb', 'bb');
     bindCheck('chk-autofibo', 'autofibo');
     bindCheck('chk-elliott', 'elliott');
+    bindCheck('chk-trendline', 'trendline');
+
     const chkElliottEl = document.getElementById('chk-elliott');
     if (chkElliottEl) {
       chkElliottEl.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          showToast('🌊 ĐÃ BẬT PHÂN TÍCH & VẼ SÓNG ELLIOTT (1-2-3-4-5, A-B-C)', 'success', 2800);
-          playBeep(920, 0.1);
-        } else {
-          showToast('✓ ĐÃ TẮT CHỈ BÁO SÓNG ELLIOTT', 'info', 2000);
-          playBeep(450, 0.08);
-        }
+        showToast(e.target.checked ? '🌊 ĐÃ BẬT SÓNG ELLIOTT & TP MỤC TIÊU' : '✓ ĐÃ TẮT SÓNG ELLIOTT & TP', e.target.checked ? 'success' : 'info', 2000);
+        try { playBeep(e.target.checked ? 920 : 450, 0.08); } catch(err) {}
       });
     }
 
-    const bindEwSubCheck = (id, key, toastMsg) => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('change', (e) => {
-          if (!indConfig.elliott) indConfig.elliott = Object.assign({}, defaultIndConfig.elliott);
-          indConfig.elliott[key] = e.target.checked;
-          if (toastMsg) {
-            showToast(e.target.checked ? `✓ ĐÃ BẬT: ${toastMsg}` : `✕ ĐÃ TẮT: ${toastMsg}`, e.target.checked ? 'success' : 'info', 2000);
-            try { playBeep(e.target.checked ? 880 : 440, 0.08); } catch(err) {}
-          }
-          applyAllIndicatorSettings();
-        });
-      }
-    };
-    bindEwSubCheck('chk-ew-lines', 'showLines');
-    bindEwSubCheck('chk-ew-labels', 'showLabels');
-    bindEwSubCheck('chk-ew-targets', 'showTargets');
-    bindEwSubCheck('chk-ew-trendlines', 'showTrendlines', 'ĐƯỜNG TRENDLINE 2-4 & KÊNH SÓNG (TL SÓNG TRANG 5)');
-    bindEwSubCheck('chk-ew-entries', 'showEntries', '3 MỨC VÀO LỆNH ENTRY 1-2-3 & STOP LOSS');
-
-    bindParamInput('inp-ew-lookback', (v) => {
-      const n = parseInt(v);
-      if (n >= 15 && n <= 300) {
-        if (!indConfig.elliott) indConfig.elliott = Object.assign({}, defaultIndConfig.elliott);
-        indConfig.elliott.lookback = n;
-      }
-    });
+    const chkTrendlineEl = document.getElementById('chk-trendline');
+    if (chkTrendlineEl) {
+      chkTrendlineEl.addEventListener('change', (e) => {
+        showToast(e.target.checked ? '📐 ĐÃ BẬT KẺ TRENDLINE TAM GIÁC / NÊM' : '✓ ĐÃ TẮT KẺ TRENDLINE', e.target.checked ? 'success' : 'info', 2000);
+        try { playBeep(e.target.checked ? 920 : 450, 0.08); } catch(err) {}
+      });
+    }
 
     bindParamInput('inp-ew-depth', (v) => {
       const n = parseInt(v);
@@ -7693,6 +7647,13 @@
       if (f >= 0.05 && f <= 3.0) {
         if (!indConfig.elliott) indConfig.elliott = Object.assign({}, defaultIndConfig.elliott);
         indConfig.elliott.minDev = f;
+      }
+    });
+    bindParamInput('inp-trendline-lookback', (v) => {
+      const n = parseInt(v);
+      if (n >= 15 && n <= 300) {
+        if (!indConfig.trendline) indConfig.trendline = Object.assign({}, defaultIndConfig.trendline);
+        indConfig.trendline.lookback = n;
       }
     });
     const chkFiboEl = document.getElementById('chk-autofibo');
@@ -9643,27 +9604,22 @@
       };
     }
 
-    // Cập nhật giao diện Modal Phân Tích Sóng Elliott & Vẽ trên Biểu đồ
+    // =========================================================================
+    // 1. CHỈ BÁO SÓNG ELLIOTT & TP SÓNG (GỘP CHUNG 1 NÚT DUY NHẤT)
+    // =========================================================================
     function updateElliottWave(candles, curPrice) {
-      const isIndEnabled = !!(indConfig.elliott && indConfig.elliott.enabled);
-      const isAnyElliottActive = !!(indConfig.elliott && (indConfig.elliott.enabled || indConfig.elliott.showTrendlines !== false || indConfig.elliott.showEntries !== false));
+      const isEwOn = !!(indConfig.elliott && indConfig.elliott.enabled);
       const btnEwModal = document.getElementById('btn-elliott-modal');
       if (btnEwModal) {
-        btnEwModal.style.display = isAnyElliottActive ? 'flex' : 'none';
+        btnEwModal.style.display = isEwOn ? 'flex' : 'none';
       }
 
-      if (!candles || candles.length < 20 || !isAnyElliottActive) {
+      if (!candles || candles.length < 20 || !isEwOn) {
         if (elliottSeries) elliottSeries.setData([]);
-        if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) elliottTrendline24Series.setData([]);
-        if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) elliottChannelSeries.setData([]);
-        if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) trendlineInnerUpperSeries.setData([]);
-        if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) trendlineInnerLowerSeries.setData([]);
         elliottWaveMarkers = [];
         syncAllChartMarkers();
         elliottPriceLines.forEach(l => { try { mainSeries.removePriceLine(l); } catch(e) {} });
         elliottPriceLines = [];
-        elliottEntryPriceLines.forEach(l => { try { mainSeries.removePriceLine(l); } catch(e) {} });
-        elliottEntryPriceLines = [];
         return;
       }
 
@@ -9673,58 +9629,29 @@
 
       if (!ew) {
         if (elliottSeries) elliottSeries.setData([]);
-        if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) elliottTrendline24Series.setData([]);
-        if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) elliottChannelSeries.setData([]);
-        if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) trendlineInnerUpperSeries.setData([]);
-        if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) trendlineInnerLowerSeries.setData([]);
         elliottWaveMarkers = [];
         syncAllChartMarkers();
         return;
       }
 
-      // 1. Cập nhật đường vẽ Zigzag & Markers trên biểu đồ (chỉ vẽ đỉnh đáy thực tế đã xác nhận)
+      // Vẽ đường sóng Zigzag
       if (elliottSeries) {
-        if (isIndEnabled && (indConfig.elliott.showLines !== false)) {
-          elliottSeries.setData(ew.linePoints || []);
-        } else {
-          elliottSeries.setData([]);
-        }
+        elliottSeries.setData(ew.linePoints || []);
       }
 
-      // 1b. Cập nhật 4 tia Trendline thẳng tuyệt đối (TL Sóng Trang 1 & 2)
-      const showTl = (indConfig.elliott && indConfig.elliott.showTrendlines !== false);
-      if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) {
-        elliottChannelSeries.setData(showTl && ew.channelPoints ? ew.channelPoints : []);
-      }
-      if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) {
-        elliottTrendline24Series.setData(showTl && ew.trendlinePoints ? ew.trendlinePoints : []);
-      }
-      if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) {
-        trendlineInnerUpperSeries.setData(showTl && ew.innerUpperPoints ? ew.innerUpperPoints : []);
-      }
-      if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) {
-        trendlineInnerLowerSeries.setData(showTl && ew.innerLowerPoints ? ew.innerLowerPoints : []);
-      }
-
-      // 1c. Markers: gộp nhãn sóng và touchpoints vòng tròn
-      elliottWaveMarkers = [];
-      if (isIndEnabled && (indConfig.elliott.showLabels !== false) && ew.markers) {
-        elliottWaveMarkers = ew.markers.slice();
-      }
-      if (showTl && ew.trianglePattern && ew.trianglePattern.touchpoints) {
-        elliottWaveMarkers = elliottWaveMarkers.concat(ew.trianglePattern.touchpoints);
-      }
+      // Nhãn đếm sóng
+      elliottWaveMarkers = (ew.markers || []).slice();
       syncAllChartMarkers();
 
-      // 2. Kẻ đường mục tiêu Fibo & Vi phạm sóng (Chỉ hiển thị khi gần giá thực tế, không làm méo mó scale giá)
+      // Đường TP theo Elliott (Target chốt lời theo Sóng Elliott - 1 đường duy nhất)
       elliottPriceLines.forEach(l => {
         try { mainSeries.removePriceLine(l); } catch(e) {}
       });
       elliottPriceLines = [];
 
       const priceRef = (curPrice && !isNaN(curPrice)) ? curPrice : (candles.length > 0 ? candles[candles.length - 1].close : 0);
-      if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.nextTarget && !isNaN(ew.nextTarget)) {
-        if (priceRef > 0 && Math.abs(ew.nextTarget - priceRef) <= priceRef * 0.025) {
+      if (ew.nextTarget && !isNaN(ew.nextTarget)) {
+        if (priceRef > 0 && Math.abs(ew.nextTarget - priceRef) <= priceRef * 0.035) {
           try {
             const tLine = mainSeries.createPriceLine({
               price: ew.nextTarget,
@@ -9732,107 +9659,152 @@
               lineWidth: 1.5,
               lineStyle: 2,
               axisLabelVisible: true,
-              title: `🎯 Target Sóng ($${ew.nextTarget.toFixed(2)})`
+              title: `🎯 TP Sóng Elliott ($${ew.nextTarget.toFixed(2)})`
             });
             elliottPriceLines.push(tLine);
           } catch(e) {}
         }
       }
 
-      if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.invalPrice && !isNaN(ew.invalPrice)) {
-        if (priceRef > 0 && Math.abs(ew.invalPrice - priceRef) <= priceRef * 0.025) {
-          try {
-            const iLine = mainSeries.createPriceLine({
-              price: ew.invalPrice,
-              color: '#ef4444',
-              lineWidth: 1.5,
-              lineStyle: 2,
-              axisLabelVisible: true,
-              title: `🛑 Vi phạm Sóng ($${ew.invalPrice.toFixed(2)})`
-            });
-            elliottPriceLines.push(iLine);
-          } catch(e) {}
+
+    // =========================================================================
+    // 2. CHỈ BÁO KẺ ĐƯỜNG TRENDLINE TAM GIÁC / NÊM (ĐỘC LẬP HOÀN TOÀN)
+    // =========================================================================
+    function updateTrendlines(candles) {
+      const isTlOn = !!(indConfig.trendline && indConfig.trendline.enabled);
+
+      if (!candles || candles.length < 15 || !isTlOn) {
+        if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) elliottChannelSeries.setData([]);
+        if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) elliottTrendline24Series.setData([]);
+        if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) trendlineInnerUpperSeries.setData([]);
+        if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) trendlineInnerLowerSeries.setData([]);
+        trendlineMarkers = [];
+        syncAllChartMarkers();
+        return;
+      }
+
+      const lookback = (indConfig.trendline && indConfig.trendline.lookback) ? indConfig.trendline.lookback : 60;
+      const startIdx = Math.max(0, candles.length - lookback);
+      const slice = candles.slice(startIdx);
+      const tfSec = (candles.length > 1) ? (candles[1].time - candles[0].time) : 300;
+      const tfLabel = currentTF === 60 ? 'M1' : (currentTF === 180 ? 'M3' : (currentTF === 300 ? 'M5' : (currentTF === 900 ? 'M15' : (currentTF === 1800 ? 'M30' : (currentTF === 3600 ? 'H1' : (currentTF === 14400 ? 'H4' : (currentTF === 86400 ? 'D1' : 'TF')))))));
+
+      const tlDepth = 3;
+      let swingHighs = [];
+      let swingLows = [];
+
+      for (let i = tlDepth; i < slice.length - tlDepth; i++) {
+        const c = slice[i];
+        let isH = true, isL = true;
+        for (let j = i - tlDepth; j <= i + tlDepth; j++) {
+          if (j === i) continue;
+          if (slice[j].high >= c.high) isH = false;
+          if (slice[j].low <= c.low) isL = false;
         }
+        if (isH) swingHighs.push({ idx: i, time: c.time, price: c.high });
+        if (isL) swingLows.push({ idx: i, time: c.time, price: c.low });
       }
 
-      if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.peakTarget && !isNaN(ew.peakTarget) && Math.abs(ew.peakTarget - (ew.nextTarget || 0)) > 1.0) {
-        try {
-          const p5Line = mainSeries.createPriceLine({
-            price: ew.peakTarget,
-            color: '#06b6d4',
-            lineWidth: 1.5,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: `🎯 Đỉnh Sóng (5) ($${ew.peakTarget.toFixed(2)})`
+      const mid = Math.floor(slice.length / 2);
+      let outH1 = swingHighs.filter(h => h.idx < mid).sort((a,b) => b.price - a.price)[0];
+      let outH2 = swingHighs.filter(h => h.idx >= mid).sort((a,b) => b.price - a.price)[0];
+      if (!outH1 || !outH2) {
+        outH1 = swingHighs[0] || { idx: 0, time: slice[0].time, price: slice[0].high };
+        outH2 = swingHighs[swingHighs.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].high };
+      }
+
+      let outL1 = swingLows.filter(l => l.idx < mid).sort((a,b) => a.price - b.price)[0];
+      let outL2 = swingLows.filter(l => l.idx >= mid).sort((a,b) => a.price - b.price)[0];
+      if (!outL1 || !outL2) {
+        outL1 = swingLows[0] || { idx: 0, time: slice[0].time, price: slice[0].low };
+        outL2 = swingLows[swingLows.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].low };
+      }
+
+      const inH1 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 2] : outH1;
+      const inH2 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 1] : outH2;
+      const inL1 = swingLows.length >= 2 ? swingLows[swingLows.length - 2] : outL1;
+      const inL2 = swingLows.length >= 2 ? swingLows[swingLows.length - 1] : outL2;
+
+      const makeStraightRay = (p1, p2) => {
+        const dt = p2.time - p1.time;
+        const slope = dt !== 0 ? (p2.price - p1.price) / dt : 0;
+        const points = [];
+        for (let i = p1.idx; i < slice.length; i++) {
+          const t = slice[i].time;
+          points.push({
+            time: t,
+            value: parseFloat((p1.price + slope * (t - p1.time)).toFixed(2))
           });
-          elliottPriceLines.push(p5Line);
-        } catch(e) {}
-      }
-
-      if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.goldenDivider && !isNaN(ew.goldenDivider)) {
-        try {
-          const gdLine = mainSeries.createPriceLine({
-            price: ew.goldenDivider,
-            color: '#f59e0b',
-            lineWidth: 1.2,
-            lineStyle: 3,
-            axisLabelVisible: true,
-            title: `✨ Tỷ Lệ Vàng 0.618 ($${ew.goldenDivider.toFixed(2)})`
+        }
+        const lastT = slice[slice.length - 1].time;
+        for (let f = 1; f <= 25; f++) {
+          const futT = lastT + f * tfSec;
+          points.push({
+            time: futT,
+            value: parseFloat((p1.price + slope * (futT - p1.time)).toFixed(2))
           });
-          elliottPriceLines.push(gdLine);
-        } catch(e) {}
+        }
+        return { slope, points, p1, p2 };
+      };
+
+      const outerUpper = makeStraightRay(outH1, outH2);
+      const outerLower = makeStraightRay(outL1, outL2);
+      const innerUpper = makeStraightRay(inH1, inH2);
+      const innerLower = makeStraightRay(inL1, inL2);
+
+      if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) {
+        elliottChannelSeries.setData(outerUpper.points);
+      }
+      if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) {
+        elliottTrendline24Series.setData(outerLower.points);
+      }
+      if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) {
+        trendlineInnerUpperSeries.setData(innerUpper.points);
+      }
+      if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) {
+        trendlineInnerLowerSeries.setData(innerLower.points);
       }
 
-      // 2b. Kẻ 3 Mức Vào Lệnh Entry 1-2-3 & Stop Loss trên biểu đồ (TL Sóng Trang 5)
-      elliottEntryPriceLines.forEach(l => {
-        try { mainSeries.removePriceLine(l); } catch(e) {}
+      const dpH = outH2.price - outH1.price;
+      const dpL = outL2.price - outL1.price;
+
+      let patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
+      if (dpH < -0.5 && dpL > 0.5) patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
+      else if (Math.abs(dpH) <= 0.8 && dpL > 0.5) patternName = `📐 TAM GIÁC TĂNG ${tfLabel}`;
+      else if (dpH < -0.5 && Math.abs(dpL) <= 0.8) patternName = `📐 TAM GIÁC GIẢM ${tfLabel}`;
+      else if (dpH > 0.5 && dpL < -0.5) patternName = `📐 TAM GIÁC MỞ RỘNG ${tfLabel}`;
+      else if (dpH > 0 && dpL > 0) patternName = `📐 NÊM TĂNG HỘI TỤ ${tfLabel}`;
+      else if (dpH < 0 && dpL < 0) patternName = `📐 NÊM GIẢM HỘI TỤ ${tfLabel}`;
+
+      const touchpoints = [];
+      const usedTimes = new Set();
+      slice.forEach(c => {
+        const upPt = outerUpper.points.find(p => p.time === c.time);
+        if (upPt && Math.abs(c.high - upPt.value) <= 0.8) {
+          touchpoints.push({ time: c.time, position: 'aboveBar', color: '#06b6d4', shape: 'circle', text: '○' });
+          usedTimes.add(c.time);
+        }
+        const lowPt = outerLower.points.find(p => p.time === c.time);
+        if (lowPt && Math.abs(c.low - lowPt.value) <= 0.8 && !usedTimes.has(c.time)) {
+          touchpoints.push({ time: c.time, position: 'belowBar', color: '#06b6d4', shape: 'circle', text: '○' });
+          usedTimes.add(c.time);
+        }
       });
-      elliottEntryPriceLines = [];
 
-      if ((indConfig.elliott.showEntries !== false) && ew.entryPlan) {
-        const ep = ew.entryPlan;
-        try {
-          const l1 = mainSeries.createPriceLine({
-            price: ep.entry1.price,
-            color: '#ec4899',
-            lineWidth: 1.5,
-            lineStyle: 1,
-            axisLabelVisible: true,
-            title: `⚡ E1 Mạo hiểm ($${ep.entry1.price.toFixed(2)})`
-          });
-          elliottEntryPriceLines.push(l1);
-
-          const l2 = mainSeries.createPriceLine({
-            price: ep.entry2.price,
-            color: '#f59e0b',
-            lineWidth: 1.5,
-            lineStyle: 1,
-            axisLabelVisible: true,
-            title: `🛡️ E2 An toàn ($${ep.entry2.price.toFixed(2)})`
-          });
-          elliottEntryPriceLines.push(l2);
-
-          const l3 = mainSeries.createPriceLine({
-            price: ep.entry3.price,
-            color: '#10b981',
-            lineWidth: 1.8,
-            lineStyle: 0,
-            axisLabelVisible: true,
-            title: `💎 E3 Rất an toàn ($${ep.entry3.price.toFixed(2)})`
-          });
-          elliottEntryPriceLines.push(l3);
-
-          const lSl = mainSeries.createPriceLine({
-            price: ep.sl,
-            color: '#ef4444',
-            lineWidth: 1.5,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: `🛑 SL ${ep.slDesc}`
-          });
-          elliottEntryPriceLines.push(lSl);
-        } catch(e) {}
+      const lastSliceBar = slice[slice.length - 1];
+      if (lastSliceBar) {
+        touchpoints.push({
+          time: lastSliceBar.time,
+          position: 'aboveBar',
+          color: '#06b6d4',
+          shape: 'arrowDown',
+          text: patternName
+        });
       }
+
+      trendlineMarkers = touchpoints;
+      syncAllChartMarkers();
+    }
 
       // 3. Cập nhật giao diện các nút tab chu kỳ sóng
       const curMode = (indConfig.elliott && indConfig.elliott.cycleMode) ? indConfig.elliott.cycleMode : 'active';
@@ -10203,9 +10175,10 @@
       // 9. Auto Fibonacci Retracement
       updateAutoFibo();
 
-      // 10. Cập nhật phân tích & vẽ Sóng Elliott
+      // 10. Cập nhật phân tích Sóng Elliott & Trendline độc lập
       const livePrice = (rawCandles && rawCandles.length > 0) ? rawCandles[rawCandles.length - 1].close : 0;
       updateElliottWave(rawCandles, livePrice);
+      updateTrendlines(rawCandles);
     }
 
     // =========================================================================
@@ -11142,6 +11115,9 @@
         if (typeof updateElliottWave === 'function' && rawCandles) {
           const cPrice = rawCandles.length > 0 ? rawCandles[rawCandles.length - 1].close : 0;
           updateElliottWave(rawCandles, cPrice);
+        }
+        if (typeof updateTrendlines === 'function' && rawCandles) {
+          updateTrendlines(rawCandles);
         }
         chart.priceScale('right').applyOptions({ autoScale: true });
         chart.timeScale().applyOptions({
