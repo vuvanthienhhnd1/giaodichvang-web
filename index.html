@@ -9666,146 +9666,6 @@
         }
       }
 
-
-    // =========================================================================
-    // 2. CHỈ BÁO KẺ ĐƯỜNG TRENDLINE TAM GIÁC / NÊM (ĐỘC LẬP HOÀN TOÀN)
-    // =========================================================================
-    function updateTrendlines(candles) {
-      const isTlOn = !!(indConfig.trendline && indConfig.trendline.enabled);
-
-      if (!candles || candles.length < 15 || !isTlOn) {
-        if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) elliottChannelSeries.setData([]);
-        if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) elliottTrendline24Series.setData([]);
-        if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) trendlineInnerUpperSeries.setData([]);
-        if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) trendlineInnerLowerSeries.setData([]);
-        trendlineMarkers = [];
-        syncAllChartMarkers();
-        return;
-      }
-
-      const lookback = (indConfig.trendline && indConfig.trendline.lookback) ? indConfig.trendline.lookback : 60;
-      const startIdx = Math.max(0, candles.length - lookback);
-      const slice = candles.slice(startIdx);
-      const tfSec = (candles.length > 1) ? (candles[1].time - candles[0].time) : 300;
-      const tfLabel = currentTF === 60 ? 'M1' : (currentTF === 180 ? 'M3' : (currentTF === 300 ? 'M5' : (currentTF === 900 ? 'M15' : (currentTF === 1800 ? 'M30' : (currentTF === 3600 ? 'H1' : (currentTF === 14400 ? 'H4' : (currentTF === 86400 ? 'D1' : 'TF')))))));
-
-      const tlDepth = 3;
-      let swingHighs = [];
-      let swingLows = [];
-
-      for (let i = tlDepth; i < slice.length - tlDepth; i++) {
-        const c = slice[i];
-        let isH = true, isL = true;
-        for (let j = i - tlDepth; j <= i + tlDepth; j++) {
-          if (j === i) continue;
-          if (slice[j].high >= c.high) isH = false;
-          if (slice[j].low <= c.low) isL = false;
-        }
-        if (isH) swingHighs.push({ idx: i, time: c.time, price: c.high });
-        if (isL) swingLows.push({ idx: i, time: c.time, price: c.low });
-      }
-
-      const mid = Math.floor(slice.length / 2);
-      let outH1 = swingHighs.filter(h => h.idx < mid).sort((a,b) => b.price - a.price)[0];
-      let outH2 = swingHighs.filter(h => h.idx >= mid).sort((a,b) => b.price - a.price)[0];
-      if (!outH1 || !outH2) {
-        outH1 = swingHighs[0] || { idx: 0, time: slice[0].time, price: slice[0].high };
-        outH2 = swingHighs[swingHighs.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].high };
-      }
-
-      let outL1 = swingLows.filter(l => l.idx < mid).sort((a,b) => a.price - b.price)[0];
-      let outL2 = swingLows.filter(l => l.idx >= mid).sort((a,b) => a.price - b.price)[0];
-      if (!outL1 || !outL2) {
-        outL1 = swingLows[0] || { idx: 0, time: slice[0].time, price: slice[0].low };
-        outL2 = swingLows[swingLows.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].low };
-      }
-
-      const inH1 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 2] : outH1;
-      const inH2 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 1] : outH2;
-      const inL1 = swingLows.length >= 2 ? swingLows[swingLows.length - 2] : outL1;
-      const inL2 = swingLows.length >= 2 ? swingLows[swingLows.length - 1] : outL2;
-
-      const makeStraightRay = (p1, p2) => {
-        const dt = p2.time - p1.time;
-        const slope = dt !== 0 ? (p2.price - p1.price) / dt : 0;
-        const points = [];
-        for (let i = p1.idx; i < slice.length; i++) {
-          const t = slice[i].time;
-          points.push({
-            time: t,
-            value: parseFloat((p1.price + slope * (t - p1.time)).toFixed(2))
-          });
-        }
-        const lastT = slice[slice.length - 1].time;
-        for (let f = 1; f <= 25; f++) {
-          const futT = lastT + f * tfSec;
-          points.push({
-            time: futT,
-            value: parseFloat((p1.price + slope * (futT - p1.time)).toFixed(2))
-          });
-        }
-        return { slope, points, p1, p2 };
-      };
-
-      const outerUpper = makeStraightRay(outH1, outH2);
-      const outerLower = makeStraightRay(outL1, outL2);
-      const innerUpper = makeStraightRay(inH1, inH2);
-      const innerLower = makeStraightRay(inL1, inL2);
-
-      if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) {
-        elliottChannelSeries.setData(outerUpper.points);
-      }
-      if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) {
-        elliottTrendline24Series.setData(outerLower.points);
-      }
-      if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) {
-        trendlineInnerUpperSeries.setData(innerUpper.points);
-      }
-      if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) {
-        trendlineInnerLowerSeries.setData(innerLower.points);
-      }
-
-      const dpH = outH2.price - outH1.price;
-      const dpL = outL2.price - outL1.price;
-
-      let patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
-      if (dpH < -0.5 && dpL > 0.5) patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
-      else if (Math.abs(dpH) <= 0.8 && dpL > 0.5) patternName = `📐 TAM GIÁC TĂNG ${tfLabel}`;
-      else if (dpH < -0.5 && Math.abs(dpL) <= 0.8) patternName = `📐 TAM GIÁC GIẢM ${tfLabel}`;
-      else if (dpH > 0.5 && dpL < -0.5) patternName = `📐 TAM GIÁC MỞ RỘNG ${tfLabel}`;
-      else if (dpH > 0 && dpL > 0) patternName = `📐 NÊM TĂNG HỘI TỤ ${tfLabel}`;
-      else if (dpH < 0 && dpL < 0) patternName = `📐 NÊM GIẢM HỘI TỤ ${tfLabel}`;
-
-      const touchpoints = [];
-      const usedTimes = new Set();
-      slice.forEach(c => {
-        const upPt = outerUpper.points.find(p => p.time === c.time);
-        if (upPt && Math.abs(c.high - upPt.value) <= 0.8) {
-          touchpoints.push({ time: c.time, position: 'aboveBar', color: '#06b6d4', shape: 'circle', text: '○' });
-          usedTimes.add(c.time);
-        }
-        const lowPt = outerLower.points.find(p => p.time === c.time);
-        if (lowPt && Math.abs(c.low - lowPt.value) <= 0.8 && !usedTimes.has(c.time)) {
-          touchpoints.push({ time: c.time, position: 'belowBar', color: '#06b6d4', shape: 'circle', text: '○' });
-          usedTimes.add(c.time);
-        }
-      });
-
-      const lastSliceBar = slice[slice.length - 1];
-      if (lastSliceBar) {
-        touchpoints.push({
-          time: lastSliceBar.time,
-          position: 'aboveBar',
-          color: '#06b6d4',
-          shape: 'arrowDown',
-          text: patternName
-        });
-      }
-
-      trendlineMarkers = touchpoints;
-      syncAllChartMarkers();
-    }
-
       // 3. Cập nhật giao diện các nút tab chu kỳ sóng
       const curMode = (indConfig.elliott && indConfig.elliott.cycleMode) ? indConfig.elliott.cycleMode : 'active';
       const btnBull = document.getElementById('btn-ew-mode-bull');
@@ -10045,8 +9905,149 @@
       const stratTextEl = document.getElementById('ew-modal-strategy-text');
       if (stratTextEl) stratTextEl.textContent = ew.strategyText;
     }
+    window.updateElliottWave = updateElliottWave;
 
-    function renderData() {
+    // =========================================================================
+    // 2. CHỈ BÁO KẺ ĐƯỜNG TRENDLINE TAM GIÁC / NÊM (ĐỘC LẬP HOÀN TOÀN)
+    // =========================================================================
+    function updateTrendlines(candles) {
+      const isTlOn = !!(indConfig.trendline && indConfig.trendline.enabled);
+
+      if (!candles || candles.length < 15 || !isTlOn) {
+        if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) elliottChannelSeries.setData([]);
+        if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) elliottTrendline24Series.setData([]);
+        if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) trendlineInnerUpperSeries.setData([]);
+        if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) trendlineInnerLowerSeries.setData([]);
+        trendlineMarkers = [];
+        syncAllChartMarkers();
+        return;
+      }
+
+      const lookback = (indConfig.trendline && indConfig.trendline.lookback) ? indConfig.trendline.lookback : 60;
+      const startIdx = Math.max(0, candles.length - lookback);
+      const slice = candles.slice(startIdx);
+      const tfSec = (candles.length > 1) ? (candles[1].time - candles[0].time) : 300;
+      const tfLabel = currentTF === 60 ? 'M1' : (currentTF === 180 ? 'M3' : (currentTF === 300 ? 'M5' : (currentTF === 900 ? 'M15' : (currentTF === 1800 ? 'M30' : (currentTF === 3600 ? 'H1' : (currentTF === 14400 ? 'H4' : (currentTF === 86400 ? 'D1' : 'TF')))))));
+
+      const tlDepth = 3;
+      let swingHighs = [];
+      let swingLows = [];
+
+      for (let i = tlDepth; i < slice.length - tlDepth; i++) {
+        const c = slice[i];
+        let isH = true, isL = true;
+        for (let j = i - tlDepth; j <= i + tlDepth; j++) {
+          if (j === i) continue;
+          if (slice[j].high >= c.high) isH = false;
+          if (slice[j].low <= c.low) isL = false;
+        }
+        if (isH) swingHighs.push({ idx: i, time: c.time, price: c.high });
+        if (isL) swingLows.push({ idx: i, time: c.time, price: c.low });
+      }
+
+      const mid = Math.floor(slice.length / 2);
+      let outH1 = swingHighs.filter(h => h.idx < mid).sort((a,b) => b.price - a.price)[0];
+      let outH2 = swingHighs.filter(h => h.idx >= mid).sort((a,b) => b.price - a.price)[0];
+      if (!outH1 || !outH2) {
+        outH1 = swingHighs[0] || { idx: 0, time: slice[0].time, price: slice[0].high };
+        outH2 = swingHighs[swingHighs.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].high };
+      }
+
+      let outL1 = swingLows.filter(l => l.idx < mid).sort((a,b) => a.price - b.price)[0];
+      let outL2 = swingLows.filter(l => l.idx >= mid).sort((a,b) => a.price - b.price)[0];
+      if (!outL1 || !outL2) {
+        outL1 = swingLows[0] || { idx: 0, time: slice[0].time, price: slice[0].low };
+        outL2 = swingLows[swingLows.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].low };
+      }
+
+      const inH1 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 2] : outH1;
+      const inH2 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 1] : outH2;
+      const inL1 = swingLows.length >= 2 ? swingLows[swingLows.length - 2] : outL1;
+      const inL2 = swingLows.length >= 2 ? swingLows[swingLows.length - 1] : outL2;
+
+      const makeStraightRay = (p1, p2) => {
+        const dt = p2.time - p1.time;
+        const slope = dt !== 0 ? (p2.price - p1.price) / dt : 0;
+        const points = [];
+        for (let i = p1.idx; i < slice.length; i++) {
+          const t = slice[i].time;
+          points.push({
+            time: t,
+            value: parseFloat((p1.price + slope * (t - p1.time)).toFixed(2))
+          });
+        }
+        const lastT = slice[slice.length - 1].time;
+        for (let f = 1; f <= 25; f++) {
+          const futT = lastT + f * tfSec;
+          points.push({
+            time: futT,
+            value: parseFloat((p1.price + slope * (futT - p1.time)).toFixed(2))
+          });
+        }
+        return { slope, points, p1, p2 };
+      };
+
+      const outerUpper = makeStraightRay(outH1, outH2);
+      const outerLower = makeStraightRay(outL1, outL2);
+      const innerUpper = makeStraightRay(inH1, inH2);
+      const innerLower = makeStraightRay(inL1, inL2);
+
+      if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) {
+        elliottChannelSeries.setData(outerUpper.points);
+      }
+      if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) {
+        elliottTrendline24Series.setData(outerLower.points);
+      }
+      if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) {
+        trendlineInnerUpperSeries.setData(innerUpper.points);
+      }
+      if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) {
+        trendlineInnerLowerSeries.setData(innerLower.points);
+      }
+
+      const dpH = outH2.price - outH1.price;
+      const dpL = outL2.price - outL1.price;
+
+      let patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
+      if (dpH < -0.5 && dpL > 0.5) patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
+      else if (Math.abs(dpH) <= 0.8 && dpL > 0.5) patternName = `📐 TAM GIÁC TĂNG ${tfLabel}`;
+      else if (dpH < -0.5 && Math.abs(dpL) <= 0.8) patternName = `📐 TAM GIÁC GIẢM ${tfLabel}`;
+      else if (dpH > 0.5 && dpL < -0.5) patternName = `📐 TAM GIÁC MỞ RỘNG ${tfLabel}`;
+      else if (dpH > 0 && dpL > 0) patternName = `📐 NÊM TĂNG HỘI TỤ ${tfLabel}`;
+      else if (dpH < 0 && dpL < 0) patternName = `📐 NÊM GIẢM HỘI TỤ ${tfLabel}`;
+
+      const touchpoints = [];
+      const usedTimes = new Set();
+      slice.forEach(c => {
+        const upPt = outerUpper.points.find(p => p.time === c.time);
+        if (upPt && Math.abs(c.high - upPt.value) <= 0.8) {
+          touchpoints.push({ time: c.time, position: 'aboveBar', color: '#06b6d4', shape: 'circle', text: '○' });
+          usedTimes.add(c.time);
+        }
+        const lowPt = outerLower.points.find(p => p.time === c.time);
+        if (lowPt && Math.abs(c.low - lowPt.value) <= 0.8 && !usedTimes.has(c.time)) {
+          touchpoints.push({ time: c.time, position: 'belowBar', color: '#06b6d4', shape: 'circle', text: '○' });
+          usedTimes.add(c.time);
+        }
+      });
+
+      const lastSliceBar = slice[slice.length - 1];
+      if (lastSliceBar) {
+        touchpoints.push({
+          time: lastSliceBar.time,
+          position: 'aboveBar',
+          color: '#06b6d4',
+          shape: 'arrowDown',
+          text: patternName
+        });
+      }
+
+      trendlineMarkers = touchpoints;
+      syncAllChartMarkers();
+    }
+    window.updateTrendlines = updateTrendlines;
+
+        function renderData() {
       if (!rawCandles || rawCandles.length === 0) return;
       mainSeries.setData(rawCandles);
 
@@ -10177,8 +10178,16 @@
 
       // 10. Cập nhật phân tích Sóng Elliott & Trendline độc lập
       const livePrice = (rawCandles && rawCandles.length > 0) ? rawCandles[rawCandles.length - 1].close : 0;
-      updateElliottWave(rawCandles, livePrice);
-      updateTrendlines(rawCandles);
+      try {
+        if (typeof updateElliottWave === 'function') updateElliottWave(rawCandles, livePrice);
+      } catch(e) {
+        console.warn('updateElliottWave error:', e);
+      }
+      try {
+        if (typeof updateTrendlines === 'function') updateTrendlines(rawCandles);
+      } catch(e) {
+        console.warn('updateTrendlines error:', e);
+      }
     }
 
     // =========================================================================
@@ -11103,65 +11112,70 @@
       fetchRealSpotPrice().catch(() => {});
       
       if (isSuccess && rawCandles.length > 0) {
-        chart.timeScale().applyOptions({
-          timeVisible: currentTF < 86400,
-          secondsVisible: false
-        });
-        renderData();
-        if (typeof syncAlertPriceLinesOnChart === 'function') syncAlertPriceLinesOnChart();
-        if (indConfig.autofibo.enabled) {
-          updateAutoFibo();
-        }
-        if (typeof updateElliottWave === 'function' && rawCandles) {
-          const cPrice = rawCandles.length > 0 ? rawCandles[rawCandles.length - 1].close : 0;
-          updateElliottWave(rawCandles, cPrice);
-        }
-        if (typeof updateTrendlines === 'function' && rawCandles) {
-          updateTrendlines(rawCandles);
-        }
-        chart.priceScale('right').applyOptions({ autoScale: true });
-        chart.timeScale().applyOptions({
-          rightOffset: 8,
-          fixLeftEdge: false,
-          fixRightEdge: false
-        });
-        const totalBars = rawCandles.length;
-        // Hiển thị vừa vặn 70-85 nến gần nhất ở trung tâm màn hình, nến mới nhất nằm sát biên phải với khoảng thở chuẩn
-        const visibleBars = (tfStr === '1d' || tfStr === '1w' || tfStr === '1M')
-          ? Math.min(totalBars, 85)
-          : Math.min(totalBars, 70);
-        chart.timeScale().setVisibleLogicalRange({
-          from: Math.max(0, totalBars - visibleBars),
-          to: totalBars + 6
-        });
-        
-        // 3. Lấy giá chốt phiên và thiết lập các cản AI
-        const lastCandle = rawCandles[rawCandles.length - 1];
-        targetPrice = lastCandle.close;
-        displayPrice = lastCandle.close;
-        buildDynamicLevels(lastCandle.close);
-        processLogic(lastCandle.close);
-        syncWinRateWithRealCandles();
-        
-        // 4. Khởi động Engine dao động từng pip (chỉ chạy trong phiên giao dịch)
-        startPipTickEngine();
+        try {
+          chart.timeScale().applyOptions({
+            timeVisible: currentTF < 86400,
+            secondsVisible: false
+          });
+          renderData();
+          if (typeof syncAlertPriceLinesOnChart === 'function') syncAlertPriceLinesOnChart();
+          if (indConfig.autofibo.enabled) {
+            updateAutoFibo();
+          }
+          if (typeof updateElliottWave === 'function' && rawCandles) {
+            const cPrice = rawCandles.length > 0 ? rawCandles[rawCandles.length - 1].close : 0;
+            updateElliottWave(rawCandles, cPrice);
+          }
+          if (typeof updateTrendlines === 'function' && rawCandles) {
+            updateTrendlines(rawCandles);
+          }
+          chart.priceScale('right').applyOptions({ autoScale: true });
+          chart.timeScale().applyOptions({
+            rightOffset: 8,
+            fixLeftEdge: false,
+            fixRightEdge: false
+          });
+          const totalBars = rawCandles.length;
+          // Hiển thị vừa vặn 70-85 nến gần nhất ở trung tâm màn hình, nến mới nhất nằm sát biên phải với khoảng thở chuẩn
+          const visibleBars = (tfStr === '1d' || tfStr === '1w' || tfStr === '1M')
+            ? Math.min(totalBars, 85)
+            : Math.min(totalBars, 70);
+          chart.timeScale().setVisibleLogicalRange({
+            from: Math.max(0, totalBars - visibleBars),
+            to: totalBars + 6
+          });
+          
+          // 3. Lấy giá chốt phiên và thiết lập các cản AI
+          const lastCandle = rawCandles[rawCandles.length - 1];
+          targetPrice = lastCandle.close;
+          displayPrice = lastCandle.close;
+          buildDynamicLevels(lastCandle.close);
+          processLogic(lastCandle.close);
+          syncWinRateWithRealCandles();
+          
+          // 4. Khởi động Engine dao động từng pip (chỉ chạy trong phiên giao dịch)
+          startPipTickEngine();
 
-        // 5. Khởi động luồng quét giá Spot Thế giới liên tục
-        if (spotScanTimer) clearInterval(spotScanTimer);
-        spotScanTimer = setInterval(fetchRealSpotPrice, 3000);
+          // 5. Khởi động luồng quét giá Spot Thế giới liên tục
+          if (spotScanTimer) clearInterval(spotScanTimer);
+          spotScanTimer = setInterval(fetchRealSpotPrice, 3000);
 
-        // 6. Khởi động luồng quét TradingView CFD định kỳ
-        if (liveScanTimer) clearInterval(liveScanTimer);
-        liveScanTimer = setInterval(pollTradingViewCfd, 5000);
+          // 6. Khởi động luồng quét TradingView CFD định kỳ
+          if (liveScanTimer) clearInterval(liveScanTimer);
+          liveScanTimer = setInterval(pollTradingViewCfd, 5000);
 
-        // 7. Khởi động WebSocket (nếu trong phiên hoặc xem Binance)
-        startBinanceWebSocket(tfStr);
+          // 7. Khởi động WebSocket (nếu trong phiên hoặc xem Binance)
+          startBinanceWebSocket(tfStr);
 
-        updateDisplayFromFeeds();
-        
-        if (loader) {
-          loader.style.opacity = '0';
-          setTimeout(() => { loader.style.display = 'none'; }, 250);
+          updateDisplayFromFeeds();
+        } catch(renderErr) {
+          console.error("Lỗi khi vẽ biểu đồ và khởi động luồng giá:", renderErr);
+        } finally {
+          // Luôn luôn tắt màn hình loader ngay khi nến đã được nạp thành công
+          if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 200);
+          }
         }
       } else {
         if (loaderText) loaderText.innerHTML = `<span style="color:#ef4444">KẾT NỐI MẠNG GIÁN ĐOẠN</span>`;
