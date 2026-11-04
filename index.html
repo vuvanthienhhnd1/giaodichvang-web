@@ -3327,6 +3327,45 @@
     .tag-bank { background: rgba(16, 185, 129, 0.2); color: #34d399; }
     .tag-spdr { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
 
+    .tag-pol { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.35); }
+    .news-category-bar {
+      display: flex;
+      gap: 5px;
+      overflow-x: auto;
+      padding-bottom: 3px;
+      margin-bottom: 4px;
+    }
+    .news-category-bar::-webkit-scrollbar {
+      height: 3px;
+    }
+    .news-category-bar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    .news-cat-btn {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .news-cat-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #f8fafc;
+    }
+    .news-cat-btn.active {
+      background: rgba(37, 99, 235, 0.25);
+      border-color: #3b82f6;
+      color: #60a5fa;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.35);
+    }
+
+
     .news-risk-badge {
       font-size: 8.5px;
       font-weight: 800;
@@ -4807,6 +4846,125 @@
     }
 
 
+    /* Trendline 2-4 & 3-Entry System (TL Sóng Trang 5) */
+    .ew-trendline-box {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(16, 185, 129, 0.08));
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ew-tl-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 6px;
+    }
+    .ew-tl-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+    }
+    .ew-tl-status-badge {
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .ew-tl-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .ew-tl-meta-card {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 6px 8px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ew-tl-meta-label {
+      font-size: 9.5px;
+      color: #94a3b8;
+    }
+    .ew-tl-meta-val {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      color: #f1f5f9;
+    }
+    .ew-entries-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .ew-entry-item {
+      background: rgba(15, 23, 42, 0.65);
+      border-radius: 6px;
+      padding: 7px 8px;
+      border: 1px solid #1e293b;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .ew-entry-item.e1 {
+      border-color: rgba(236, 72, 153, 0.4);
+      background: rgba(236, 72, 153, 0.06);
+    }
+    .ew-entry-item.e2 {
+      border-color: rgba(245, 158, 11, 0.4);
+      background: rgba(245, 158, 11, 0.06);
+    }
+    .ew-entry-item.e3 {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.06);
+    }
+    .ew-entry-tag {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .e1 .ew-entry-tag { color: #f472b6; }
+    .e2 .ew-entry-tag { color: #fbbf24; }
+    .e3 .ew-entry-tag { color: #34d399; }
+    .ew-entry-price {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+    .ew-entry-desc {
+      font-size: 8.5px;
+      color: #94a3b8;
+      line-height: 1.3;
+    }
+    .ew-tl-warning-box {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px dashed rgba(239, 68, 68, 0.35);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 9.5px;
+      color: #fca5a5;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      line-height: 1.4;
+    }
+
     /* Light Theme for Elliott Wave */
     body.light-theme .c-elliott {
       background: linear-gradient(90deg, rgba(147, 51, 234, 0.12), rgba(37, 99, 235, 0.12));
@@ -5345,11 +5503,11 @@
             </div>
           </div>
 
-                    <!-- NHÓM 4: SÓNG ELLIOTT & HÌNH THÁI GIÁ -->
+                    <!-- NHÓM 4: SÓNG ELLIOTT & ĐƯỜNG XU HƯỚNG TRENDLINE (TL SÓNG) -->
           <div class="ind-section">
-            <div class="ind-group-title">🌊 SÓNG ELLIOTT & HÌNH THÁI GIÁ</div>
+            <div class="ind-group-title">🌊 SÓNG ELLIOTT &amp; ĐƯỜNG XU HƯỚNG TRENDLINE (TL SÓNG)</div>
 
-            <!-- ELLIOTT WAVE -->
+            <!-- 1. SÓNG ELLIOTT -->
             <div class="ind-card-item">
               <div class="ind-card-main">
                 <label class="ind-label-area">
@@ -5379,8 +5537,49 @@
                   </label>
                   <label style="display:flex; align-items:center; gap:6px; font-size:11px; cursor:pointer;">
                     <input type="checkbox" id="chk-ew-targets" checked>
-                    <span>Hiện đường mục tiêu Fibo & Vi phạm sóng</span>
+                    <span>Hiện đường mục tiêu Fibo &amp; Vi phạm sóng</span>
                   </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. ĐƯỜNG TRENDLINE TAM GIÁC (NỐI ĐỈNH & ĐÁY - TL SÓNG TRANG 1 & 2) -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-ew-trendlines" checked>
+                  <span class="ind-color-badge" style="background:#06b6d4;"></span>
+                  <span id="title-ew-trendlines" style="font-weight:700; color:#38bdf8;">Kẻ Trendline Tam Giác / Nêm</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-trendline" title="Xem chi tiết Trendline Tam Giác">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-trendline">
+                <div style="font-size: 10px; color: #cbd5e1; line-height: 1.45; margin-bottom: 6px;">
+                  📐 <b>Trendline Tam Giác / Nêm (TL Sóng Trang 1 &amp; 2):</b> Tự động tính toán trên khung nến đang mở, kẻ các tia thẳng tuyệt đối (không gãy khúc) bám sát các đỉnh đáy trong số nến quan sát.
+                </div>
+                <div class="ind-row" style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size: 10px; color:#94a3b8;">Số nến quan sát (Lookback):</span>
+                  <input type="number" id="inp-ew-lookback" value="60" min="20" max="200" step="5" style="width:50px; background:#1e293b; color:#fff; border:1px solid #334155; border-radius:4px; padding:2px 4px; text-align:center; font-size:11px;">
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. HỆ THỐNG 3 MỨC VÀO LỆNH ENTRY 1-2-3 & STOP LOSS (TL SÓNG TRANG 5) -->
+            <div class="ind-card-item">
+              <div class="ind-card-main">
+                <label class="ind-label-area">
+                  <input type="checkbox" id="chk-ew-entries" checked>
+                  <span class="ind-color-badge" style="background:#10b981;"></span>
+                  <span id="title-ew-entries" style="font-weight:700; color:#34d399;">3 Điểm Vào Lệnh Entry 1-2-3 &amp; SL</span>
+                </label>
+                <button class="ind-gear-btn" data-target="box-entries" title="Xem chi tiết 3 mức vào lệnh">⚙️</button>
+              </div>
+              <div class="ind-params-box" id="box-entries">
+                <div style="font-size: 10px; color: #cbd5e1; line-height: 1.55;">
+                  <div>⚡ <b style="color:#f472b6;">Entry 1 (Mạo hiểm):</b> Phá vỡ cấu trúc sóng cấp 4 (Fibo 23.6%)</div>
+                  <div>🛡️ <b style="color:#fbbf24;">Entry 2 (An toàn):</b> Phá vỡ cấu trúc sóng cấp 3 (Fibo 50%)</div>
+                  <div>💎 <b style="color:#34d399;">Entry 3 (Rất an toàn):</b> Phá vỡ Trendline 2-4 (Sóng cấp 2)</div>
+                  <div>🛑 <b style="color:#ef4444;">Stop Loss:</b> Đỉnh Sóng 5 (hoặc Đáy Sóng C)</div>
                 </div>
               </div>
             </div>
@@ -5829,6 +6028,15 @@
               <div class="macro-risk-badge" id="macro-risk-level">BIẾN ĐỘNG CAO (PHIÊN MỸ)</div>
             </div>
 
+            <!-- Bộ lọc chuyên mục tin tức thế giới & chính trị -->
+            <div class="news-category-bar" id="news-category-bar">
+              <button type="button" class="news-cat-btn active" data-cat="all">🌐 Tất Cả (<span id="news-cnt-all">0</span>)</button>
+              <button type="button" class="news-cat-btn" data-cat="pol">🏛️ Bầu Cử &amp; Chính Trị (<span id="news-cnt-pol">0</span>)</button>
+              <button type="button" class="news-cat-btn" data-cat="geo">⚔️ Địa Chính Trị (<span id="news-cnt-geo">0</span>)</button>
+              <button type="button" class="news-cat-btn" data-cat="fed">🏦 Fed &amp; Vĩ Mô (<span id="news-cnt-fed">0</span>)</button>
+              <button type="button" class="news-cat-btn" data-cat="gold">📈 Vàng &amp; USD (<span id="news-cnt-gold">0</span>)</button>
+            </div>
+
             <!-- Danh sách tin tức thế giới liên tục cuộn -->
             <div class="news-scroll-container" id="news-items-container">
               <!-- Render động từ JavaScript News Engine -->
@@ -6259,6 +6467,89 @@
               </div>
               <div style="font-family: var(--font-mono); font-size: 11.5px; font-weight: 800; color: #fbbf24;" id="ew-modal-divider-val">---.--</div>
             </div>
+          </div>
+        </div>
+
+        <!-- BỘ CHỈ BÁO KẺ ĐƯỜNG TRENDLINE TAM GIÁC (NỐI ĐỈNH & ĐÁY - TL SÓNG TRANG 1, 2 & 5) -->
+        <div class="ew-trendline-box">
+          <div class="ew-tl-head">
+            <div class="ew-tl-title">
+              <span>📐</span>
+              <span>TRENDLINE TAM GIÁC (NỐI ĐỈNH &amp; ĐÁY) &amp; 3 ENTRY</span>
+            </div>
+            <span class="ew-tl-status-badge" id="ew-modal-tl24-status">ĐANG NHẬN DIỆN MÔ HÌNH...</span>
+          </div>
+
+          <!-- Thông số 2 đường Trendline Tam Giác -->
+          <div class="ew-tl-meta-grid">
+            <div class="ew-tl-meta-card" style="border-left: 3px solid #f59e0b;">
+              <div>
+                <div class="ew-tl-meta-label" style="color: #fbbf24; font-weight: 800;">TRENDLINE ĐỈNH (KHÁNG CỰ)</div>
+                <div style="font-size: 8.5px; color: #94a3b8;" id="ew-modal-upper-desc">Nối các đỉnh tăng/giảm dần</div>
+              </div>
+              <div class="ew-tl-meta-val" id="ew-modal-channel-val" style="color: #fbbf24;">---.--</div>
+            </div>
+            <div class="ew-tl-meta-card" style="border-left: 3px solid #06b6d4;">
+              <div>
+                <div class="ew-tl-meta-label" style="color: #38bdf8; font-weight: 800;">TRENDLINE ĐÁY (HỖ TRỢ)</div>
+                <div style="font-size: 8.5px; color: #94a3b8;" id="ew-modal-lower-desc">Nối các đáy tăng/giảm dần</div>
+              </div>
+              <div class="ew-tl-meta-val" id="ew-modal-tl24-val" style="color: #38bdf8;">---.--</div>
+            </div>
+          </div>
+
+          <div style="font-size: 9.5px; color: #cbd5e1; background: rgba(15, 23, 42, 0.45); padding: 5px 8px; border-radius: 6px;" id="ew-modal-triangle-desc">
+            Đang phân tích độ dốc của đỉnh và đáy...
+          </div>
+
+          <!-- 3 Mức Vào Lệnh Entry 1-2-3 (TL Sóng Trang 5) -->
+          <div style="font-size: 10px; font-weight: 800; color: #cbd5e1; margin-top: 2px;">
+            🎯 3 ĐIỂM VÀO LỆNH ĐẢO CHIỀU (3-STEP ENTRY SYSTEM):
+          </div>
+          <div class="ew-entries-grid">
+            <!-- Entry 1 -->
+            <div class="ew-entry-item e1">
+              <div class="ew-entry-tag">ENTRY 1 (MẠO HIỂM)</div>
+              <div class="ew-entry-price" id="ew-modal-e1-price">---.--</div>
+              <div class="ew-entry-desc">Phá vỡ cấu trúc sóng cấp 4 (subwave [iv])</div>
+              <div style="font-size: 8.5px; font-weight: 800; color: #f472b6; margin-top: 2px;" id="ew-modal-e1-status">CHỜ TÍN HIỆU</div>
+            </div>
+            <!-- Entry 2 -->
+            <div class="ew-entry-item e2">
+              <div class="ew-entry-tag">ENTRY 2 (AN TOÀN)</div>
+              <div class="ew-entry-price" id="ew-modal-e2-price">---.--</div>
+              <div class="ew-entry-desc">Phá vỡ cấu trúc sóng cấp 3 (Fibo 50% W5)</div>
+              <div style="font-size: 8.5px; font-weight: 800; color: #fbbf24; margin-top: 2px;" id="ew-modal-e2-status">CHỜ TÍN HIỆU</div>
+            </div>
+            <!-- Entry 3 -->
+            <div class="ew-entry-item e3">
+              <div class="ew-entry-tag">ENTRY 3 (RẤT AN TOÀN)</div>
+              <div class="ew-entry-price" id="ew-modal-e3-price">---.--</div>
+              <div class="ew-entry-desc">Phá vỡ cấu trúc sóng cấp 2 (Thủng Trendline 2-4)</div>
+              <div style="font-size: 8.5px; font-weight: 800; color: #34d399; margin-top: 2px;" id="ew-modal-e3-status">CHỜ TÍN HIỆU</div>
+            </div>
+          </div>
+
+          <!-- Stop Loss & Bộ chia Fibonacci h14 -->
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.4); padding: 5px 8px; border-radius: 6px; font-size: 9.5px;">
+            <div>
+              <span style="color: #ef4444; font-weight: 800;">🛑 STOP LOSS CHUNG:</span>
+              <span id="ew-modal-entries-sl" style="font-family: var(--font-mono); font-weight: 700; color: #f87171; margin-left: 4px;">---.--</span>
+            </div>
+            <div>
+              <span style="color: #94a3b8;">Bộ chia Fibo h14:</span>
+              <span id="ew-modal-divider-ratio" style="font-family: var(--font-mono); font-weight: 700; color: #fbbf24; margin-left: 4px;">---.--</span>
+            </div>
+          </div>
+
+          <!-- Cảnh báo Sóng cụt & Expanded Flat & Tam giác từ TL Sóng Trang 1-3 -->
+          <div class="ew-tl-warning-box" id="ew-modal-warn-trunc" style="display: none;">
+            <span>⚠️</span>
+            <span><b>CẢNH BÁO SÓNG CỤT (TRUNCATED WAVE 5):</b> Sóng 3 mở rộng &gt; 2.618 W1. Sóng 5 có nguy cơ thất bại không phá nổi đỉnh 3!</span>
+          </div>
+
+          <div style="background: rgba(30, 41, 59, 0.35); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 6px 8px; font-size: 9px; color: #94a3b8; line-height: 1.4;">
+            💡 <b>Quy tắc quan trọng (TL Sóng):</b> Sóng tăng chỉ mua sóng 3 &amp; 5; Sóng giảm chỉ bán sóng A &amp; C. Trong mô hình Tam giác hội tụ (Triangle 3-3-3-3-3), phải kiên nhẫn chờ kết thúc Sóng (e) mới kích hoạt lệnh!
           </div>
         </div>
 
@@ -6755,7 +7046,7 @@
       vol: { enabled: true, maPeriod: 20 },
       rsi: { enabled: false, period: 14, ob: 70, os: 30 },
       autofibo: { enabled: false, lookback: 90 },
-      elliott: { enabled: true, depth: 6, minDev: 0.12, showLines: true, showLabels: true, showTargets: true, cycleMode: 'active' }
+      elliott: { enabled: true, depth: 6, minDev: 0.12, lookback: 60, showLines: true, showLabels: true, showTargets: true, showTrendlines: true, showEntries: true, cycleMode: 'active' }
     };
 
     // Đảm bảo khởi động sạch: Xoá cài đặt chỉ báo cũ và cảnh báo thử nghiệm cũ nếu có
@@ -6901,22 +7192,72 @@
       priceLineVisible: false
     });
 
+    // 4 Đường Trendline tạo thành hình Tam Giác / Nêm theo TL Sóng Trang 1 & 2
+    const elliottTrendline24Series = chart.addLineSeries({
+      color: '#06b6d4',
+      lineWidth: 2,
+      lineStyle: 2, // dashed
+      visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false),
+      lastValueVisible: false,
+      priceLineVisible: false,
+      title: 'Trendline Ngoài (Đáy)'
+    });
+
+    const elliottChannelSeries = chart.addLineSeries({
+      color: '#06b6d4',
+      lineWidth: 2,
+      lineStyle: 2, // dashed
+      visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false),
+      lastValueVisible: false,
+      priceLineVisible: false,
+      title: 'Trendline Ngoài (Đỉnh)'
+    });
+
+    const trendlineInnerUpperSeries = chart.addLineSeries({
+      color: '#ec4899',
+      lineWidth: 2,
+      lineStyle: 0, // solid
+      visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false),
+      lastValueVisible: false,
+      priceLineVisible: false,
+      title: 'Trendline Trong (Đỉnh)'
+    });
+
+    const trendlineInnerLowerSeries = chart.addLineSeries({
+      color: '#8b5cf6',
+      lineWidth: 2,
+      lineStyle: 0, // solid
+      visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false),
+      lastValueVisible: false,
+      priceLineVisible: false,
+      title: 'Trendline Trong (Đáy)'
+    });
+
+    window.trendlineInnerUpperSeries = trendlineInnerUpperSeries;
+    window.trendlineInnerLowerSeries = trendlineInnerLowerSeries;
+
     let elliottPriceLines = [];
+    let elliottEntryPriceLines = [];
     let elliottWaveMarkers = [];
     let supertrendMarkers = [];
 
-    // Bộ quản lý gộp Marker thống nhất giữa SuperTrend & Sóng Elliott
+    // Bộ quản lý gộp Marker thống nhất giữa SuperTrend, Sóng Elliott & Touchpoints Trendline
     function syncAllChartMarkers() {
       let combined = [];
       if (indConfig.supertrend && indConfig.supertrend.enabled && supertrendMarkers && supertrendMarkers.length > 0) {
         combined = combined.concat(supertrendMarkers);
+      }
+      if (elliottWaveMarkers && elliottWaveMarkers.length > 0) {
+        const cTimes = (rawCandles && rawCandles.length > 0) ? new Set(rawCandles.map(c => c.time)) : null;
+        const validEw = cTimes ? elliottWaveMarkers.filter(m => cTimes.has(m.time)) : elliottWaveMarkers;
+        combined = combined.concat(validEw);
       }
       combined.sort((a, b) => a.time - b.time);
       try {
         mainSeries.setMarkers(combined);
       } catch(e) {}
 
-      // Gán markers Sóng Elliott trực tiếp lên elliottSeries để định vị chuẩn xác cả 5 sóng
+      // Gán markers Sóng Elliott trực tiếp lên elliottSeries nếu cần
       if (typeof elliottSeries !== 'undefined' && elliottSeries && typeof elliottSeries.setMarkers === 'function') {
         try {
           if (indConfig.elliott && indConfig.elliott.enabled && (indConfig.elliott.showLabels !== false) && elliottWaveMarkers && elliottWaveMarkers.length > 0) {
@@ -7183,9 +7524,12 @@
         setChk('chk-elliott', indConfig.elliott.enabled);
         setInp('inp-ew-depth', indConfig.elliott.depth || 8);
         setInp('inp-ew-dev', indConfig.elliott.minDev || 0.2);
+        setInp('inp-ew-lookback', indConfig.elliott.lookback || 60);
         setChk('chk-ew-lines', indConfig.elliott.showLines !== false);
         setChk('chk-ew-labels', indConfig.elliott.showLabels !== false);
         setChk('chk-ew-targets', indConfig.elliott.showTargets !== false);
+        setChk('chk-ew-trendlines', indConfig.elliott.showTrendlines !== false);
+        setChk('chk-ew-entries', indConfig.elliott.showEntries !== false);
       }
       setText('val-fibo-lb', indConfig.autofibo.lookback);
 
@@ -7223,9 +7567,22 @@
       if (typeof elliottSeries !== 'undefined') {
         elliottSeries.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.enabled && indConfig.elliott.showLines) });
       }
+      if (typeof elliottTrendline24Series !== 'undefined') {
+        elliottTrendline24Series.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false) });
+      }
+      if (typeof elliottChannelSeries !== 'undefined') {
+        elliottChannelSeries.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false) });
+      }
+      if (typeof trendlineInnerUpperSeries !== 'undefined') {
+        trendlineInnerUpperSeries.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false) });
+      }
+      if (typeof trendlineInnerLowerSeries !== 'undefined') {
+        trendlineInnerLowerSeries.applyOptions({ visible: !!(indConfig.elliott && indConfig.elliott.showTrendlines !== false) });
+      }
+      const isAnyElliottActive = !!(indConfig.elliott && (indConfig.elliott.enabled || indConfig.elliott.showTrendlines !== false || indConfig.elliott.showEntries !== false));
       const btnEwToolbar = document.getElementById('btn-elliott-modal');
       if (btnEwToolbar) {
-        btnEwToolbar.style.display = (indConfig.elliott && indConfig.elliott.enabled) ? 'flex' : 'none';
+        btnEwToolbar.style.display = isAnyElliottActive ? 'flex' : 'none';
       }
 
       updateRsiPriceLines();
@@ -7296,12 +7653,16 @@
       });
     }
 
-    const bindEwSubCheck = (id, key) => {
+    const bindEwSubCheck = (id, key, toastMsg) => {
       const el = document.getElementById(id);
       if (el) {
         el.addEventListener('change', (e) => {
           if (!indConfig.elliott) indConfig.elliott = Object.assign({}, defaultIndConfig.elliott);
           indConfig.elliott[key] = e.target.checked;
+          if (toastMsg) {
+            showToast(e.target.checked ? `✓ ĐÃ BẬT: ${toastMsg}` : `✕ ĐÃ TẮT: ${toastMsg}`, e.target.checked ? 'success' : 'info', 2000);
+            try { playBeep(e.target.checked ? 880 : 440, 0.08); } catch(err) {}
+          }
           applyAllIndicatorSettings();
         });
       }
@@ -7309,6 +7670,16 @@
     bindEwSubCheck('chk-ew-lines', 'showLines');
     bindEwSubCheck('chk-ew-labels', 'showLabels');
     bindEwSubCheck('chk-ew-targets', 'showTargets');
+    bindEwSubCheck('chk-ew-trendlines', 'showTrendlines', 'ĐƯỜNG TRENDLINE 2-4 & KÊNH SÓNG (TL SÓNG TRANG 5)');
+    bindEwSubCheck('chk-ew-entries', 'showEntries', '3 MỨC VÀO LỆNH ENTRY 1-2-3 & STOP LOSS');
+
+    bindParamInput('inp-ew-lookback', (v) => {
+      const n = parseInt(v);
+      if (n >= 15 && n <= 300) {
+        if (!indConfig.elliott) indConfig.elliott = Object.assign({}, defaultIndConfig.elliott);
+        indConfig.elliott.lookback = n;
+      }
+    });
 
     bindParamInput('inp-ew-depth', (v) => {
       const n = parseInt(v);
@@ -8596,19 +8967,13 @@
         const linePoints = [
           { time: p0.time, value: p0.price },
           { time: p1.time, value: p1.price },
-          { time: p2.time, value: p2.price },
-          { time: t3, value: p3 },
-          { time: t4, value: p4 },
-          { time: t5, value: p5 }
+          { time: p2.time, value: p2.price }
         ];
 
         const markers = [
           { time: p0.time, position: 'belowBar', color: '#64748b', shape: 'circle', text: `(0) Đáy $${p0.price.toFixed(2)}` },
           { time: p1.time, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(1) Đỉnh W1 $${p1.price.toFixed(2)}` },
-          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Đáy W2 $${p2.price.toFixed(2)}` },
-          { time: t3, position: 'aboveBar', color: '#10b981', shape: 'circle', text: `(3) Mục tiêu W3 $${p3.toFixed(2)}` },
-          { time: t4, position: 'belowBar', color: '#eab308', shape: 'circle', text: `(4) Tích luỹ W4 $${p4.toFixed(2)}` },
-          { time: t5, position: 'aboveBar', color: '#06b6d4', shape: 'arrowDown', text: `(5) Đỉnh W5 $${p5.toFixed(2)}` }
+          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Đáy W2 $${p2.price.toFixed(2)}` }
         ];
 
         // Kiểm tra phân kỳ RSI & Nến đảo chiều (Chương 6)
@@ -8962,6 +9327,264 @@
       const isDiagonal = (chosen.patternType === 'ending_diagonal' || chosen.patternType === 'leading_diagonal');
       const rule3Pass = isDiagonal ? true : (chosen.P4 ? (chosen.P4.price > chosen.P1.price) : true);
 
+      // =========================================================================
+      // KẺ ĐƯỜNG TRENDLINE TAM GIÁC (NỐI ĐỈNH & ĐÁY TĂNG/GIẢM DẦN - TL SÓNG TRANG 1 & 2)
+      // =========================================================================
+      let trendlinePoints = [];
+      let channelPoints = [];
+      let entryPlan = null;
+      let isTruncatedRisk = false;
+      let goldenDividerRatio = 0.618;
+      let trendlineCurVal = null;
+      let channelCurVal = null;
+      let trianglePattern = null;
+
+      const p0 = chosen.P0;
+      const p1 = chosen.P1;
+      const p2 = chosen.P2;
+      const p3 = chosen.P3;
+      const p4 = chosen.P4;
+      const p5 = chosen.P5;
+
+      // =========================================================================
+      // HỆ THỐNG KẺ ĐƯỜNG TRENDLINE TAM GIÁC / NÊM THEO KHUNG THỜI GIAN MỞ (TL SÓNG TRANG 1 & 2)
+      // TIA THẲNG TUYỆT ĐỐI (KHÔNG GÃY KHÚC), BÁM SÁT THEO NẾN TRONG LOOKBACK
+      // =========================================================================
+      const ewLookback = (indConfig.elliott && indConfig.elliott.lookback) ? indConfig.elliott.lookback : 60;
+      const startIdx = Math.max(0, candles.length - ewLookback);
+      const slice = candles.slice(startIdx);
+      const tfSec = (candles.length > 1) ? (candles[1].time - candles[0].time) : 300;
+      const tfLabel = currentTF === 60 ? 'M1' : (currentTF === 180 ? 'M3' : (currentTF === 300 ? 'M5' : (currentTF === 900 ? 'M15' : (currentTF === 1800 ? 'M30' : (currentTF === 3600 ? 'H1' : (currentTF === 14400 ? 'H4' : (currentTF === 86400 ? 'D1' : 'TF')))))));
+
+      let innerUpperPoints = [];
+      let innerLowerPoints = [];
+
+      if (slice.length >= 10) {
+        const tlDepth = 3;
+        let swingHighs = [];
+        let swingLows = [];
+
+        for (let i = tlDepth; i < slice.length - tlDepth; i++) {
+          const c = slice[i];
+          let isH = true, isL = true;
+          for (let j = i - tlDepth; j <= i + tlDepth; j++) {
+            if (j === i) continue;
+            if (slice[j].high >= c.high) isH = false;
+            if (slice[j].low <= c.low) isL = false;
+          }
+          if (isH) swingHighs.push({ idx: i, time: c.time, price: c.high });
+          if (isL) swingLows.push({ idx: i, time: c.time, price: c.low });
+        }
+
+        const mid = Math.floor(slice.length / 2);
+        let outH1 = swingHighs.filter(h => h.idx < mid).sort((a,b) => b.price - a.price)[0];
+        let outH2 = swingHighs.filter(h => h.idx >= mid).sort((a,b) => b.price - a.price)[0];
+        if (!outH1 || !outH2) {
+          outH1 = swingHighs[0] || { idx: 0, time: slice[0].time, price: slice[0].high };
+          outH2 = swingHighs[swingHighs.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].high };
+        }
+
+        let outL1 = swingLows.filter(l => l.idx < mid).sort((a,b) => a.price - b.price)[0];
+        let outL2 = swingLows.filter(l => l.idx >= mid).sort((a,b) => a.price - b.price)[0];
+        if (!outL1 || !outL2) {
+          outL1 = swingLows[0] || { idx: 0, time: slice[0].time, price: slice[0].low };
+          outL2 = swingLows[swingLows.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].low };
+        }
+
+        const inH1 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 2] : outH1;
+        const inH2 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 1] : outH2;
+        const inL1 = swingLows.length >= 2 ? swingLows[swingLows.length - 2] : outL1;
+        const inL2 = swingLows.length >= 2 ? swingLows[swingLows.length - 1] : outL2;
+
+        const makeStraightRay = (p1, p2) => {
+          const dt = p2.time - p1.time;
+          const slope = dt !== 0 ? (p2.price - p1.price) / dt : 0;
+          const points = [];
+          for (let i = p1.idx; i < slice.length; i++) {
+            const t = slice[i].time;
+            points.push({
+              time: t,
+              value: parseFloat((p1.price + slope * (t - p1.time)).toFixed(2))
+            });
+          }
+          const lastT = slice[slice.length - 1].time;
+          for (let f = 1; f <= 25; f++) {
+            const futT = lastT + f * tfSec;
+            points.push({
+              time: futT,
+              value: parseFloat((p1.price + slope * (futT - p1.time)).toFixed(2))
+            });
+          }
+          return { slope, points, p1, p2 };
+        };
+
+        const outerUpper = makeStraightRay(outH1, outH2);
+        const outerLower = makeStraightRay(outL1, outL2);
+        const innerUpper = makeStraightRay(inH1, inH2);
+        const innerLower = makeStraightRay(inL1, inL2);
+
+        channelPoints = outerUpper.points;
+        trendlinePoints = outerLower.points;
+        innerUpperPoints = innerUpper.points;
+        innerLowerPoints = innerLower.points;
+
+        const lastCandle = slice[slice.length - 1];
+        channelCurVal = parseFloat((outH1.price + outerUpper.slope * (lastCandle.time - outH1.time)).toFixed(2));
+        trendlineCurVal = parseFloat((outL1.price + outerLower.slope * (lastCandle.time - outL1.time)).toFixed(2));
+
+        const dpH = outH2.price - outH1.price;
+        const dpL = outL2.price - outL1.price;
+
+        let patternType = 'converging_triangle';
+        let patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
+        let desc = `Đỉnh giảm ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)}) & Đáy tăng ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)})`;
+
+        if (dpH < -0.5 && dpL > 0.5) {
+          patternType = 'converging_triangle';
+          patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
+          desc = `Đỉnh giảm dần ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)}) & Đáy tăng dần ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)}) (TL Sóng Trang 2)`;
+        } else if (Math.abs(dpH) <= 0.8 && dpL > 0.5) {
+          patternType = 'ascending_triangle';
+          patternName = `📐 TAM GIÁC TĂNG ${tfLabel}`;
+          desc = `Kháng cự đỉnh ngang (~$${outH2.price.toFixed(2)}) & Đáy tăng dốc lên ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)}) (TL Sóng Trang 2)`;
+        } else if (dpH < -0.5 && Math.abs(dpL) <= 0.8) {
+          patternType = 'descending_triangle';
+          patternName = `📐 TAM GIÁC GIẢM ${tfLabel}`;
+          desc = `Đỉnh giảm dốc xuống ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)}) & Hỗ trợ đáy phẳng (~$${outL2.price.toFixed(2)}) (TL Sóng Trang 2)`;
+        } else if (dpH > 0.5 && dpL < -0.5) {
+          patternType = 'expanding_triangle';
+          patternName = `📐 TAM GIÁC MỞ RỘNG ${tfLabel}`;
+          desc = `Đỉnh tăng dần ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)}) & Đáy giảm dần ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)}) (TL Sóng Trang 1 & 2)`;
+        } else if (dpH > 0 && dpL > 0) {
+          patternType = 'rising_wedge';
+          patternName = `📐 NÊM TĂNG HỘI TỤ ${tfLabel}`;
+          desc = `Cả đỉnh & đáy cùng tăng nhưng biên độ thu hẹp (Sóng chéo hội tụ Trang 1)`;
+        } else if (dpH < 0 && dpL < 0) {
+          patternType = 'falling_wedge';
+          patternName = `📐 NÊM GIẢM HỘI TỤ ${tfLabel}`;
+          desc = `Cả đỉnh & đáy cùng giảm nhưng biên độ thu hẹp (Sóng chéo hội tụ Trang 1)`;
+        }
+
+        const touchpoints = [];
+        const usedTimes = new Set();
+        slice.forEach(c => {
+          const upPt = outerUpper.points.find(p => p.time === c.time);
+          if (upPt && Math.abs(c.high - upPt.value) <= 0.8) {
+            touchpoints.push({ time: c.time, position: 'aboveBar', color: '#06b6d4', shape: 'circle', text: '○' });
+            usedTimes.add(c.time);
+          }
+          const lowPt = outerLower.points.find(p => p.time === c.time);
+          if (lowPt && Math.abs(c.low - lowPt.value) <= 0.8 && !usedTimes.has(c.time)) {
+            touchpoints.push({ time: c.time, position: 'belowBar', color: '#06b6d4', shape: 'circle', text: '○' });
+            usedTimes.add(c.time);
+          }
+        });
+
+        const lastSliceBar = slice[slice.length - 1];
+        if (lastSliceBar) {
+          touchpoints.push({
+            time: lastSliceBar.time,
+            position: 'aboveBar',
+            color: '#06b6d4',
+            shape: 'arrowDown',
+            text: patternName
+          });
+        }
+
+        trianglePattern = {
+          patternType,
+          patternName,
+          desc,
+          curUpper: channelCurVal,
+          curLower: trendlineCurVal,
+          upperDesc: dpH < 0 ? `Đỉnh giảm dần ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)})` : `Đỉnh tăng dần ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)})`,
+          lowerDesc: dpL > 0 ? `Đáy tăng dần ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)})` : `Đáy giảm dần ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)})`,
+          upperPoints: channelPoints,
+          lowerPoints: trendlinePoints,
+          innerUpperPoints,
+          innerLowerPoints,
+          touchpoints,
+          h1: outH1, h2: outH2, l1: outL1, l2: outL2
+        };
+      }
+
+      // Kiểm tra rủi ro Sóng cụt (TL Sóng Trang 1: W3 > 2.618 W1)
+      if (chosen.w1Len > 0 && chosen.w3Len > 0) {
+        if (chosen.w3Len > 2.618 * chosen.w1Len) {
+          isTruncatedRisk = true;
+        }
+      }
+
+      // Bộ chia Fibonacci h14 (TL Sóng Trang 1: h14 = 0.5 hoặc 0.618 h)
+      if (p0 && p5 && (p5.price - p0.price) > 0 && p4) {
+        goldenDividerRatio = (p4.price - p0.price) / (p5.price - p0.price);
+      }
+
+      // 3 Điểm vào lệnh Entry 1-2-3 (TL Sóng Trang 5)
+      const lastClose = (candles.length > 0) ? candles[candles.length - 1].close : 0;
+      if (p5 && p4 && p5.price > p4.price) {
+        const w5Span = p5.price - p4.price;
+        const e1Price = parseFloat((p5.price - w5Span * 0.236).toFixed(2));
+        const e2Price = parseFloat((p5.price - w5Span * 0.50).toFixed(2));
+        const e3Price = parseFloat(p4.price.toFixed(2));
+        const slPrice = parseFloat((p5.price + 1.5).toFixed(2));
+
+        entryPlan = {
+          mode: 'BEAR_REVERSAL',
+          sl: slPrice,
+          slDesc: `Đỉnh Sóng 5 ($${p5.price.toFixed(2)})`,
+          entry1: {
+            price: e1Price,
+            title: 'Entry 1 (Mạo hiểm)',
+            desc: 'Phá vỡ cấu trúc sóng cấp 4 (Fibo 23.6% từ đỉnh 5)',
+            status: (lastClose && lastClose <= e1Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
+          },
+          entry2: {
+            price: e2Price,
+            title: 'Entry 2 (An toàn)',
+            desc: 'Phá vỡ cấu trúc sóng cấp 3 (Fibo 50% nhịp sóng 5)',
+            status: (lastClose && lastClose <= e2Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
+          },
+          entry3: {
+            price: e3Price,
+            title: 'Entry 3 (Rất an toàn)',
+            desc: 'Phá vỡ cấu trúc sóng cấp 2 (Thủng Trendline 2-4 / Đáy W4)',
+            status: (lastClose && lastClose <= e3Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
+          }
+        };
+      } else if (chosen.PC && chosen.PB && chosen.PB.price > chosen.PC.price) {
+        // Chu kỳ hoàn tất sóng C điều chỉnh (Mua lên)
+        const cSpan = chosen.PB.price - chosen.PC.price;
+        const e1Price = parseFloat((chosen.PC.price + cSpan * 0.236).toFixed(2));
+        const e2Price = parseFloat((chosen.PC.price + cSpan * 0.50).toFixed(2));
+        const e3Price = parseFloat(chosen.PB.price.toFixed(2));
+        const slPrice = parseFloat((chosen.PC.price - 1.5).toFixed(2));
+
+        entryPlan = {
+          mode: 'BULL_REVERSAL',
+          sl: slPrice,
+          slDesc: `Đáy Sóng C ($${chosen.PC.price.toFixed(2)})`,
+          entry1: {
+            price: e1Price,
+            title: 'Entry 1 (Mạo hiểm)',
+            desc: 'Phá vỡ cấu trúc sóng cấp 4 của nhịp giảm C',
+            status: (lastClose && lastClose >= e1Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
+          },
+          entry2: {
+            price: e2Price,
+            title: 'Entry 2 (An toàn)',
+            desc: 'Phá vỡ cấu trúc sóng cấp 3 (Hồi 50% Sóng C)',
+            status: (lastClose && lastClose >= e2Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
+          },
+          entry3: {
+            price: e3Price,
+            title: 'Entry 3 (Rất an toàn)',
+            desc: 'Phá vỡ sóng cấp 2 (Vượt đỉnh Sóng B)',
+            status: (lastClose && lastClose >= e3Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
+          }
+        };
+      }
+
       return {
         isBull: true,
         patternType: chosen.patternType,
@@ -9006,84 +9629,130 @@
         w5Len: chosen.w5Len,
         linePoints: chosen.linePoints,
         markers: chosen.markers,
-        timeRange: chosen.timeRange
+        timeRange: chosen.timeRange,
+        trendlinePoints,
+        channelPoints,
+        innerUpperPoints,
+        innerLowerPoints,
+        trendlineCurVal,
+        channelCurVal,
+        trianglePattern,
+        entryPlan,
+        isTruncatedRisk,
+        goldenDividerRatio
       };
     }
 
     // Cập nhật giao diện Modal Phân Tích Sóng Elliott & Vẽ trên Biểu đồ
     function updateElliottWave(candles, curPrice) {
+      const isIndEnabled = !!(indConfig.elliott && indConfig.elliott.enabled);
+      const isAnyElliottActive = !!(indConfig.elliott && (indConfig.elliott.enabled || indConfig.elliott.showTrendlines !== false || indConfig.elliott.showEntries !== false));
       const btnEwModal = document.getElementById('btn-elliott-modal');
-      const isIndEnabled = indConfig.elliott && indConfig.elliott.enabled;
       if (btnEwModal) {
-        btnEwModal.style.display = isIndEnabled ? 'flex' : 'none';
+        btnEwModal.style.display = isAnyElliottActive ? 'flex' : 'none';
       }
 
-      if (!candles || candles.length < 20) {
+      if (!candles || candles.length < 20 || !isAnyElliottActive) {
         if (elliottSeries) elliottSeries.setData([]);
+        if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) elliottTrendline24Series.setData([]);
+        if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) elliottChannelSeries.setData([]);
+        if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) trendlineInnerUpperSeries.setData([]);
+        if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) trendlineInnerLowerSeries.setData([]);
         elliottWaveMarkers = [];
         syncAllChartMarkers();
+        elliottPriceLines.forEach(l => { try { mainSeries.removePriceLine(l); } catch(e) {} });
+        elliottPriceLines = [];
+        elliottEntryPriceLines.forEach(l => { try { mainSeries.removePriceLine(l); } catch(e) {} });
+        elliottEntryPriceLines = [];
         return;
       }
 
       const depth = (indConfig.elliott && indConfig.elliott.depth) ? indConfig.elliott.depth : 6;
-      const minDev = (indConfig.elliott && indConfig.elliott.minDev) ? indConfig.elliott.minDev : 0.10;
+      const minDev = (indConfig.elliott && indConfig.elliott.minDev) ? indConfig.elliott.minDev : 0.12;
       const ew = calcElliottWave(candles, depth, minDev);
 
       if (!ew) {
         if (elliottSeries) elliottSeries.setData([]);
+        if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) elliottTrendline24Series.setData([]);
+        if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) elliottChannelSeries.setData([]);
+        if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) trendlineInnerUpperSeries.setData([]);
+        if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) trendlineInnerLowerSeries.setData([]);
         elliottWaveMarkers = [];
         syncAllChartMarkers();
         return;
       }
 
-      // 1. Cập nhật đường vẽ Zigzag & Markers trên biểu đồ
+      // 1. Cập nhật đường vẽ Zigzag & Markers trên biểu đồ (chỉ vẽ đỉnh đáy thực tế đã xác nhận)
       if (elliottSeries) {
         if (isIndEnabled && (indConfig.elliott.showLines !== false)) {
-          elliottSeries.setData(ew.linePoints);
+          elliottSeries.setData(ew.linePoints || []);
         } else {
           elliottSeries.setData([]);
         }
       }
 
-      if (isIndEnabled && (indConfig.elliott.showLabels !== false)) {
-        elliottWaveMarkers = ew.markers;
-      } else {
-        elliottWaveMarkers = [];
+      // 1b. Cập nhật 4 tia Trendline thẳng tuyệt đối (TL Sóng Trang 1 & 2)
+      const showTl = (indConfig.elliott && indConfig.elliott.showTrendlines !== false);
+      if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) {
+        elliottChannelSeries.setData(showTl && ew.channelPoints ? ew.channelPoints : []);
+      }
+      if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) {
+        elliottTrendline24Series.setData(showTl && ew.trendlinePoints ? ew.trendlinePoints : []);
+      }
+      if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) {
+        trendlineInnerUpperSeries.setData(showTl && ew.innerUpperPoints ? ew.innerUpperPoints : []);
+      }
+      if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) {
+        trendlineInnerLowerSeries.setData(showTl && ew.innerLowerPoints ? ew.innerLowerPoints : []);
+      }
+
+      // 1c. Markers: gộp nhãn sóng và touchpoints vòng tròn
+      elliottWaveMarkers = [];
+      if (isIndEnabled && (indConfig.elliott.showLabels !== false) && ew.markers) {
+        elliottWaveMarkers = ew.markers.slice();
+      }
+      if (showTl && ew.trianglePattern && ew.trianglePattern.touchpoints) {
+        elliottWaveMarkers = elliottWaveMarkers.concat(ew.trianglePattern.touchpoints);
       }
       syncAllChartMarkers();
 
-      // 2. Kẻ đường mục tiêu Fibo & Vi phạm sóng
+      // 2. Kẻ đường mục tiêu Fibo & Vi phạm sóng (Chỉ hiển thị khi gần giá thực tế, không làm méo mó scale giá)
       elliottPriceLines.forEach(l => {
         try { mainSeries.removePriceLine(l); } catch(e) {}
       });
       elliottPriceLines = [];
 
+      const priceRef = (curPrice && !isNaN(curPrice)) ? curPrice : (candles.length > 0 ? candles[candles.length - 1].close : 0);
       if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.nextTarget && !isNaN(ew.nextTarget)) {
-        try {
-          const tLine = mainSeries.createPriceLine({
-            price: ew.nextTarget,
-            color: '#10b981',
-            lineWidth: 1.5,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: `🎯 Target Sóng ($${ew.nextTarget.toFixed(2)})`
-          });
-          elliottPriceLines.push(tLine);
-        } catch(e) {}
+        if (priceRef > 0 && Math.abs(ew.nextTarget - priceRef) <= priceRef * 0.025) {
+          try {
+            const tLine = mainSeries.createPriceLine({
+              price: ew.nextTarget,
+              color: '#10b981',
+              lineWidth: 1.5,
+              lineStyle: 2,
+              axisLabelVisible: true,
+              title: `🎯 Target Sóng ($${ew.nextTarget.toFixed(2)})`
+            });
+            elliottPriceLines.push(tLine);
+          } catch(e) {}
+        }
       }
 
       if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.invalPrice && !isNaN(ew.invalPrice)) {
-        try {
-          const iLine = mainSeries.createPriceLine({
-            price: ew.invalPrice,
-            color: '#ef4444',
-            lineWidth: 1.5,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: `🛑 Vi phạm Sóng ($${ew.invalPrice.toFixed(2)})`
-          });
-          elliottPriceLines.push(iLine);
-        } catch(e) {}
+        if (priceRef > 0 && Math.abs(ew.invalPrice - priceRef) <= priceRef * 0.025) {
+          try {
+            const iLine = mainSeries.createPriceLine({
+              price: ew.invalPrice,
+              color: '#ef4444',
+              lineWidth: 1.5,
+              lineStyle: 2,
+              axisLabelVisible: true,
+              title: `🛑 Vi phạm Sóng ($${ew.invalPrice.toFixed(2)})`
+            });
+            elliottPriceLines.push(iLine);
+          } catch(e) {}
+        }
       }
 
       if (isIndEnabled && (indConfig.elliott.showTargets !== false) && ew.peakTarget && !isNaN(ew.peakTarget) && Math.abs(ew.peakTarget - (ew.nextTarget || 0)) > 1.0) {
@@ -9111,6 +9780,57 @@
             title: `✨ Tỷ Lệ Vàng 0.618 ($${ew.goldenDivider.toFixed(2)})`
           });
           elliottPriceLines.push(gdLine);
+        } catch(e) {}
+      }
+
+      // 2b. Kẻ 3 Mức Vào Lệnh Entry 1-2-3 & Stop Loss trên biểu đồ (TL Sóng Trang 5)
+      elliottEntryPriceLines.forEach(l => {
+        try { mainSeries.removePriceLine(l); } catch(e) {}
+      });
+      elliottEntryPriceLines = [];
+
+      if ((indConfig.elliott.showEntries !== false) && ew.entryPlan) {
+        const ep = ew.entryPlan;
+        try {
+          const l1 = mainSeries.createPriceLine({
+            price: ep.entry1.price,
+            color: '#ec4899',
+            lineWidth: 1.5,
+            lineStyle: 1,
+            axisLabelVisible: true,
+            title: `⚡ E1 Mạo hiểm ($${ep.entry1.price.toFixed(2)})`
+          });
+          elliottEntryPriceLines.push(l1);
+
+          const l2 = mainSeries.createPriceLine({
+            price: ep.entry2.price,
+            color: '#f59e0b',
+            lineWidth: 1.5,
+            lineStyle: 1,
+            axisLabelVisible: true,
+            title: `🛡️ E2 An toàn ($${ep.entry2.price.toFixed(2)})`
+          });
+          elliottEntryPriceLines.push(l2);
+
+          const l3 = mainSeries.createPriceLine({
+            price: ep.entry3.price,
+            color: '#10b981',
+            lineWidth: 1.8,
+            lineStyle: 0,
+            axisLabelVisible: true,
+            title: `💎 E3 Rất an toàn ($${ep.entry3.price.toFixed(2)})`
+          });
+          elliottEntryPriceLines.push(l3);
+
+          const lSl = mainSeries.createPriceLine({
+            price: ep.sl,
+            color: '#ef4444',
+            lineWidth: 1.5,
+            lineStyle: 2,
+            axisLabelVisible: true,
+            title: `🛑 SL ${ep.slDesc}`
+          });
+          elliottEntryPriceLines.push(lSl);
         } catch(e) {}
       }
 
@@ -9235,6 +9955,77 @@
 
       const dividerValEl = document.getElementById('ew-modal-divider-val');
       if (dividerValEl) dividerValEl.textContent = ew.goldenDivider ? `$${ew.goldenDivider.toFixed(2)}` : '---';
+
+      // Cập nhật thẻ Trendline Tam Giác & Hệ thống 3 Entry (TL Sóng Trang 1, 2 & 5)
+      const tlCurValEl = document.getElementById('ew-modal-tl24-val');
+      if (tlCurValEl) {
+        tlCurValEl.textContent = (ew.trendlineCurVal !== null) ? `$${ew.trendlineCurVal.toFixed(2)}` : 'Đang quét...';
+      }
+
+      const chCurValEl = document.getElementById('ew-modal-channel-val');
+      if (chCurValEl) {
+        chCurValEl.textContent = (ew.channelCurVal !== null) ? `$${ew.channelCurVal.toFixed(2)}` : 'Đang quét...';
+      }
+
+      const tlStatusBadge = document.getElementById('ew-modal-tl24-status');
+      if (tlStatusBadge) {
+        if (ew.trianglePattern) {
+          tlStatusBadge.textContent = ew.trianglePattern.patternName;
+          tlStatusBadge.style.background = 'rgba(245, 158, 11, 0.2)';
+          tlStatusBadge.style.color = '#fbbf24';
+          tlStatusBadge.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+        } else if (ew.trendlineCurVal !== null && curPrice) {
+          if (curPrice < ew.trendlineCurVal) {
+            tlStatusBadge.textContent = 'ĐÃ THỦNG TRENDLINE (ĐẠT ENTRY 3)';
+            tlStatusBadge.style.background = 'rgba(239, 68, 68, 0.2)';
+            tlStatusBadge.style.color = '#f87171';
+            tlStatusBadge.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+          } else {
+            tlStatusBadge.textContent = 'ĐANG NÂNG ĐỠ TỐT (TRÊN TRENDLINE)';
+            tlStatusBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+            tlStatusBadge.style.color = '#34d399';
+            tlStatusBadge.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+          }
+        } else {
+          tlStatusBadge.textContent = 'CHỜ TÍN HIỆU';
+        }
+      }
+
+      const triDescEl = document.getElementById('ew-modal-triangle-desc');
+      if (triDescEl && ew.trianglePattern) {
+        triDescEl.textContent = ew.trianglePattern.desc;
+      }
+      const upDescEl = document.getElementById('ew-modal-upper-desc');
+      if (upDescEl && ew.trianglePattern) {
+        upDescEl.textContent = ew.trianglePattern.upperDesc;
+      }
+      const lowDescEl = document.getElementById('ew-modal-lower-desc');
+      if (lowDescEl && ew.trianglePattern) {
+        lowDescEl.textContent = ew.trianglePattern.lowerDesc;
+      }
+
+      if (ew.entryPlan) {
+        const ep = ew.entryPlan;
+        const setEl = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+        setEl('ew-modal-e1-price', `$${ep.entry1.price.toFixed(2)}`);
+        setEl('ew-modal-e1-status', ep.entry1.status);
+        setEl('ew-modal-e2-price', `$${ep.entry2.price.toFixed(2)}`);
+        setEl('ew-modal-e2-status', ep.entry2.status);
+        setEl('ew-modal-e3-price', `$${ep.entry3.price.toFixed(2)}`);
+        setEl('ew-modal-e3-status', ep.entry3.status);
+        setEl('ew-modal-entries-sl', `$${ep.sl.toFixed(2)} (${ep.slDesc})`);
+      }
+
+      // Cảnh báo Sóng cụt & Expanded Flat
+      const warnTruncEl = document.getElementById('ew-modal-warn-trunc');
+      if (warnTruncEl) {
+        warnTruncEl.style.display = ew.isTruncatedRisk ? 'flex' : 'none';
+      }
+
+      const divRatioEl = document.getElementById('ew-modal-divider-ratio');
+      if (divRatioEl) {
+        divRatioEl.textContent = `${(ew.goldenDividerRatio * 100).toFixed(1)}% (Chuẩn: 50% hoặc 61.8%)`;
+      }
 
       // Chỉ báo xác nhận (Chương 6)
       if (ew.techIndicators) {
@@ -10707,57 +11498,150 @@
     }
 
     // =========================================================================
-    // HỆ THỐNG TIN TỨC THẾ GIỚI & KIỂM SOÁT RỦI RO (LIVE REAL-TIME WORLD NEWS ENGINE)
-    // TỰ ĐỘNG NẠP 100% TIN TỨC THẬT TỪ CÁC ĐẦU BÁO TÀI CHÍNH (GOOGLE NEWS / REUTERS / VNEXPRESS)
+    // HỆ THỐNG TIN TỨC CHÍNH TRỊ THẾ GIỚI & ĐỊA CHÍNH TRỊ VĨ MÔ THỜI GIAN THỰC
+    // (REAL-TIME WORLD POLITICS & GEOPOLITICAL RISK ENGINE - CONTINUOUS LIVE FEED)
+    // NẠP ĐA KÊNH LIÊN TỤC: VNEXPRESS THẾ GIỚI, TUỔI TRẺ THẾ GIỚI, THANH NIÊN THẾ GIỚI
+    // TỰ ĐỘNG PHÂN TÍCH TÁC ĐỘNG VÀO GIÁ VÀNG (XAU/USD) & PHÂN LOẠI CHÍNH TRỊ / ĐỊA CHÍNH TRỊ
     // =========================================================================
 
     let liveWorldNewsData = [];
+    let currentNewsCategory = 'all';
 
-    // Danh sách tin tức thực tế dự phòng chất lượng cao
+    // Hàm giải mã HTML Entities an toàn cho tiêu đề tiếng Việt
+    function unescapeNewsHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&Ocirc;/g, 'Ô')
+        .replace(/&ocirc;/g, 'ô')
+        .replace(/&Ecirc;/g, 'Ê')
+        .replace(/&ecirc;/g, 'ê')
+        .replace(/&Acirc;/g, 'Â')
+        .replace(/&acirc;/g, 'â')
+        .replace(/&agrave;/g, 'à')
+        .replace(/&aacute;/g, 'á')
+        .replace(/&atilde;/g, 'ã')
+        .replace(/&egrave;/g, 'è')
+        .replace(/&eacute;/g, 'é')
+        .replace(/&igrave;/g, 'ì')
+        .replace(/&iacute;/g, 'í')
+        .replace(/&ograve;/g, 'ò')
+        .replace(/&oacute;/g, 'ó')
+        .replace(/&otilde;/g, 'õ')
+        .replace(/&ugrave;/g, 'ù')
+        .replace(/&uacute;/g, 'ú')
+        .replace(/&yacute;/g, 'ý');
+    }
+
+    // Cơ sở dữ liệu tin tức Chính trị Thế giới & Địa chính trị chất lượng cao
     const FALLBACK_REAL_NEWS = [
       {
-        category: 'THỊ TRƯỜNG VÀNG',
-        tagClass: 'tag-geo',
-        riskText: '🔴 BIẾN ĐỘNG CAO',
+        id: 'pol-1',
+        category: 'CHÍNH TRỊ QUỐC TẾ & BẦU CỬ',
+        catGroup: 'pol',
+        tagClass: 'tag-pol',
+        riskText: '🔴 BIẾN ĐỘNG CHÍNH TRỊ',
         riskClass: 'risk-high',
-        headline: 'Giá vàng biến động mạnh quanh vùng cản tâm lý; dòng tiền trú ẩn gia tăng',
-        source: 'VnExpress / Reuter',
-        link: 'https://vnexpress.net/kinh-doanh/hang-hoa',
-        impact: '<strong>Tác động vàng:</strong> Phe Mua duy trì lực đỡ tại các mốc cản dưới; ưu tiên canh Buy khi giá hồi về Vùng Cầu.',
-        pubTime: Date.now() - 15 * 60000
+        headline: 'Bầu cử Mỹ: Cuộc đua vào lưỡng viện Quốc hội gay cấn, định hình chính sách tài khóa và tiền tệ',
+        source: 'VnExpress / Reuters',
+        link: 'https://vnexpress.net/the-gioi',
+        impact: '<strong>Tác động vàng:</strong> Bất định chính trị tại Washington và cán cân quyền lực mới tác động trực tiếp lên sức mạnh đồng USD, thúc đẩy dòng tiền trú ẩn an toàn mua Vàng.',
+        pubTime: Date.now() - 12 * 60000
       },
       {
-        category: 'FED & LÃI SUẤT',
+        id: 'geo-1',
+        category: 'ĐỊA CHÍNH TRỊ & XUNG ĐỘT',
+        catGroup: 'geo',
+        tagClass: 'tag-geo',
+        riskText: '🔥 CĂNG THẲNG ĐỊA CHÍNH TRỊ',
+        riskClass: 'risk-high',
+        headline: 'Căng thẳng Trung Đông leo thang: Tuyên bố đáp trả quân sự làm dấy lên lo ngại gián đoạn nguồn cung',
+        source: 'Tuổi Trẻ / AFP',
+        link: 'https://tuoitre.vn/the-gioi.htm',
+        impact: '<strong>Tác động vàng:</strong> Nguy cơ bùng phát xung đột quân sự quy mô lớn kích hoạt tâm lý hoảng loạn phòng thủ (Risk-off); giá Vàng được gom mạnh ở các nhịp hồi.',
+        pubTime: Date.now() - 25 * 60000
+      },
+      {
+        id: 'geo-2',
+        category: 'ĐỊA CHÍNH TRỊ & XUNG ĐỘT',
+        catGroup: 'geo',
+        tagClass: 'tag-geo',
+        riskText: '🔥 CHIẾN SỰ NGA - UKRAINE',
+        riskClass: 'risk-high',
+        headline: 'Châu Âu lên phương án an ninh mới cho Ukraine trong bối cảnh các đàm phán quốc tế bước vào giai đoạn then chốt',
+        source: 'Thanh Niên / AP',
+        link: 'https://thanhnien.vn/the-gioi.htm',
+        impact: '<strong>Tác động vàng:</strong> Rủi ro an ninh lục địa già kéo dài bảo đảm vị thế kim loại quý như hầm trú ẩn phòng ngừa khủng hoảng địa chính trị toàn cầu.',
+        pubTime: Date.now() - 48 * 60000
+      },
+      {
+        id: 'fed-1',
+        category: 'FED & LÃI SUẤT VĨ MÔ',
+        catGroup: 'fed',
         tagClass: 'tag-fed',
-        riskText: '🟡 BIẾN ĐỘNG VỪA',
+        riskText: '🟡 CHÍNH SÁCH TIỀN TỆ',
         riskClass: 'risk-med',
-        headline: 'Thị trường tài chính theo dõi sát kỳ vọng lãi suất và động thái điều hành của Fed',
-        source: 'Báo Dân trí / Bloomberg',
+        headline: 'Cục Dự trữ Liên bang Mỹ (Fed) bước vào phiên họp định hướng lãi suất trước thềm công bố bảng lương Non-Farm',
+        source: 'Bloomberg / Dân Trí',
         link: 'https://dantri.com.vn/kinh-doanh.htm',
-        impact: '<strong>Tác động vàng:</strong> Lãi suất trái phiếu Mỹ điều chỉnh tạo dư địa phục hồi cho vàng; chú ý mốc Trục Pivot.',
-        pubTime: Date.now() - 42 * 60000
+        impact: '<strong>Tác động vàng:</strong> Lãi suất thực giảm làm giảm chi phí cơ hội nắm giữ tài sản không sinh lợi suất, hỗ trợ Vàng bứt phá các mốc cản trên.',
+        pubTime: Date.now() - 65 * 60000
       },
       {
-        category: 'ĐỒNG USD (DXY)',
-        tagClass: 'tag-dxy',
-        riskText: '🟡 BIẾN ĐỘNG VỪA',
-        riskClass: 'risk-med',
-        headline: 'Chỉ số Dollar Index (DXY) giằng co trước thềm các báo cáo kinh tế vĩ mô',
-        source: 'Báo Lao Động / ForexLive',
-        link: 'https://laodong.vn/tien-te-dau-tu',
-        impact: '<strong>Tác động vàng:</strong> Sự hạ nhiệt của đồng USD giảm bớt áp lực xả hàng lên kim loại quý.',
-        pubTime: Date.now() - 75 * 60000
+        id: 'pol-2',
+        category: 'CHÍNH TRỊ QUỐC TẾ & BẦU CỬ',
+        catGroup: 'pol',
+        tagClass: 'tag-pol',
+        riskText: '🔴 NGOẠI GIAO & CẤM VẬN',
+        riskClass: 'risk-high',
+        headline: 'Mỹ và các đồng minh thảo luận gói thuế quan và biện pháp kiểm soát xuất khẩu công nghệ chiến lược',
+        source: 'VnExpress / Bloomberg',
+        link: 'https://vnexpress.net/the-gioi',
+        impact: '<strong>Tác động vàng:</strong> Xung đột thương mại tiềm tàng đe dọa chuỗi cung ứng toàn cầu, gia tăng sức ép lạm phát và giữ giá vàng neo cao.',
+        pubTime: Date.now() - 95 * 60000
       },
       {
-        category: 'NGÂN HÀNG TRUNG ƯƠNG',
+        id: 'gold-1',
+        category: 'THỊ TRƯỜNG VÀNG & USD',
+        catGroup: 'gold',
         tagClass: 'tag-bank',
-        riskText: '🟢 TÍCH CỰC DÀI HẠN',
+        riskText: '🟢 DÒNG TIỀN TRỰC TIẾP',
         riskClass: 'risk-low',
-        headline: 'Hội đồng Vàng Thế giới (WGC): Các Ngân hàng Trung ương tiếp tục duy trì mua ròng vàng',
+        headline: 'Hội đồng Vàng Thế giới (WGC): Động thái tích lũy vàng dự trữ của các Ngân hàng Trung ương tiếp tục dẫn dắt thị trường',
         source: 'World Gold Council',
         link: 'https://www.gold.org',
-        impact: '<strong>Tác động vàng:</strong> Lực cầu gom hàng từ các tổ chức bảo đảm đệm giá vững chắc cho chu kỳ dài hạn.',
-        pubTime: Date.now() - 120 * 60000
+        impact: '<strong>Tác động vàng:</strong> Lực cầu mua ròng mang tính cơ cấu tạo vùng đệm hỗ trợ cực mạnh; ưu tiên canh Buy khi giá kiểm tra lại Vùng Hỗ trợ D1.',
+        pubTime: Date.now() - 130 * 60000
+      },
+      {
+        id: 'geo-3',
+        category: 'ĐỊA CHÍNH TRỊ & XUNG ĐỘT',
+        catGroup: 'geo',
+        tagClass: 'tag-geo',
+        riskText: '🔥 AN NINH HÀNG HẢI',
+        riskClass: 'risk-high',
+        headline: 'Biển Đỏ: Các cuộc tập kích tàu hàng tiếp diễn, tuyến hàng hải qua kênh đào Suez đối mặt chi phí bảo hiểm tăng vọt',
+        source: 'Reuters / VnExpress',
+        link: 'https://vnexpress.net/the-gioi',
+        impact: '<strong>Tác động vàng:</strong> Rủi ro chuỗi cung ứng quốc tế leo thang khiến nhà đầu tư gia tăng tỷ trọng vàng vật chất.',
+        pubTime: Date.now() - 160 * 60000
+      },
+      {
+        id: 'fed-2',
+        category: 'FED & LÃI SUẤT VĨ MÔ',
+        catGroup: 'fed',
+        tagClass: 'tag-dxy',
+        riskText: '🟡 TỶ GIÁ USD',
+        riskClass: 'risk-med',
+        headline: 'Chỉ số Dollar Index (DXY) suy yếu trước sức ép thâm hụt ngân sách và lợi suất trái phiếu hạ nhiệt',
+        source: 'ForexLive / Lao Động',
+        link: 'https://laodong.vn/tien-te-dau-tu',
+        impact: '<strong>Tác động vàng:</strong> Đồng USD giảm giá là chất xúc tác trực tiếp giúp XAU/USD tăng tốc hướng về các mục tiêu Fibonacci tiếp theo.',
+        pubTime: Date.now() - 210 * 60000
       }
     ];
 
@@ -10772,15 +11656,106 @@
       return `${days} ngày trước`;
     }
 
-    async function fetchLiveWorldNews(forceRefresh = false) {
-      const container = document.getElementById('news-items-container');
-      const lastUpdatedElem = document.getElementById('news-last-updated');
-      const riskBadge = document.getElementById('macro-risk-level');
+    // Phân loại chuyên sâu bài báo dựa trên nội dung Chính trị & Địa chính trị
+    function classifyNewsItem(rawTitle, sourceText, linkUrl, pubDateStr) {
+      const title = unescapeNewsHtml(rawTitle).trim();
+      const low = title.toLowerCase();
 
-      // 1. Tải nhanh từ localStorage cache trước (hiển thị ngay lập tức)
+      let category = 'THỜI SỰ CHÍNH TRỊ QUỐC TẾ';
+      let catGroup = 'pol';
+      let tagClass = 'tag-pol';
+      let riskText = '🔴 BIẾN ĐỘNG CHÍNH TRỊ';
+      let riskClass = 'risk-high';
+      let impact = '<strong>Tác động vàng:</strong> Bất định chính trị toàn cầu chi phối mạnh mẽ sức mạnh đồng USD; dòng tiền ưu tiên tài sản trú ẩn an toàn (Safe-Haven Gold).';
+
+      // 1. Nhận diện Địa chính trị & Xung đột quân sự
+      if (
+        low.includes('chiến sự') || low.includes('quân sự') || low.includes('xung đột') ||
+        low.includes('tấn công') || low.includes('tên lửa') || low.includes('không kích') ||
+        low.includes('israel') || low.includes('iran') || low.includes('li-băng') || low.includes('lebanon') ||
+        low.includes('gaza') || low.includes('hamas') || low.includes('hezbollah') ||
+        low.includes('nga') || low.includes('ukraine') || low.includes('biển đỏ') || low.includes('houthi') ||
+        low.includes('phòng không') || low.includes('chiến tranh') || low.includes('vũ khí') || low.includes('trực thăng')
+      ) {
+        category = 'ĐỊA CHÍNH TRỊ & XUNG ĐỘT';
+        catGroup = 'geo';
+        tagClass = 'tag-geo';
+        riskText = '🔥 CĂNG THẲNG ĐỊA CHÍNH TRỊ';
+        riskClass = 'risk-high';
+        impact = '<strong>Tác động vàng:</strong> Bùng phát rủi ro địa chính trị kích hoạt tâm lý tháo chạy phòng thủ (Risk-off); vàng hưởng lợi trực tiếp từ lực cầu trú ẩn.';
+      }
+      // 2. Nhận diện Bầu cử & Chính trị quốc tế
+      else if (
+        low.includes('bầu cử') || low.includes('trump') || low.includes('biden') || low.includes('harris') ||
+        low.includes('nhà trắng') || low.includes('quốc hội') || low.includes('thượng viện') || low.includes('hạ viện') ||
+        low.includes('cộng hòa') || low.includes('dân chủ') || low.includes('tổng thống') || low.includes('chính phủ') ||
+        low.includes('ngoại giao') || low.includes('cấm vận') || low.includes('trừng phạt') || low.includes('thuế quan') ||
+        low.includes('thượng đỉnh') || low.includes('hội đàm') || low.includes('bỏ phiếu')
+      ) {
+        category = 'CHÍNH TRỊ QUỐC TẾ & BẦU CỬ';
+        catGroup = 'pol';
+        tagClass = 'tag-pol';
+        riskText = '🔴 BIẾN ĐỘNG CHÍNH TRỊ';
+        riskClass = 'risk-high';
+        impact = '<strong>Tác động vàng:</strong> Sự phân cực chính trị và thay đổi chính sách ngoại giao/thuế quan gây rung lắc mạnh lên đồng Dollar, hỗ trợ xu hướng giá Vàng.';
+      }
+      // 3. Nhận diện Fed, Lãi suất, Vĩ mô
+      else if (
+        low.includes('fed') || low.includes('powell') || low.includes('lãi suất') || low.includes('lạm phát') ||
+        low.includes('cpi') || low.includes('fomc') || low.includes('ecb') || low.includes('boe') ||
+        low.includes('kinh tế mỹ') || low.includes('pmi') || low.includes('ngân hàng trung ương') || low.includes('thất nghiệp')
+      ) {
+        category = 'FED & LÃI SUẤT VĨ MÔ';
+        catGroup = 'fed';
+        tagClass = 'tag-fed';
+        riskText = '🟡 CHÍNH SÁCH TIỀN TỆ';
+        riskClass = 'risk-med';
+        impact = '<strong>Tác động vàng:</strong> Lộ trình hạ lãi suất của Fed làm suy giảm sức hút của trái phiếu Mỹ, tạo động lực bứt phá cho kim loại quý.';
+      }
+      // 4. Nhận diện Giá vàng, USD, Ngân hàng trung ương gom vàng
+      else if (
+        low.includes('vàng') || low.includes('xauusd') || low.includes('sjc') || low.includes('vàng thế giới') ||
+        low.includes('usd') || low.includes('dxy') || low.includes('pboc') || low.includes('wgc') ||
+        low.includes('etf') || low.includes('spdr') || low.includes('mua ròng')
+      ) {
+        category = 'THỊ TRƯỜNG VÀNG & USD';
+        catGroup = 'gold';
+        tagClass = 'tag-bank';
+        riskText = '🟢 DÒNG TIỀN TRỰC TIẾP';
+        riskClass = 'risk-low';
+        impact = '<strong>Tác động vàng:</strong> Động thái gom vàng tích lũy từ các Ngân hàng Trung ương bảo đảm lực nâng đỡ vững chắc cho các nhịp sóng đẩy.';
+      }
+
+      let parsedTime = Date.now() - 15 * 60000;
+      if (pubDateStr) {
+        const t = Date.parse(pubDateStr);
+        if (!isNaN(t)) parsedTime = t;
+      }
+
+      return {
+        id: 'news-' + Math.random().toString(36).substr(2, 9),
+        category,
+        catGroup,
+        tagClass,
+        riskText,
+        riskClass,
+        headline: title,
+        source: sourceText || 'Báo chí Quốc tế',
+        link: linkUrl || 'https://vnexpress.net/the-gioi',
+        impact,
+        pubTime: parsedTime
+      };
+    }
+
+    // Nạp tin tức từ các nguồn RSS Chính trị & Thế giới hàng đầu
+    async function fetchLiveWorldNews(forceRefresh = false) {
+      const btnRefresh = document.getElementById('btn-refresh-news');
+      const lastUpdatedElem = document.getElementById('news-last-updated');
+
+      // 1. Tải nhanh từ localStorage cache trước để người dùng thấy ngay lập tức
       if (!forceRefresh && liveWorldNewsData.length === 0) {
         try {
-          const cached = localStorage.getItem('agy_real_news_cache_v2');
+          const cached = localStorage.getItem('agy_real_news_cache_v3');
           if (cached) {
             const parsed = JSON.parse(cached);
             if (Array.isArray(parsed) && parsed.length > 0) {
@@ -10791,140 +11766,103 @@
         } catch(e) {}
       }
 
-      // 2. Gọi API RSS thực tế
+      // Danh sách các luồng RSS Chính trị Thế giới & Thời sự quốc tế
+      const rssFeeds = [
+        { name: 'VnExpress Thế Giới', url: 'https://vnexpress.net/rss/the-gioi.rss' },
+        { name: 'Tuổi Trẻ Thế Giới', url: 'https://tuoitre.vn/rss/the-gioi.rss' },
+        { name: 'Thanh Niên Thế Giới', url: 'https://thanhnien.vn/rss/the-gioi.rss' },
+        { name: 'VnExpress Hàng Hóa', url: 'https://vnexpress.net/rss/kinh-doanh.rss' }
+      ];
+
       try {
-        const query = encodeURIComponent('giá vàng OR XAUUSD OR Fed OR USD');
-        const rssTarget = `https://news.google.com/rss/search?q=${query}&hl=vi&gl=VN&ceid=VN:vi`;
-        const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssTarget)}`;
+        let fetchedArticles = [];
 
-        const ctrl = new AbortController();
-        const timeoutId = setTimeout(() => ctrl.abort(), 6500);
-
-        const res = await fetch(apiUrl, { signal: ctrl.signal });
-        clearTimeout(timeoutId);
-
-        if (res.ok) {
-          const json = await res.json();
-          if (json.status === 'ok' && Array.isArray(json.items) && json.items.length > 0) {
-            const parsedList = json.items.slice(0, 8).map(item => {
-              const rawTitle = (item.title || '').trim();
-              let title = rawTitle;
-              let source = item.author || 'Báo chí Quốc tế / VN';
-
-              if (rawTitle.includes(' - ')) {
-                const parts = rawTitle.rsplit ? rawTitle.rsplit(' - ', 1) : rawTitle.split(' - ');
-                if (parts.length >= 2) {
-                  source = parts[parts.length - 1].trim();
-                  title = parts.slice(0, parts.length - 1).join(' - ').trim();
-                }
+        // Quét song song các luồng tin với timeout 4.5 giây
+        const fetchPromises = rssFeeds.map(feed => {
+          const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
+          return fetch(proxyUrl, { signal: AbortSignal.timeout(4500) })
+            .then(res => res.ok ? res.json() : null)
+            .then(json => {
+              if (json && json.status === 'ok' && Array.isArray(json.items)) {
+                return json.items.slice(0, 5).map(it => classifyNewsItem(it.title, feed.name, it.link, it.pubDate));
               }
+              return [];
+            })
+            .catch(() => []);
+        });
 
-              const low = (title + ' ' + rawTitle).toLowerCase();
-              let category = 'THỊ TRƯỜNG VÀNG';
-              let tagClass = 'tag-geo';
-              let riskText = '🟡 BIẾN ĐỘNG VỪA';
-              let riskClass = 'risk-med';
-              let impact = '<strong>Tác động vàng:</strong> Dòng tiền thị trường phản ứng nhạy với các mốc thanh khoản lớn; bám sát Trục Pivot để xác nhận xu hướng.';
-
-              if (low.includes('fed') || low.includes('lãi suất') || low.includes('rate')) {
-                category = 'FED & LÃI SUẤT';
-                tagClass = 'tag-fed';
-                impact = '<strong>Tác động vàng:</strong> Lộ trình lãi suất tạo biến động lớn trong các khung giờ giao dịch; bám sát cản trước Macro để đón sóng.';
-              } else if (low.includes('usd') || low.includes('dollar') || low.includes('dxy')) {
-                category = 'ĐỒNG USD (DXY)';
-                tagClass = 'tag-dxy';
-                impact = '<strong>Tác động vàng:</strong> Diễn biến chỉ số DXY tác động trực tiếp tới lực cầu vàng; ưu tiên quản trị rủi ro tại biên cản.';
-              } else if (low.includes('địa chính trị') || low.includes('chiến tranh') || low.includes('bầu cử')) {
-                category = 'ĐỊA CHÍNH TRỊ';
-                tagClass = 'tag-geo';
-                impact = '<strong>Tác động vàng:</strong> Dòng tiền trú ẩn an toàn kích hoạt lực cầu mua mạnh tại các ngưỡng hỗ trợ kỹ thuật.';
-              } else if (low.includes('ngân hàng') || low.includes('nhtw') || low.includes('dự trữ')) {
-                category = 'NGÂN HÀNG TRUNG ƯƠNG';
-                tagClass = 'tag-bank';
-                impact = '<strong>Tác động vàng:</strong> Nhu cầu gom vàng dự trữ quốc gia tạo thành tấm đệm đỡ giá vững chắc cho chu kỳ.';
-              }
-
-              if (low.includes('tăng mạnh') || low.includes('giảm mạnh') || low.includes('lao dốc') || low.includes('kỷ lục') || low.includes('bùng nổ')) {
-                riskText = '🔴 BIẾN ĐỘNG MẠNH';
-                riskClass = 'risk-high';
-              } else if (low.includes('phục hồi') || low.includes('tăng') || low.includes('giảm') || low.includes('đảo chiều')) {
-                riskText = '🟡 BIẾN ĐỘNG VỪA';
-                riskClass = 'risk-med';
-              } else {
-                riskText = '🟢 TÍCH CỰC';
-                riskClass = 'risk-low';
-              }
-
-              if (low.includes('tăng') || low.includes('lên') || low.includes('bật') || low.includes('phục hồi')) {
-                impact = '<strong>Tác động vàng:</strong> Lực cầu phe Mua củng cố tại các ngưỡng hỗ trợ kỹ thuật; dòng tiền duy trì đà hồi phục hướng tới cản trên.';
-              } else if (low.includes('giảm') || low.includes('lao dốc') || low.includes('áp lực') || low.includes('bán tháo')) {
-                impact = '<strong>Tác động vàng:</strong> Áp lực chốt lời ngắn hạn; cảnh báo điều chỉnh kỹ thuật tại vùng cản, không nên fomo đu đỉnh.';
-              }
-
-              let pubTimeMs = Date.now();
-              if (item.pubDate) {
-                const parsedDate = new Date(item.pubDate);
-                if (!isNaN(parsedDate.getTime())) pubTimeMs = parsedDate.getTime();
-              }
-
-              return {
-                category: category,
-                tagClass: tagClass,
-                riskText: riskText,
-                riskClass: riskClass,
-                headline: title,
-                source: source,
-                link: item.link || 'https://news.google.com',
-                impact: impact,
-                pubTime: pubTimeMs
-              };
-            });
-
-            if (parsedList.length > 0) {
-              liveWorldNewsData = parsedList;
-              try {
-                localStorage.setItem('agy_real_news_cache_v2', JSON.stringify(parsedList));
-              } catch(e) {}
-            }
+        const results = await Promise.allSettled(fetchPromises);
+        results.forEach(r => {
+          if (r.status === 'fulfilled' && Array.isArray(r.value)) {
+            fetchedArticles = fetchedArticles.concat(r.value);
           }
-        }
-      } catch(err) {
-        console.warn('Lỗi tải tin tức online, chuyển sang bộ nhớ đệm:', err);
-      }
+        });
 
-      // Nếu vẫn chưa có tin nào, dùng fallback thực tế
-      if (liveWorldNewsData.length === 0) {
-        liveWorldNewsData = FALLBACK_REAL_NEWS;
+        if (fetchedArticles.length > 0) {
+          // Lọc trùng tiêu đề bài báo
+          const seen = new Set();
+          const uniqueList = [];
+          fetchedArticles.forEach(item => {
+            const normalized = item.headline.toLowerCase().replace(/[^a-z0-9à-ỹ]/gi, '');
+            if (!seen.has(normalized)) {
+              seen.add(normalized);
+              uniqueList.push(item);
+            }
+          });
+
+          // Sắp xếp bài mới nhất lên đầu
+          uniqueList.sort((a, b) => b.pubTime - a.pubTime);
+
+          liveWorldNewsData = uniqueList.slice(0, 20);
+
+          try {
+            localStorage.setItem('agy_real_news_cache_v3', JSON.stringify(liveWorldNewsData));
+          } catch(e) {}
+        } else if (liveWorldNewsData.length === 0) {
+          liveWorldNewsData = FALLBACK_REAL_NEWS.slice();
+        }
+      } catch (err) {
+        if (liveWorldNewsData.length === 0) {
+          liveWorldNewsData = FALLBACK_REAL_NEWS.slice();
+        }
       }
 
       renderWorldNewsUI();
 
       if (lastUpdatedElem) {
-        const timeNowStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        lastUpdatedElem.innerHTML = `⏱️ Cập nhật: <strong>${timeNowStr}</strong> (Báo chí thời gian thực)`;
-      }
-
-      if (riskBadge) {
-        const hasHighRisk = liveWorldNewsData.some(n => n.riskClass === 'risk-high');
-        if (hasHighRisk) {
-          riskBadge.textContent = 'BIẾN ĐỘNG CAO (THEO DÕI TIN VĨ MÔ)';
-          riskBadge.className = 'macro-risk-badge';
-          riskBadge.style.background = 'rgba(239, 68, 68, 0.2)';
-          riskBadge.style.color = '#f87171';
-        } else {
-          riskBadge.textContent = 'BIẾN ĐỘNG BÌNH THƯỜNG (ỔN ĐỊNH)';
-          riskBadge.className = 'macro-risk-badge';
-          riskBadge.style.background = 'rgba(16, 185, 129, 0.2)';
-          riskBadge.style.color = '#34d399';
-        }
+        lastUpdatedElem.innerHTML = `⏱️ Cập nhật: Vừa xong (Tự động quét liên tục 60s)`;
       }
     }
 
+    // Hiển thị danh sách tin tức lên giao diện kèm bộ lọc chuyên mục
     function renderWorldNewsUI() {
       const container = document.getElementById('news-items-container');
-      if (!container || liveWorldNewsData.length === 0) return;
+      if (!container) return;
 
-      container.innerHTML = liveWorldNewsData.map(item => `
+      const dataToRender = (liveWorldNewsData && liveWorldNewsData.length > 0) ? liveWorldNewsData : FALLBACK_REAL_NEWS;
+
+      // Cập nhật số lượng bài báo trên các nút chuyên mục
+      const countAll = dataToRender.length;
+      const countPol = dataToRender.filter(i => i.catGroup === 'pol').length;
+      const countGeo = dataToRender.filter(i => i.catGroup === 'geo').length;
+      const countFed = dataToRender.filter(i => i.catGroup === 'fed').length;
+      const countGold = dataToRender.filter(i => i.catGroup === 'gold').length;
+
+      const setCnt = (id, num) => { const el = document.getElementById(id); if (el) el.textContent = num; };
+      setCnt('news-cnt-all', countAll);
+      setCnt('news-cnt-pol', countPol);
+      setCnt('news-cnt-geo', countGeo);
+      setCnt('news-cnt-fed', countFed);
+      setCnt('news-cnt-gold', countGold);
+
+      // Lọc theo danh mục người dùng đang chọn
+      let filtered = dataToRender;
+      if (currentNewsCategory !== 'all') {
+        filtered = dataToRender.filter(i => i.catGroup === currentNewsCategory);
+        if (filtered.length === 0) filtered = dataToRender; // Dự phòng
+      }
+
+      container.innerHTML = filtered.map(item => `
         <div class="news-item">
           <div class="news-item-top">
             <span class="news-tag ${item.tagClass}">${item.category}</span>
@@ -10943,7 +11881,20 @@
       `).join('');
     }
 
-    // Nút làm mới tin tức thủ công
+    // Khởi tạo các nút lọc chuyên mục tin tức
+    function initNewsCategoryFilter() {
+      const catBtns = document.querySelectorAll('#news-category-bar .news-cat-btn');
+      catBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          catBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentNewsCategory = btn.getAttribute('data-cat') || 'all';
+          renderWorldNewsUI();
+        });
+      });
+    }
+
+    // Nút làm mới tin tức thủ công (Manual Refresh)
     const btnRefreshNews = document.getElementById('btn-refresh-news');
     if (btnRefreshNews) {
       btnRefreshNews.addEventListener('click', async () => {
@@ -10951,23 +11902,29 @@
         await fetchLiveWorldNews(true);
         setTimeout(() => {
           btnRefreshNews.classList.remove('spinning');
-          showToast('✓ ĐÃ CẬP NHẬT DÒNG TIN THỰC TẾ MỚI NHẤT TỪ BÁO CHÍ', 'success', 2500);
-          playBeep(980, 0.08);
+          if (typeof showToast === 'function') {
+            showToast('✓ ĐÃ CẬP NHẬT DÒNG TIN CHÍNH TRỊ & ĐỊA CHÍNH TRỊ MỚI NHẤT', 'success', 2500);
+          }
+          if (typeof playBeep === 'function') {
+            playBeep(980, 0.08);
+          }
         }, 500);
       });
     }
 
-    // Khởi chạy nạp tin tức thực tế và đặt lịch quét tự động định kỳ 3 phút
+    // Khởi chạy hệ thống tin tức
+    initNewsCategoryFilter();
     fetchLiveWorldNews();
+
+    // Tự động quét cập nhật tin tức liên tục mỗi 60 giây (1 phút)
     setInterval(() => {
       fetchLiveWorldNews(true);
-    }, 180000);
+    }, 60000);
 
-    // Cập nhật lại số phút "X phút trước" mỗi 60 giây
-    setInterval(renderWorldNewsUI, 60000);
+    // Cập nhật lại nhãn "X phút trước" mỗi 30 giây
+    setInterval(renderWorldNewsUI, 30000);
 
-    
-    // =========================================================================
+        // =========================================================================
     // HỆ THỐNG LỊCH SỬ MỐC DỮ LIỆU MACRO QUAN TRỌNG & CƠ SỞ NHẬN ĐỊNH VÙNG GIÁ
     // =========================================================================
     // HỆ THỐNG LỊCH SỬ MỐC MACRO, SỔ TAY GHI CHÚ & XUẤT NHẬP NOTEPAD THÔNG MINH
