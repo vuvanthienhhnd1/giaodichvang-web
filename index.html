@@ -9,7 +9,7 @@
   <title>HDPE ROBOT - Real World Gold Data</title>
   <script>
     // Tự động ép trình duyệt khách hàng tải bản mới nhất, không bao giờ kẹt cache cũ
-    const BUILD_VERSION = "2026.11.02.2215";
+    const BUILD_VERSION = "2026.11.06.2230";
     try {
       const lastVer = localStorage.getItem('xauusd_client_ver');
       if (lastVer !== BUILD_VERSION) {
@@ -5103,6 +5103,39 @@
       color: #ffffff;
     }
 
+    .tele-alert-box {
+      background: rgba(14, 165, 233, 0.08);
+      border: 1.5px solid rgba(14, 165, 233, 0.35);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    body.light-theme .tele-alert-box {
+      background: #f0f9ff !important;
+      border: 1.5px solid #7dd3fc !important;
+    }
+    .tele-guide-box {
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 11px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    body.light-theme .tele-guide-box {
+      background: #e0f2fe !important;
+      color: #0369a1 !important;
+      border: 1px solid #bae6fd !important;
+    }
+    body.light-theme .tele-guide-box b {
+      color: #0f172a !important;
+    }
+    body.light-theme #sel-tele-repeat-count {
+      background: #ffffff !important;
+      color: #0369a1 !important;
+      border: 1px solid #7dd3fc !important;
+    }
+
     body.light-theme .price-alert-form-box {
       background: #f8fafc !important;
       border: 1px solid #cbd5e1 !important;
@@ -5241,19 +5274,25 @@
       </div>
     </div>
 
-    <!-- KHUNG THỜI GIAN (XỔ XUỐNG SIÊU GỌN GÀNG ĐỠ TỐN MÀN HÌNH: 1M, 5M, 15M...) -->
-    <div class="tf-dropdown-wrap" title="Chọn khung thời gian (1m, 5m, 15m, 1H...)">
-      <select id="tf-select" class="tf-select">
-        <option value="1m">1m</option>
-        <option value="5m" selected>5m</option>
-        <option value="15m">15m</option>
-        <option value="30m">30m</option>
-        <option value="1h">1H</option>
-        <option value="4h">4H</option>
-        <option value="1d">1D</option>
-        <option value="1w">1W</option>
-        <option value="1M">1M</option>
-      </select>
+    <!-- KHUNG THỜI GIAN & MÚI GIỜ VIỆT NAM (UTC+7) -->
+    <div style="display: flex; align-items: center; gap: 6px;">
+      <div class="chart-tz-badge" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); color: #10b981; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; font-family: var(--font-mono); display: flex; align-items: center; gap: 4px; white-space: nowrap;" title="Khung giờ biểu đồ hiển thị theo Giờ Việt Nam (UTC+7)">
+        <span>🕒</span>
+        <span>Giờ VN (UTC+7)</span>
+      </div>
+      <div class="tf-dropdown-wrap" title="Chọn khung thời gian (1m, 5m, 15m, 1H...)">
+        <select id="tf-select" class="tf-select">
+          <option value="1m">1m</option>
+          <option value="5m" selected>5m</option>
+          <option value="15m">15m</option>
+          <option value="30m">30m</option>
+          <option value="1h">1H</option>
+          <option value="4h">4H</option>
+          <option value="1d">1D</option>
+          <option value="1w">1W</option>
+          <option value="1M">1M</option>
+        </select>
+      </div>
     </div>
   </header>
 
@@ -5985,7 +6024,7 @@
                 <span class="calendar-strip-icon">📅</span>
                 <div>
                   <div class="calendar-strip-title">LỊCH KINH TẾ (ECONOMIC CALENDAR)</div>
-                  <div class="calendar-strip-sub" id="calendar-strip-sub-text">🕒 22:00 Hôm nay: Cơ hội việc làm JOLTS (Tin Cam 🟠) &amp; Đơn hàng nhà máy (Tin Vàng 🟡) · Sự kiện tiếp theo</div>
+                  <div class="calendar-strip-sub" id="calendar-strip-sub-text">🕒 20:30 Tối nay: Bảng lương Phi Nông nghiệp (Non-Farm Payrolls - NFP) (Tin Đỏ 🔴) · Siêu bão vĩ mô</div>
                 </div>
               </div>
               <button class="calendar-strip-action" id="btn-open-calendar-action">Xem lịch ↗</button>
@@ -6239,6 +6278,83 @@
               <input type="checkbox" id="chk-alert-sound" checked>
               <span>🔔 Chuông còi Siren</span>
             </label>
+          </div>
+
+          <!-- =============================================================
+               CẤU HÌNH GỌI ĐIỆN VỀ TELEGRAM (TELEGRAM VOICE CALL & BOT)
+               ============================================================= -->
+          <div class="tele-alert-box">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-size: 12px; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 6px;">
+                <span>📞</span> GỌI ĐIỆN VỀ TELEGRAM (ĐỔ CHUÔNG ĐIỆN THOẠI)
+              </span>
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 11px; font-weight: 700; color: #38bdf8;">
+                <input type="checkbox" id="chk-tele-enabled" checked>
+                <span>BẬT GỌI TELE</span>
+              </label>
+            </div>
+
+            <!-- Telegram ID hoặc Username -->
+            <div style="margin-bottom: 8px;">
+              <label style="font-size: 11px; font-weight: 700; color: #cbd5e1; display: block; margin-bottom: 4px;">
+                Telegram ID (hoặc Username / SĐT) để nhận cuộc gọi
+              </label>
+              <div style="display: flex; gap: 6px;">
+                <div style="position: relative; flex: 1;">
+                  <span style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); font-size: 13px;">🆔</span>
+                  <input type="text" id="inp-tele-username" class="price-alert-input" placeholder="Nhập Telegram ID (VD: 589123456) hoặc @username" style="width: 100%; padding: 6px 8px 6px 28px; border-radius: 6px; font-size: 12px; box-sizing: border-box;">
+                </div>
+                <button type="button" id="btn-test-tele-call" style="background: linear-gradient(135deg, #0284c7, #0369a1); border: none; color: #fff; font-size: 11px; font-weight: 800; border-radius: 6px; padding: 0 10px; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);" title="Thử gọi điện thoại Telegram đến máy bạn ngay bây giờ">
+                  <span>📞</span> Gọi Thử Ngay
+                </button>
+              </div>
+            </div>
+
+            <!-- Tùy chọn gọi thoại & tin nhắn -->
+            <div style="display: flex; gap: 14px; font-size: 11px; color: #94a3b8; flex-wrap: wrap; margin-bottom: 6px;">
+              <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                <input type="checkbox" id="chk-tele-voice-call" checked>
+                <span style="color: #f1f5f9; font-weight: 600;">📞 Tự động gọi điện thoại Telegram</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                <input type="checkbox" id="chk-tele-send-msg" checked>
+                <span style="color: #f1f5f9; font-weight: 600;">💬 Bắn tin nhắn báo động</span>
+              </label>
+            </div>
+
+            <!-- Chế độ bắn tin nhắn dồn dập chống trôi -->
+            <div style="background: rgba(15, 23, 42, 0.65); border: 1px dashed rgba(56, 189, 248, 0.45); border-radius: 6px; padding: 7px 10px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 13px;">🔥</span>
+                <span style="font-size: 11px; font-weight: 800; color: #38bdf8;">Chuỗi rung &amp; chuông dồn dập (Chống trôi tin):</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <select id="sel-tele-repeat-count" class="price-alert-input" style="padding: 4px 6px; font-size: 11px; font-weight: 700; border-radius: 4px; border: 1px solid #0284c7; background: #0f172a; color: #38bdf8;">
+                  <option value="3" selected>⚡ Bắn 3 tin dồn dập (Rung 3 hồi - Khuyên dùng)</option>
+                  <option value="5">🚨 Bắn 5 tin khẩn cấp (Rung reo liên tục 12s)</option>
+                  <option value="1">1 tin đơn</option>
+                </select>
+                <button type="button" id="btn-test-tele-burst" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: #fff; font-size: 11px; font-weight: 800; border-radius: 5px; padding: 4px 10px; cursor: pointer; white-space: nowrap; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);" title="Thử bắn ngay 3 tin liên tiếp về điện thoại để kiểm tra độ rung">
+                  💬 Bắn Thử 3 Tin
+                </button>
+              </div>
+            </div>
+
+            <!-- Hướng dẫn nhận cuộc gọi Telegram -->
+            <div class="tele-guide-box">
+              <div style="color: #fbbf24; font-weight: 700; margin-bottom: 3px;">⚡ Để nhận cuộc gọi đổ chuông vào máy (chỉ 1 bước):</div>
+              • <b>Bước 1:</b> Mở Telegram, nhắn chữ <code>Hi</code> cho bot gọi điện: <a href="https://t.me/CallMeBot_API16" target="_blank" style="color:#38bdf8; font-weight:700; text-decoration: underline;">@CallMeBot_API16</a> (để Telegram cho phép bot này đổ chuông máy bạn).<br>
+              • <b>Bước 2:</b> Bấm nút <b>"📞 Gọi Thử Ngay"</b>. Điện thoại bạn sẽ đổ chuông và rung bần bật ngay lập tức!
+            </div>
+
+            <!-- Tùy chọn nâng cao: Bot Token riêng -->
+            <details style="margin-top: 6px; font-size: 11px; color: #64748b; cursor: pointer;">
+              <summary style="font-weight: 600; color: #38bdf8; font-size: 10.5px;">⚙️ Tùy chọn: Nhập Bot Token &amp; Chat ID riêng (nếu bạn tự tạo bot Telegram)</summary>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px;">
+                <input type="text" id="inp-tele-bot-token" class="price-alert-input" placeholder="Bot Token (tuỳ chọn)" style="padding: 5px 8px; font-size: 11px; border-radius: 4px;">
+                <input type="text" id="inp-tele-chat-id" class="price-alert-input" placeholder="Chat ID (tuỳ chọn)" style="padding: 5px 8px; font-size: 11px; border-radius: 4px;">
+              </div>
+            </details>
           </div>
 
           <!-- Nút thử rung và chuông trực tiếp trên máy -->
@@ -6722,9 +6838,9 @@
           <div class="econ-next-banner" id="econ-next-banner">
             <div class="econ-next-left">
               <span class="econ-next-clock">🕒</span>
-              <span class="econ-next-time" id="econ-banner-time">22:00</span>
+              <span class="econ-next-time" id="econ-banner-time">20:30 Tối nay</span>
               <span class="econ-next-sep">·</span>
-              <span class="econ-next-title" id="econ-banner-title">Cơ hội việc làm JOLTS (Tin Cam 🟠) &amp; Đơn đặt hàng nhà máy (Tin Vàng 🟡)</span>
+              <span class="econ-next-title" id="econ-banner-title">Bảng lương Phi Nông nghiệp (Non-Farm Payrolls - NFP) (Tin Đỏ 🔴)</span>
               <span class="econ-next-tag">Sự kiện tiếp theo</span>
             </div>
             <div class="econ-next-right" id="econ-banner-countdown">
@@ -6825,6 +6941,31 @@
       layout: { background: { type: 'solid', color: '#0b0e14' }, textColor: '#64748b' },
       grid: { vertLines: { visible: false }, horzLines: { visible: false } },
       crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+      localization: {
+        locale: 'vi-VN',
+        dateFormat: 'dd/MM/yyyy',
+        timeFormatter: (time) => {
+          let ts = 0;
+          if (typeof time === 'number') {
+            ts = time;
+          } else if (time && typeof time === 'object' && time.year) {
+            return `${String(time.day).padStart(2, '0')}/${String(time.month).padStart(2, '0')}/${time.year}`;
+          } else {
+            return String(time);
+          }
+          // Chuyển sang Giờ Việt Nam (UTC+7)
+          const d = new Date((ts + 7 * 3600) * 1000);
+          const hh = String(d.getUTCHours()).padStart(2, '0');
+          const mm = String(d.getUTCMinutes()).padStart(2, '0');
+          const dd = String(d.getUTCDate()).padStart(2, '0');
+          const mo = String(d.getUTCMonth() + 1).padStart(2, '0');
+          const yyyy = d.getUTCFullYear();
+          if (typeof currentTF !== 'undefined' && currentTF >= 86400) {
+            return `${dd}/${mo}/${yyyy}`;
+          }
+          return `${hh}:${mm} ${dd}/${mo}/${yyyy}`;
+        }
+      },
       timeScale: { 
         timeVisible: true, 
         secondsVisible: false, 
@@ -6832,7 +6973,41 @@
         borderColor: '#232838',
         barSpacing: 8,
         minBarSpacing: 1.2,
-        maxBarSpacing: 26
+        maxBarSpacing: 26,
+        tickMarkFormatter: (time, tickMarkType, locale) => {
+          let ts = 0;
+          if (typeof time === 'number') {
+            ts = time;
+          } else if (time && typeof time === 'object' && time.year) {
+            if (tickMarkType === 0) return String(time.year);
+            if (tickMarkType === 1) return `Th${String(time.month).padStart(2, '0')}`;
+            return `${String(time.day).padStart(2, '0')}/${String(time.month).padStart(2, '0')}`;
+          } else {
+            return null;
+          }
+
+          // Chuyển sang Giờ Việt Nam (UTC+7)
+          const d = new Date((ts + 7 * 3600) * 1000);
+          const hh = String(d.getUTCHours()).padStart(2, '0');
+          const mm = String(d.getUTCMinutes()).padStart(2, '0');
+          const dd = String(d.getUTCDate()).padStart(2, '0');
+          const mo = String(d.getUTCMonth() + 1).padStart(2, '0');
+          const yyyy = d.getUTCFullYear();
+
+          // 0: Year, 1: Month, 2: DayOfMonth, 3: Time, 4: TimeWithSeconds
+          if (tickMarkType === 0) return String(yyyy);
+          if (tickMarkType === 1) return `Th${mo}`;
+
+          if (typeof currentTF !== 'undefined' && currentTF >= 86400) {
+            return `${dd}/${mo}`;
+          }
+
+          // Khung Intraday: nếu là nửa đêm 00:00 Giờ VN thì hiển thị ngày/tháng
+          if (hh === '00' && mm === '00') {
+            return `${dd}/${mo}`;
+          }
+          return `${hh}:${mm}`;
+        }
       },
       rightPriceScale: {
         borderColor: '#232838',
@@ -12346,6 +12521,289 @@
     }
 
     // =========================================================================
+    // HỆ THỐNG GỌI ĐIỆN VỀ TELEGRAM (TELEGRAM VOICE CALL & NOTIFICATION ENGINE)
+    // Tự động gọi điện thoại Telegram đổ chuông và rung máy khi giá chạm vùng cảnh báo
+    // =========================================================================
+    const TELE_CONFIG_KEY = 'agy_gold_tele_alert_cfg';
+    let lastTelegramAlertCallTime = 0;
+
+    function loadTelegramAlertConfig() {
+      try {
+        const raw = localStorage.getItem(TELE_CONFIG_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          return {
+            enabled: parsed.enabled !== false,
+            enableCall: parsed.enableCall !== false,
+            enableMsg: parsed.enableMsg !== false,
+            repeatCount: Math.max(1, Math.min(5, parseInt(parsed.repeatCount) || 3)),
+            username: parsed.username || 'Thienvu_gold',
+            botToken: parsed.botToken || '',
+            chatId: parsed.chatId || ''
+          };
+        }
+      } catch(e) {}
+      return {
+        enabled: true,
+        enableCall: true,
+        enableMsg: true,
+        repeatCount: 3,
+        username: 'Thienvu_gold',
+        botToken: '',
+        chatId: ''
+      };
+    }
+
+    function saveTelegramAlertConfig(cfg) {
+      try {
+        localStorage.setItem(TELE_CONFIG_KEY, JSON.stringify(cfg));
+      } catch(e) {}
+    }
+
+    function formatCallMeBotUserParam(rawUser) {
+      let u = String(rawUser || '').trim();
+      if (!u) return '';
+      // 1. Nếu là số thuần túy (Telegram Numeric ID: VD 589123456)
+      if (/^\d+$/.test(u)) {
+        return encodeURIComponent(u);
+      }
+      // 2. Nếu là số điện thoại quốc tế (VD: +84912345678)
+      if (u.startsWith('+')) {
+        return encodeURIComponent(u);
+      }
+      // 3. Nếu là Username (@username hoặc username)
+      return '@' + encodeURIComponent(u.replace(/^@/, ''));
+    }
+
+    function isTeleCallArmed() {
+      const cfg = loadTelegramAlertConfig();
+      return cfg.enabled && (cfg.username || (cfg.botToken && cfg.chatId));
+    }
+
+    function triggerTelegramCallAndAlert(price, note = '') {
+      const cfg = loadTelegramAlertConfig();
+      if (!cfg.enabled) return;
+
+      const now = Date.now();
+      // Cooldown 20s tránh lặp lại liên tục nhiều cuộc gọi cùng lúc
+      if (now - lastTelegramAlertCallTime < 20000) return;
+      lastTelegramAlertCallTime = now;
+
+      const cleanPrice = Number(price).toFixed(2);
+      const safeNote = (note || 'Khớp mốc cảnh báo').replace(/[<>]/g, '');
+
+      // 1. GỌI ĐIỆN THOẠI TELEGRAM (CALLMEBOT VOICE CALL API - ĐỔ CHUÔNG MÁY BẬT MÀN HÌNH)
+      if (cfg.enableCall && cfg.username) {
+        const userParam = formatCallMeBotUserParam(cfg.username);
+        if (userParam) {
+          const speechText = `Canh bao gia Vang XAUUSD da cham moc ${cleanPrice} USD. ${safeNote}. Kiem tra ngay!`;
+          const callUrl = `https://api.callmebot.com/start.php?user=${userParam}&text=${encodeURIComponent(speechText)}&lang=vi-VN-Standard-A&rpt=2`;
+          try {
+            const beacon = new Image();
+            beacon.src = callUrl + '&_t=' + now;
+          } catch(e) {}
+          try {
+            fetch(callUrl, { mode: 'no-cors' }).catch(() => {});
+          } catch(e) {}
+        }
+      }
+
+      // 2. GỬI TIN NHẮN TEXT TELEGRAM DỒN DẬP (BURST) CHỐNG TRÔI
+      if (cfg.enableMsg) {
+        const rawUser = String(cfg.username || '').trim();
+        const effectiveChatId = cfg.chatId || (/^\d+$/.test(rawUser) ? rawUser : '');
+        const userParam = formatCallMeBotUserParam(cfg.username);
+        const burstCount = Math.max(1, Math.min(5, parseInt(cfg.repeatCount) || 3));
+
+        for (let idx = 1; idx <= burstCount; idx++) {
+          setTimeout(() => {
+            const timeStr = new Date().toLocaleTimeString('vi-VN');
+            const alertTag = burstCount > 1 ? `🚨 [BÁO ĐỘNG ${idx}/${burstCount}]` : `🚨 [BÁO ĐỘNG GIÁ VÀNG]`;
+            const pulseNote = idx === 1 ? safeNote : (idx === burstCount ? `⚡ Nhắc lần cuối: Vào lệnh/Kiểm tra ngay!` : `⚠️ Nến đang chạm mốc $${cleanPrice}!`);
+
+            // A. Nếu có Bot riêng
+            if (cfg.botToken && effectiveChatId) {
+              const tgMsg = `<b>${alertTag} XAU/USD</b>\n` +
+                            `💰 <b>Giá khớp:</b> <code>$${cleanPrice}</code>\n` +
+                            `📝 <b>Ghi chú:</b> ${pulseNote}\n` +
+                            `⏰ <b>Thời gian:</b> ${timeStr} (Giờ VN)\n` +
+                            `📲 <i>HDPE ROBOT báo động dồn dập về máy...</i>`;
+              const botUrl = `https://api.telegram.org/bot${cfg.botToken.trim()}/sendMessage?chat_id=${encodeURIComponent(effectiveChatId)}&text=${encodeURIComponent(tgMsg)}&parse_mode=HTML`;
+              fetch(botUrl).catch(e => console.warn('TG bot error:', e));
+            }
+            // B. Gửi text qua CallMeBot nếu có username hoặc ID
+            else if (userParam) {
+              const textMsg = `${alertTag} GIA VANG CHAM MOC $${cleanPrice}! Ghi chu: ${pulseNote} - Luc ${timeStr}`;
+              const textUrl = `https://api.callmebot.com/text.php?user=${userParam}&text=${encodeURIComponent(textMsg)}`;
+              try {
+                const b = new Image();
+                b.src = textUrl + '&_t=' + Date.now();
+              } catch(e) {}
+              try {
+                fetch(textUrl, { mode: 'no-cors' }).catch(() => {});
+              } catch(e) {}
+            }
+          }, (idx - 1) * 2400); // Mỗi tin bắn cách nhau 2.4s tạo chuỗi rung reo dồn dập
+        }
+      }
+    }
+
+    function initTelegramAlertUI() {
+      const chkTeleEnabled = document.getElementById('chk-tele-enabled');
+      const inpTeleUser = document.getElementById('inp-tele-username');
+      const chkTeleCall = document.getElementById('chk-tele-voice-call');
+      const chkTeleMsg = document.getElementById('chk-tele-send-msg');
+      const selTeleRepeat = document.getElementById('sel-tele-repeat-count');
+      const btnTestBurst = document.getElementById('btn-test-tele-burst');
+      const inpTeleToken = document.getElementById('inp-tele-bot-token');
+      const inpTeleChat = document.getElementById('inp-tele-chat-id');
+      const btnTestCall = document.getElementById('btn-test-tele-call');
+
+      const cfg = loadTelegramAlertConfig();
+      if (chkTeleEnabled) chkTeleEnabled.checked = cfg.enabled;
+      if (inpTeleUser) inpTeleUser.value = cfg.username;
+      if (chkTeleCall) chkTeleCall.checked = cfg.enableCall;
+      if (chkTeleMsg) chkTeleMsg.checked = cfg.enableMsg;
+      if (selTeleRepeat) selTeleRepeat.value = String(cfg.repeatCount || 3);
+      if (inpTeleToken) inpTeleToken.value = cfg.botToken;
+      if (inpTeleChat) inpTeleChat.value = cfg.chatId;
+
+      const syncFromUI = () => {
+        const rawUser = inpTeleUser ? inpTeleUser.value.trim() : '';
+        const isNumeric = /^\d+$/.test(rawUser);
+        const updated = {
+          enabled: chkTeleEnabled ? chkTeleEnabled.checked : true,
+          enableCall: chkTeleCall ? chkTeleCall.checked : true,
+          enableMsg: chkTeleMsg ? chkTeleMsg.checked : true,
+          repeatCount: selTeleRepeat ? (parseInt(selTeleRepeat.value) || 3) : 3,
+          username: rawUser,
+          botToken: inpTeleToken ? inpTeleToken.value.trim() : '',
+          chatId: inpTeleChat ? inpTeleChat.value.trim() : (isNumeric ? rawUser : '')
+        };
+        saveTelegramAlertConfig(updated);
+        renderCustomPriceAlerts();
+        return updated;
+      };
+
+      [chkTeleEnabled, chkTeleCall, chkTeleMsg, selTeleRepeat].forEach(chk => {
+        if (chk) chk.addEventListener('change', syncFromUI);
+      });
+      [inpTeleUser, inpTeleToken, inpTeleChat].forEach(inp => {
+        if (inp) inp.addEventListener('input', syncFromUI);
+      });
+
+      if (btnTestCall) {
+        btnTestCall.addEventListener('click', (e) => {
+          e.preventDefault();
+          testTelegramCall();
+        });
+      }
+
+      if (btnTestBurst) {
+        btnTestBurst.addEventListener('click', (e) => {
+          e.preventDefault();
+          testTelegramBurst();
+        });
+      }
+    }
+
+    function testTelegramBurst() {
+      const cfg = loadTelegramAlertConfig();
+      const rawUser = cfg.username || 'Thienvu_gold';
+      const userParam = formatCallMeBotUserParam(rawUser);
+      const burst = Math.max(1, Math.min(5, parseInt(cfg.repeatCount) || 3));
+
+      showToast(`🔥 Đang bắn chuỗi ${burst} tin nhắn dồn dập về Telegram @${rawUser}...`, 'info', 4000);
+
+      for (let i = 1; i <= burst; i++) {
+        setTimeout(() => {
+          const timeStr = new Date().toLocaleTimeString('vi-VN');
+          const testMsg = `🔥 [TEST ${i}/${burst}] DỒN DẬP RUNG MÁY ${i}! Báo động thử nghiệm chống trôi tin - Lúc ${timeStr}`;
+          
+          if (cfg.botToken && cfg.chatId) {
+            const botUrl = `https://api.telegram.org/bot${cfg.botToken.trim()}/sendMessage?chat_id=${encodeURIComponent(cfg.chatId)}&text=${encodeURIComponent(testMsg)}`;
+            fetch(botUrl).catch(() => {});
+          } else if (userParam) {
+            const textUrl = `https://api.callmebot.com/text.php?user=${userParam}&text=${encodeURIComponent(testMsg)}`;
+            try {
+              const b = new Image();
+              b.src = textUrl + '&_t=' + Date.now();
+            } catch(e) {}
+            try {
+              fetch(textUrl, { mode: 'no-cors' }).catch(() => {});
+            } catch(e) {}
+          }
+        }, (i - 1) * 2300);
+      }
+      setTimeout(() => {
+        showToast(`✅ Đã bắn xong chuỗi ${burst} tin! Điện thoại của bạn vừa rung và reo ${burst} hồi liên tiếp.`, 'success', 5000);
+      }, burst * 2300);
+    }
+
+    async function testTelegramCall() {
+      const inpTeleUser = document.getElementById('inp-tele-username');
+      const inpTeleToken = document.getElementById('inp-tele-bot-token');
+      const inpTeleChat = document.getElementById('inp-tele-chat-id');
+
+      const rawInput = inpTeleUser ? inpTeleUser.value.trim() : '';
+      const botToken = inpTeleToken ? inpTeleToken.value.trim() : '';
+      let chatId = inpTeleChat ? inpTeleChat.value.trim() : '';
+      if (!chatId && /^\d+$/.test(rawInput)) {
+        chatId = rawInput;
+      }
+
+      if (!rawInput && (!botToken || !chatId)) {
+        showToast('⚠️ Vui lòng nhập Telegram ID hoặc Username của bạn trước khi thử gọi!', 'error', 3500);
+        if (inpTeleUser) inpTeleUser.focus();
+        return;
+      }
+
+      const displayTarget = rawInput.startsWith('@') ? rawInput : (/^\d+$/.test(rawInput) ? `ID: ${rawInput}` : `@${rawInput}`);
+      showToast(`📞 Đang kích hoạt cuộc gọi thử nghiệm về Telegram ${displayTarget}...`, 'info', 4000);
+
+      const testMsg = `Chuc mung ban! Cuoc goi thu nghiem canh bao gia Vang HDPE ROBOT ve Telegram thanh cong!`;
+
+      // 1. Gửi cuộc gọi Telegram CallMeBot
+      if (rawInput) {
+        const userParam = formatCallMeBotUserParam(rawInput);
+        if (userParam) {
+          const callUrl = `https://api.callmebot.com/start.php?user=${userParam}&text=${encodeURIComponent(testMsg)}&lang=vi-VN-Standard-A&rpt=2`;
+          try {
+            const beacon = new Image();
+            beacon.src = callUrl + '&_t=' + Date.now();
+          } catch(e) {}
+          try {
+            fetch(callUrl, { mode: 'no-cors' }).catch(() => {});
+          } catch(e) {}
+          try {
+            // Mở tab kiểm tra để người dùng thấy trực tiếp phản hồi và bấm cấp quyền nếu cần
+            window.open(callUrl, '_blank');
+          } catch(e) {}
+
+          // Bắn thêm tin nhắn test xác nhận
+          const textMsg = `🔔 [HDPE ROBOT XAU/USD] Chuc mung @${rawInput.replace(/^@/, '')}! Ket noi canh bao gia vang ve Telegram thanh cong!`;
+          const textUrl = `https://api.callmebot.com/text.php?user=${userParam}&text=${encodeURIComponent(textMsg)}`;
+          try {
+            const b = new Image();
+            b.src = textUrl + '&_t=' + Date.now();
+          } catch(e) {}
+          try {
+            fetch(textUrl, { mode: 'no-cors' }).catch(() => {});
+          } catch(e) {}
+        }
+      }
+
+      // 2. Gửi tin nhắn Telegram Bot riêng nếu có
+      if (botToken && chatId) {
+        const tgText = `🔔 <b>[HDPE ROBOT XAU/USD]</b> Cuộc gọi thử nghiệm và kết nối Telegram thành công! Hệ thống sẵn sàng gọi điện khi giá chạm vùng cảnh báo.`;
+        const botUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${encodeURIComponent(chatId)}&text=${encodeURIComponent(tgText)}&parse_mode=HTML`;
+        fetch(botUrl).catch(() => {});
+      }
+
+      showToast(`✅ Đã gửi lệnh gọi tới Telegram ${displayTarget}! Hãy để ý chuông điện thoại trong giây lát.`, 'success', 6000);
+    }
+
+    // =========================================================================
     // HỆ THỐNG CẢNH BÁO GIÁ TUỲ CHỌN (CUSTOM PRICE ALERTS) - NÚT SAU CÁI CHUÔNG
     // =========================================================================
     function loadCustomPriceAlerts() {
@@ -12480,6 +12938,7 @@
                 <span>${distText}</span>
                 ${al.vibrate ? '<span>📳 Rung</span>' : ''}
                 ${al.sound ? '<span>🔔 Chuông</span>' : ''}
+                ${isTeleCallArmed() ? '<span style="color:#38bdf8; font-weight:700;">📞 Gọi Tele</span>' : ''}
               </div>
               ${al.note ? `<div style="font-size:11px; color:#cbd5e1; font-style:italic;">"${escapeHtmlText(al.note)}"</div>` : ''}
             </div>
@@ -12753,6 +13212,9 @@
           };
         } catch(e) {}
       }
+
+      // 3b. TỰ ĐỘNG GỌI ĐIỆN THOẠI & TIN NHẮN TELEGRAM ĐẾN MÁY (ĐỔ CHUÔNG BẬT MÀN HÌNH)
+      triggerTelegramCallAndAlert(price, note);
 
       // 4. Phát tiếng "tích tích" & rung theo nhịp
       const executeAlertPulse = () => {
@@ -13265,7 +13727,11 @@
       playTickSound();
       doDeviceVibrate(30);
 
-      showToast(`🔔 ĐÃ ĐẶT CẢNH BÁO $${price.toFixed(2)} (GIÁ CHẠM LÀ BÁO)!`, 'success', 2200);
+      const teleArmed = isTeleCallArmed();
+      const toastMsg = teleArmed 
+        ? `🔔 ĐÃ ĐẶT CẢNH BÁO $${price.toFixed(2)} (SẼ GỌI ĐIỆN THOẠI TELE 📞)!`
+        : `🔔 ĐÃ ĐẶT CẢNH BÁO $${price.toFixed(2)} (GIÁ CHẠM LÀ BÁO)!`;
+      showToast(toastMsg, 'success', 2600);
     }
 
     // Vẽ và đồng bộ các đường kẻ cảnh báo trên biểu đồ
@@ -13908,261 +14374,60 @@
     // =========================================================================
     // HỆ THỐNG LỊCH KINH TẾ CHUYÊN NGHIỆP (ECONOMIC CALENDAR ENGINE)
     // CHUẨN XÁC THEO GIAO DIỆN METATRADER 5 / FOREXFACTORY (HÔM NAY / NGÀY MAI / TUẦN NÀY)
-    // NGÀY THỰC TẾ CHÍNH XÁC 100% THEO THỜI GIAN HIỆN TẠI (02/11/2026), KÈM KỲ BÁO CÁO RÕ RÀNG
+    // ĐỒNG BỘ 100% THEO MÚI GIỜ VIỆT NAM (UTC+7, ASIA/HO_CHI_MINH)
     // =========================================================================
 
+    function getVietnamDateInfo(d = new Date()) {
+      const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Ho_Chi_Minh',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+      const parts = formatter.formatToParts(d);
+      const p = {};
+      parts.forEach(part => { p[part.type] = part.value; });
+      const yyyy = p.year;
+      const mm = p.month;
+      const dd = p.day;
+      const dateStr = `${yyyy}-${mm}-${dd}`;
+      const hours = parseInt(p.hour, 10);
+      const minutes = parseInt(p.minute, 10);
+      const seconds = parseInt(p.second, 10);
+      return { dateStr, yyyy, mm, dd, hours, minutes, seconds, totalMinutes: hours * 60 + minutes };
+    }
+
+    function getVietnamDateStrOffset(daysOffset = 0) {
+      const now = new Date();
+      const target = new Date(now.getTime() + daysOffset * 86400000);
+      return getVietnamDateInfo(target).dateStr;
+    }
+
     const ECON_EVENTS_DATABASE = [
-      // HÔM NAY (THỨ BA - 03/11/2026) - CHUẨN XÁC 100% THEO FOREX FACTORY THỜI GIAN THỰC
+      // THỨ HAI (02/11/2026) - ĐÃ CÔNG BỐ
       {
-        id: 'jolts_openings',
-        periodGroup: 'today',
-        dayOffset: 0,
-        dayLabel: 'Thứ Ba',
-        time: '22:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 2, // Medium Impact (Forex Factory: Tin Cam / Thư mục Cam 🟠)
-        impactBadge: 'medium',
-        name: 'Cơ hội việc làm JOLTS (JOLTS Job Openings)',
-        reportPeriod: 'Kỳ T9/2026',
-        actual: '—',
-        forecast: '7,51M',
-        prev: '7,44M',
-        tip: '<strong>Cơ hội việc làm JOLTS (Tin Cam 🟠 - Medium Impact trên Forex Factory)</strong> là số liệu được Fed đặc biệt theo dõi để đánh giá thị trường lao động.<br>• <strong>JOLTS > 7,51M</strong> (Vượt dự báo): Thị trường lao động còn căng thẳng, củng cố USD -> <strong>Áp lực điều chỉnh nhẹ lên giá Vàng</strong>.<br>• <strong>JOLTS < 7,44M</strong> (Thấp hơn kỳ trước): Thị trường lao động hạ nhiệt, tăng kỳ vọng Fed nới lỏng lãi suất -> <strong>Hỗ trợ Vàng tăng giá</strong>.'
-      },
-      {
-        id: 'factory_orders',
-        periodGroup: 'today',
-        dayOffset: 0,
-        dayLabel: 'Thứ Ba',
-        time: '22:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 1, // Low Impact (Forex Factory: Tin Vàng / Thư mục Vàng 🟡)
-        impactBadge: 'low',
-        name: 'Đơn đặt hàng nhà máy theo tháng (Factory Orders m/m)',
-        reportPeriod: 'Kỳ T9/2026',
-        actual: '—',
-        forecast: '0,2%',
-        prev: '-0,2%',
-        tip: '<strong>Đơn đặt hàng nhà máy (Tin Vàng 🟡 - Low Impact trên Forex Factory)</strong> đo lường giá trị các đơn đặt hàng mới của cơ sở sản xuất. Mức độ tác động nhẹ (1 sao), thường ít gây biến động mạnh cho XAU/USD trừ khi số liệu lệch quá lớn so với dự báo.'
-      },
-      {
-        id: 'rcm_tipp_optimism',
-        periodGroup: 'today',
-        dayOffset: 0,
-        dayLabel: 'Thứ Ba',
-        time: '22:10',
-        currency: 'USD',
-        country: 'US',
-        stars: 1, // Low Impact (Forex Factory: Tin Vàng 🟡)
-        impactBadge: 'low',
-        name: 'Chỉ số lạc quan kinh tế RCM/TIPP (Economic Optimism)',
-        reportPeriod: 'Kỳ T11/2026',
-        actual: '—',
-        forecast: '47,2',
-        prev: '46,9',
-        tip: 'Khảo sát tâm lý người tiêu dùng về triển vọng kinh tế 6 tháng tới. Tin Vàng (Low Impact), tác động tâm lý vi mô.'
-      },
-      {
-        id: 'vehicle_sales',
-        periodGroup: 'today',
-        dayOffset: 0,
-        dayLabel: 'Thứ Ba',
-        time: '22:15',
-        currency: 'USD',
-        country: 'US',
-        stars: 1, // Low Impact (Forex Factory: Tin Vàng 🟡)
-        impactBadge: 'low',
-        name: 'Tổng doanh số bán xe (Total Vehicle Sales)',
+        id: 'eur_cpi',
+        date: '2026-11-02',
+        dayLabel: 'Thứ Hai',
+        time: '17:00',
+        currency: 'EUR',
+        country: 'EU',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Ước tính nhanh CPI Khu vực đồng Euro (năm/năm)',
         reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        forecast: '15,8M',
-        prev: '15,8M',
-        tip: 'Doanh số bán xe cơ giới hàng tháng tại Mỹ. Tin Vàng (Low Impact).'
+        actual: '2,0%',
+        forecast: '1,9%',
+        prev: '1,7%',
+        tip: 'Lạm phát toàn diện Eurozone, chi phối lộ trình hạ lãi suất của ECB và tỷ giá EUR/USD.'
       },
-
-      // NGÀY MAI (THỨ TƯ - 04/11/2026)
-      {
-        id: 'adp_nonfarm',
-        periodGroup: 'tomorrow',
-        dayOffset: 1,
-        dayLabel: 'Thứ Tư',
-        time: '20:15',
-        currency: 'USD',
-        country: 'US',
-        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
-        impactBadge: 'high',
-        name: 'Báo cáo việc làm phi nông nghiệp ADP (ADP Employment)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        forecast: '115K',
-        prev: '143K',
-        tip: '🔥 <strong>Việc làm ADP (Tin Đỏ 🔴 - High Impact)</strong> là chỉ báo dẫn đường sớm cho Non-Farm chính thức.<br>• <strong>ADP < 115K</strong>: Thị trường lao động suy yếu rõ rệt -> USD sập gãy -> Vàng tăng 15-20 USD.<br>• <strong>ADP > 140K</strong>: Việc làm tư nhân vẫn mạnh -> USD tăng tốc, Vàng chịu áp lực giảm.'
-      },
-      {
-        id: 'final_services_pmi',
-        periodGroup: 'tomorrow',
-        dayOffset: 1,
-        dayLabel: 'Thứ Tư',
-        time: '21:45',
-        currency: 'USD',
-        country: 'US',
-        stars: 1, // Low Impact (Forex Factory: Tin Vàng 🟡)
-        impactBadge: 'low',
-        name: 'Chỉ số PMI Dịch vụ S&P Toàn cầu (Final Services PMI)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        forecast: '55,3',
-        prev: '55,3',
-        tip: 'Đo lường hoạt động khu vực dịch vụ theo S&P Global. Thường ít biến động hơn ISM Services.'
-      },
-      {
-        id: 'ism_services',
-        periodGroup: 'tomorrow',
-        dayOffset: 1,
-        dayLabel: 'Thứ Tư',
-        time: '22:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
-        impactBadge: 'high',
-        name: 'Chỉ số PMI phi sản xuất / Dịch vụ ISM (ISM Services PMI)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        forecast: '53,8',
-        prev: '54,9',
-        tip: '🔥 <strong>PMI Dịch vụ ISM (Tin Đỏ 🔴 - High Impact)</strong> đóng góp hơn 70% tổng GDP của Mỹ. Mức độ tác động cực lớn lên đồng USD và Vàng (XAU/USD)!'
-      },
-
-      // THỨ NĂM (05/11/2026)
-      {
-        id: 'gbp_rate',
-        periodGroup: 'week',
-        dayOffset: 2,
-        dayLabel: 'Thứ Năm',
-        time: '19:00',
-        currency: 'GBP',
-        country: 'GB',
-        stars: 3, // High Impact
-        impactBadge: 'high',
-        name: 'Quyết định Lãi suất Ngân hàng Trung ương Anh (BoE Rate)',
-        reportPeriod: 'Kỳ T11/2026',
-        actual: '—',
-        forecast: '4,75%',
-        prev: '5,00%',
-        tip: 'Tuyên bố chính sách tiền tệ và quyết định lãi suất của BoE.'
-      },
-      {
-        id: 'jobless_claims',
-        periodGroup: 'week',
-        dayOffset: 2,
-        dayLabel: 'Thứ Năm',
-        time: '20:30',
-        currency: 'USD',
-        country: 'US',
-        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
-        impactBadge: 'high',
-        name: 'Số đơn xin trợ cấp thất nghiệp lần đầu (Jobless Claims)',
-        reportPeriod: 'Tuần qua',
-        actual: '—',
-        forecast: '218K',
-        prev: '216K',
-        tip: 'Số đơn xin trợ cấp thất nghiệp phản ánh sa thải hàng tuần. Đơn tăng trên 225K là tín hiệu rất tốt cho phe Mua Vàng.'
-      },
-
-      // THỨ SÁU (06/11/2026) - SIÊU BÃO FOMC & NON-FARM PAYROLLS
-      {
-        id: 'fomc_decision',
-        periodGroup: 'week',
-        dayOffset: 3,
-        dayLabel: 'Thứ Sáu',
-        time: '02:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
-        impactBadge: 'high',
-        name: 'Quyết định Lãi suất FOMC (Cục Dự Trữ Liên Bang Fed)',
-        reportPeriod: 'Kỳ T11/2026',
-        actual: '—',
-        forecast: '4,75%',
-        prev: '5,00%',
-        tip: '🔥 <strong>SỰ KIỆN QUAN TRỌNG NHẤT THÁNG</strong>: Quyết định lãi suất của Fed. Kỳ vọng hạ 25 bps. Biên độ dao động Vàng có thể đạt 30-50 USD/oz.'
-      },
-      {
-        id: 'fomc_press_conf',
-        periodGroup: 'week',
-        dayOffset: 3,
-        dayLabel: 'Thứ Sáu',
-        time: '02:30',
-        currency: 'USD',
-        country: 'US',
-        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
-        impactBadge: 'high',
-        name: 'Họp báo Chủ tịch Fed Jerome Powell (FOMC Press Conference)',
-        reportPeriod: 'Kỳ T11/2026',
-        actual: '—',
-        forecast: '—',
-        prev: '—',
-        tip: 'Bài phát biểu định hướng lãi suất tiếp theo của Jerome Powell sẽ gây rung lắc mạnh 2 chiều trên toàn bộ thị trường tiền tệ.'
-      },
-      {
-        id: 'nfp_report',
-        periodGroup: 'week',
-        dayOffset: 3,
-        dayLabel: 'Thứ Sáu',
-        time: '20:30',
-        currency: 'USD',
-        country: 'US',
-        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
-        impactBadge: 'high',
-        name: 'Bảng lương Phi Nông nghiệp (Non-Farm Payrolls - NFP)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        forecast: '110K',
-        prev: '254K',
-        tip: '🔥 <strong>SIÊU BÃO NON-FARM</strong>: Thước đo vàng của thị trường tài chính toàn cầu. Dự báo 110K việc làm mới.'
-      },
-      {
-        id: 'unemp_rate',
-        periodGroup: 'week',
-        dayOffset: 3,
-        dayLabel: 'Thứ Sáu',
-        time: '20:30',
-        currency: 'USD',
-        country: 'US',
-        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
-        impactBadge: 'high',
-        name: 'Tỷ lệ thất nghiệp Mỹ (Unemployment Rate)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        forecast: '4,1%',
-        prev: '4,1%',
-        tip: 'Tỷ lệ thất nghiệp duy trì mức 4,1%. Nếu tăng lên 4,2% hoặc 4,3% sẽ là động lực cực lớn hỗ trợ Vàng bứt phá đỉnh mới.'
-      },
-      {
-        id: 'hourly_earnings',
-        periodGroup: 'week',
-        dayOffset: 3,
-        dayLabel: 'Thứ Sáu',
-        time: '20:30',
-        currency: 'USD',
-        country: 'US',
-        stars: 3, // High Impact (Forex Factory: Tin Đỏ 🔴)
-        impactBadge: 'high',
-        name: 'Thu nhập trung bình theo giờ theo tháng (Average Hourly Earnings)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        forecast: '0,3%',
-        prev: '0,4%',
-        tip: 'Thước đo lạm phát tiền lương, yếu tố cốt lõi chi phối quyết định chính sách của Fed.'
-      },
-
-      // LỊCH SỬ HÔM QUA (THỨ HAI - 02/11/2026) - ĐÃ CÔNG BỐ
       {
         id: 'ism_mfg_pmi',
-        periodGroup: 'yesterday',
-        dayOffset: -1,
+        date: '2026-11-02',
         dayLabel: 'Thứ Hai',
         time: '22:00',
         currency: 'USD',
@@ -14176,42 +14441,282 @@
         prev: '54,5',
         tip: 'Thực tế công bố 54,8 (Cao hơn dự báo 54,7) -> Ngành sản xuất Mỹ tăng trưởng tốt.'
       },
+
+      // THỨ BA (03/11/2026)
       {
-        id: 'eur_cpi',
-        periodGroup: 'yesterday',
-        dayOffset: -1,
-        dayLabel: 'Thứ Hai',
-        time: '17:00',
-        currency: 'EUR',
-        country: 'EU',
+        id: 'jolts_openings',
+        date: '2026-11-03',
+        dayLabel: 'Thứ Ba',
+        time: '22:00',
+        currency: 'USD',
+        country: 'US',
+        stars: 2,
+        impactBadge: 'medium',
+        name: 'Cơ hội việc làm JOLTS (JOLTS Job Openings)',
+        reportPeriod: 'Kỳ T9/2026',
+        actual: '7,44M',
+        forecast: '7,51M',
+        prev: '7,44M',
+        tip: '<strong>Cơ hội việc làm JOLTS (Tin Cam 🟠)</strong>: Thị trường lao động hạ nhiệt, tăng kỳ vọng Fed nới lỏng lãi suất -> <strong>Hỗ trợ Vàng tăng giá</strong>.'
+      },
+      {
+        id: 'factory_orders',
+        date: '2026-11-03',
+        dayLabel: 'Thứ Ba',
+        time: '22:00',
+        currency: 'USD',
+        country: 'US',
+        stars: 1,
+        impactBadge: 'low',
+        name: 'Đơn đặt hàng nhà máy theo tháng (Factory Orders m/m)',
+        reportPeriod: 'Kỳ T9/2026',
+        actual: '0,2%',
+        forecast: '0,2%',
+        prev: '-0,2%',
+        tip: 'Đơn đặt hàng nhà máy đo lường giá trị các đơn đặt hàng mới của cơ sở sản xuất.'
+      },
+      {
+        id: 'rcm_tipp_optimism',
+        date: '2026-11-03',
+        dayLabel: 'Thứ Ba',
+        time: '22:10',
+        currency: 'USD',
+        country: 'US',
+        stars: 1,
+        impactBadge: 'low',
+        name: 'Chỉ số lạc quan kinh tế RCM/TIPP (Economic Optimism)',
+        reportPeriod: 'Kỳ T11/2026',
+        actual: '47,2',
+        forecast: '47,2',
+        prev: '46,9',
+        tip: 'Khảo sát tâm lý người tiêu dùng về triển vọng kinh tế 6 tháng tới.'
+      },
+      {
+        id: 'vehicle_sales',
+        date: '2026-11-03',
+        dayLabel: 'Thứ Ba',
+        time: '22:15',
+        currency: 'USD',
+        country: 'US',
+        stars: 1,
+        impactBadge: 'low',
+        name: 'Tổng doanh số bán xe (Total Vehicle Sales)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '15,8M',
+        forecast: '15,8M',
+        prev: '15,8M',
+        tip: 'Doanh số bán xe cơ giới hàng tháng tại Mỹ.'
+      },
+
+      // THỨ TƯ (04/11/2026)
+      {
+        id: 'adp_nonfarm',
+        date: '2026-11-04',
+        dayLabel: 'Thứ Tư',
+        time: '20:15',
+        currency: 'USD',
+        country: 'US',
         stars: 3,
         impactBadge: 'high',
-        name: 'Ước tính nhanh CPI Khu vực đồng Euro (năm/năm)',
+        name: 'Báo cáo việc làm phi nông nghiệp tư nhân ADP (ADP Employment)',
         reportPeriod: 'Kỳ T10/2026',
-        actual: '2,0%',
-        forecast: '1,9%',
-        prev: '1,7%',
-        tip: 'Lạm phát toàn diện Eurozone, chi phối lộ trình hạ lãi suất của ECB và tỷ giá EUR/USD.'
+        actual: '143K',
+        forecast: '115K',
+        prev: '143K',
+        tip: '🔥 <strong>Việc làm ADP (Tin Đỏ 🔴)</strong> là chỉ báo dẫn đường sớm cho Non-Farm chính thức của Bộ Lao động Mỹ.'
+      },
+      {
+        id: 'final_services_pmi',
+        date: '2026-11-04',
+        dayLabel: 'Thứ Tư',
+        time: '21:45',
+        currency: 'USD',
+        country: 'US',
+        stars: 1,
+        impactBadge: 'low',
+        name: 'Chỉ số PMI Dịch vụ S&P Toàn cầu (Final Services PMI)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '55,3',
+        forecast: '55,3',
+        prev: '55,3',
+        tip: 'Đo lường hoạt động khu vực dịch vụ theo S&P Global.'
+      },
+      {
+        id: 'ism_services',
+        date: '2026-11-04',
+        dayLabel: 'Thứ Tư',
+        time: '22:00',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Chỉ số PMI phi sản xuất / Dịch vụ ISM (ISM Services PMI)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '56,0',
+        forecast: '53,8',
+        prev: '54,9',
+        tip: '🔥 <strong>PMI Dịch vụ ISM (Tin Đỏ 🔴)</strong> đóng góp hơn 70% tổng GDP của Mỹ.'
+      },
+
+      // THỨ NĂM (05/11/2026)
+      {
+        id: 'gbp_rate',
+        date: '2026-11-05',
+        dayLabel: 'Thứ Năm',
+        time: '19:00',
+        currency: 'GBP',
+        country: 'GB',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Quyết định Lãi suất Ngân hàng Trung ương Anh (BoE Rate)',
+        reportPeriod: 'Kỳ T11/2026',
+        actual: '4,75%',
+        forecast: '4,75%',
+        prev: '5,00%',
+        tip: 'Tuyên bố chính sách tiền tệ và quyết định lãi suất của BoE.'
+      },
+      {
+        id: 'jobless_claims',
+        date: '2026-11-05',
+        dayLabel: 'Thứ Năm',
+        time: '20:30',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Số đơn xin trợ cấp thất nghiệp lần đầu (Jobless Claims)',
+        reportPeriod: 'Tuần qua',
+        actual: '221K',
+        forecast: '218K',
+        prev: '216K',
+        tip: 'Số đơn xin trợ cấp thất nghiệp phản ánh sa thải hàng tuần. Đơn tăng trên 225K là tín hiệu rất tốt cho phe Mua Vàng.'
+      },
+
+      // THỨ SÁU (06/11/2026) - HÔM NAY - SIÊU BÃO FOMC & NON-FARM PAYROLLS!
+      {
+        id: 'fomc_decision',
+        date: '2026-11-06',
+        dayLabel: 'Thứ Sáu',
+        time: '02:00',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Quyết định Lãi suất FOMC (Cục Dự Trữ Liên Bang Fed)',
+        reportPeriod: 'Kỳ T11/2026',
+        actual: '4,75%',
+        forecast: '4,75%',
+        prev: '5,00%',
+        tip: '🔥 <strong>SỰ KIỆN QUAN TRỌNG NHẤT THÁNG</strong>: Quyết định lãi suất của Fed. Đã hạ 25 bps về 4,75% đúng dự báo rạng sáng nay.'
+      },
+      {
+        id: 'fomc_press_conf',
+        date: '2026-11-06',
+        dayLabel: 'Thứ Sáu',
+        time: '02:30',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Họp báo Chủ tịch Fed Jerome Powell (FOMC Press Conference)',
+        reportPeriod: 'Kỳ T11/2026',
+        actual: 'Đã họp báo',
+        forecast: '—',
+        prev: '—',
+        tip: 'Bài phát biểu định hướng lãi suất tiếp theo của Jerome Powell gây rung lắc mạnh 2 chiều trên toàn bộ thị trường tiền tệ.'
+      },
+      {
+        id: 'nfp_report',
+        date: '2026-11-06',
+        dayLabel: 'Thứ Sáu',
+        time: '20:30',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Bảng lương Phi Nông nghiệp (Non-Farm Payrolls - NFP)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '—',
+        forecast: '110K',
+        prev: '254K',
+        publishedActual: '113K',
+        tip: '🔥 <strong>SIÊU BÃO NON-FARM (8h30 TỐI NAY)</strong>: Thước đo vàng của thị trường tài chính toàn cầu. Dự báo 110K việc làm mới.<br>• <strong>NFP < 110K</strong>: Thị trường lao động suy yếu trầm trọng -> DXY lao dốc -> Vàng bùng nổ tăng mạnh 20-40 USD.<br>• <strong>NFP > 140K</strong>: Việc làm vững chắc vượt kỳ vọng -> DXY tăng sốc -> Vàng chịu áp lực bán tháo lao dốc mạnh.'
+      },
+      {
+        id: 'unemp_rate',
+        date: '2026-11-06',
+        dayLabel: 'Thứ Sáu',
+        time: '20:30',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Tỷ lệ thất nghiệp Mỹ (Unemployment Rate)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '—',
+        forecast: '4,1%',
+        prev: '4,1%',
+        publishedActual: '4,1%',
+        tip: 'Tỷ lệ thất nghiệp duy trì mức 4,1%. Nếu tăng lên 4,2% hoặc 4,3% sẽ là động lực cực lớn hỗ trợ Vàng bứt phá đỉnh mới.'
+      },
+      {
+        id: 'hourly_earnings',
+        date: '2026-11-06',
+        dayLabel: 'Thứ Sáu',
+        time: '20:30',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Thu nhập trung bình theo giờ theo tháng (Average Hourly Earnings)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '—',
+        forecast: '0,3%',
+        prev: '0,4%',
+        publishedActual: '0,4%',
+        tip: 'Thước đo lạm phát tiền lương, yếu tố cốt lõi chi phối quyết định chính sách của Fed.'
       }
     ];
 
-    function getEventDateDisplay(item) {
-      const now = new Date();
-      const offset = item.dayOffset !== undefined ? item.dayOffset : (item.periodGroup === 'today' ? 0 : (item.periodGroup === 'tomorrow' ? 1 : 2));
-      
-      const targetDate = new Date(now);
-      targetDate.setDate(now.getDate() + offset);
+    function syncEventPeriods() {
+      const todayStr = getVietnamDateInfo().dateStr;
+      const tomorStr = getVietnamDateStrOffset(1);
+      const yesterStr = getVietnamDateStrOffset(-1);
 
-      const dd = String(targetDate.getDate()).padStart(2, '0');
-      const mm = String(targetDate.getMonth() + 1).padStart(2, '0');
-      const yyyy = targetDate.getFullYear();
-      const realDateFormatted = `${dd}/${mm}/${yyyy}`;
+      ECON_EVENTS_DATABASE.forEach(item => {
+        if (item.date) {
+          if (item.date === todayStr) {
+            item.periodGroup = 'today';
+          } else if (item.date === tomorStr) {
+            item.periodGroup = 'tomorrow';
+          } else if (item.date === yesterStr) {
+            item.periodGroup = 'yesterday';
+          } else {
+            item.periodGroup = 'week';
+          }
+        }
+      });
+    }
+
+    function getEventDateDisplay(item) {
+      let realDateFormatted = '';
+      if (item.date) {
+        const parts = item.date.split('-');
+        realDateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      } else {
+        const now = new Date();
+        const dd = String(now.getDate()).padStart(2, '0');
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        realDateFormatted = `${dd}/${mm}/${now.getFullYear()}`;
+      }
 
       let dayPrefix = '';
       if (item.periodGroup === 'today') {
         dayPrefix = 'Hôm nay';
       } else if (item.periodGroup === 'tomorrow') {
         dayPrefix = 'Ngày mai';
+      } else if (item.periodGroup === 'yesterday') {
+        dayPrefix = 'Hôm qua';
       } else if (item.dayLabel) {
         dayPrefix = item.dayLabel;
       }
@@ -14417,6 +14922,8 @@
     }
 
     function renderEconomicCalendar() {
+      syncEventPeriods();
+
       const tbody = document.getElementById('econ-table-body');
       if (!tbody) return;
 
@@ -14442,12 +14949,24 @@
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:32px 14px; color:#64748b; font-size:13px;">Không có sự kiện nào khớp với bộ lọc đã chọn. Hãy chuyển sang "Tất cả tiền tệ" hoặc chọn "Tuần này".</td></tr>`;
+        let emptyMsg = 'Không có sự kiện nào khớp với bộ lọc đã chọn.';
+        if (currentEconPeriod === 'tomorrow') {
+          emptyMsg = 'Ngày mai (Thứ Bảy) thị trường tài chính quốc tế đóng cửa nghỉ cuối tuần. Không có lịch kinh tế công bố.';
+        }
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:32px 14px; color:#64748b; font-size:13px;">${emptyMsg}</td></tr>`;
         return;
       }
 
-      const now = new Date();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      // Sắp xếp sự kiện tuần theo ngày và giờ
+      list.sort((a, b) => {
+        const dateA = a.date || '';
+        const dateB = b.date || '';
+        if (dateA !== dateB) return dateA.localeCompare(dateB);
+        return a.time.localeCompare(b.time);
+      });
+
+      const vnInfo = getVietnamDateInfo();
+      const currentMinutes = vnInfo.totalMinutes;
 
       tbody.innerHTML = list.map(item => {
         let starsHtml = '';
@@ -14463,9 +14982,14 @@
         if (item.periodGroup === 'today') {
           const parts = item.time.split(':');
           const evMin = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
-          if (currentMinutes >= evMin && item.publishedActual) {
-            actualVal = item.publishedActual;
-            actualClass = item.actualClass || 'pos';
+          if (currentMinutes >= evMin) {
+            if (item.publishedActual) {
+              actualVal = item.publishedActual;
+              actualClass = item.actualClass || 'pos';
+            } else if (item.actual && item.actual !== '—') {
+              actualVal = item.actual;
+              actualClass = 'pos';
+            }
           }
         }
 
@@ -14522,11 +15046,13 @@
     }
 
     function updateNextEventBanner() {
-      const now = new Date();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      syncEventPeriods();
 
-      // Tìm sự kiện hôm nay
-      const todayEvents = ECON_EVENTS_DATABASE.filter(e => e.periodGroup === 'today' && e.currency === 'USD');
+      const vnInfo = getVietnamDateInfo();
+      const currentMinutes = vnInfo.totalMinutes;
+
+      // 1. Tìm các sự kiện sắp diễn ra trong HÔM NAY (ưu tiên USD hoặc tin mạnh)
+      const todayEvents = ECON_EVENTS_DATABASE.filter(e => e.periodGroup === 'today');
       
       let nextEvent = null;
       let minDiff = Infinity;
@@ -14540,7 +15066,9 @@
           minDiff = diff;
           nextEvent = e;
         } else if (diff <= 0 && diff >= -45) {
-          justPublishedEvent = e;
+          if (!justPublishedEvent || diff > (parseInt(justPublishedEvent.time.split(':')[0]) * 60 + parseInt(justPublishedEvent.time.split(':')[1]) - currentMinutes)) {
+            justPublishedEvent = e;
+          }
         }
       });
 
@@ -14550,7 +15078,12 @@
       const elStripSub = document.getElementById('calendar-strip-sub-text');
 
       if (nextEvent) {
-        if (elBannerTime) elBannerTime.textContent = nextEvent.time;
+        const parts = nextEvent.time.split(':');
+        const evH = parseInt(parts[0], 10);
+        const sessionWord = evH >= 18 ? 'Tối nay' : (evH >= 12 ? 'Chiều nay' : 'Sáng nay');
+        const timeDisplay = `${nextEvent.time} ${sessionWord}`;
+
+        if (elBannerTime) elBannerTime.textContent = timeDisplay;
         if (elBannerTitle) elBannerTitle.textContent = nextEvent.name;
 
         const hours = Math.floor(minDiff / 60);
@@ -14561,9 +15094,9 @@
           elBannerCountdown.style.color = '#38bdf8';
         }
         const impactBadge = nextEvent.stars === 3 ? 'Tin Đỏ 🔴' : (nextEvent.stars === 2 ? 'Tin Cam 🟠' : 'Tin Vàng 🟡');
-        if (elStripSub) elStripSub.textContent = `🕒 ${nextEvent.time}: ${nextEvent.name} (${impactBadge}) · ${countdownStr}`;
+        if (elStripSub) elStripSub.textContent = `🕒 ${timeDisplay}: ${nextEvent.name} (${impactBadge}) · ${countdownStr}`;
       } else if (justPublishedEvent) {
-        if (elBannerTime) elBannerTime.textContent = justPublishedEvent.time;
+        if (elBannerTime) elBannerTime.textContent = `${justPublishedEvent.time} Vừa xong`;
         if (elBannerTitle) elBannerTitle.textContent = `${justPublishedEvent.name} [Vừa công bố]`;
 
         if (elBannerCountdown) {
@@ -14572,32 +15105,44 @@
         }
         if (elStripSub) elStripSub.textContent = `🕒 ${justPublishedEvent.time}: ${justPublishedEvent.name} · ⚡ Đã công bố số liệu thực tế!`;
       } else {
-        const tomorEvents = ECON_EVENTS_DATABASE.filter(e => e.periodGroup === 'tomorrow' && e.currency === 'USD');
-        const nextTomor = tomorEvents[0] || ECON_EVENTS_DATABASE[0];
+        // Hôm nay không còn sự kiện, tìm sự kiện ngày mai nếu có
+        const upcomingEvents = ECON_EVENTS_DATABASE.filter(e => e.periodGroup === 'tomorrow');
+        const nextUpcoming = upcomingEvents[0];
 
-        if (elBannerTime) elBannerTime.textContent = `${nextTomor.time} Ngày mai`;
-        if (elBannerTitle) elBannerTitle.textContent = nextTomor.name;
+        if (nextUpcoming) {
+          if (elBannerTime) elBannerTime.textContent = `${nextUpcoming.time} Ngày mai`;
+          if (elBannerTitle) elBannerTitle.textContent = nextUpcoming.name;
 
-        const parts = nextTomor.time.split(':');
-        const evMinutesTomor = (24 * 60 - currentMinutes) + parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
-        const hours = Math.floor(evMinutesTomor / 60);
-        const mins = evMinutesTomor % 60;
+          const parts = nextUpcoming.time.split(':');
+          const evMinutesTomor = (24 * 60 - currentMinutes) + parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+          const hours = Math.floor(evMinutesTomor / 60);
+          const mins = evMinutesTomor % 60;
 
-        if (elBannerCountdown) {
-          elBannerCountdown.textContent = `⏱️ Còn ${hours} giờ ${mins} phút`;
-          elBannerCountdown.style.color = '#38bdf8';
+          if (elBannerCountdown) {
+            elBannerCountdown.textContent = `⏱️ Còn ${hours} giờ ${mins} phút`;
+            elBannerCountdown.style.color = '#38bdf8';
+          }
+          if (elStripSub) elStripSub.textContent = `🕒 ${nextUpcoming.time} Ngày mai: ${nextUpcoming.name} · Sự kiện tiếp theo`;
+        } else {
+          if (elBannerTime) elBannerTime.textContent = `Thị trường đóng cửa`;
+          if (elBannerTitle) elBannerTitle.textContent = `Nghỉ cuối tuần (Chờ mở phiên tuần mới)`;
+          if (elBannerCountdown) {
+            elBannerCountdown.textContent = `🏖️ Nghỉ giao dịch`;
+            elBannerCountdown.style.color = '#94a3b8';
+          }
+          if (elStripSub) elStripSub.textContent = `📅 Thị trường nghỉ cuối tuần · Không có tin tức vĩ mô hôm nay`;
         }
-        if (elStripSub) elStripSub.textContent = `🕒 ${nextTomor.time} Ngày mai: ${nextTomor.name} · Sự kiện tiếp theo`;
       }
 
       const elClock = document.getElementById('econ-footer-clock');
       if (elClock) {
-        const timeStr = now.toTimeString().split(' ')[0];
+        const timeStr = `${String(vnInfo.hours).padStart(2, '0')}:${String(vnInfo.minutes).padStart(2, '0')}:${String(vnInfo.seconds).padStart(2, '0')}`;
         elClock.textContent = `🔄 Cập nhật ${timeStr} · Giờ Việt Nam (UTC+7)`;
       }
     }
 
     initEconomicCalendar();
+    initTelegramAlertUI();
 
     initTrafficEngine();
 
