@@ -5247,6 +5247,107 @@
       color: #0f172a !important;
       border-color: #cbd5e1 !important;
     }
+
+    /* =========================================================================
+       MA TRẬN XU HƯỚNG ĐA KHUNG THỜI GIAN (TOP-DOWN D1 -> M5)
+       ========================================================================= */
+    .card-mtf-bias {
+      margin-bottom: 10px;
+      border: 1px solid #1e293b;
+      background: #0f1420;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .c-mtf {
+      background: #141b2a;
+      border-bottom: 1px solid #1e293b;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .mtf-refresh-btn:hover {
+      background: rgba(255, 255, 255, 0.12) !important;
+      color: #fff !important;
+    }
+    .mtf-banner-buy {
+      background: rgba(16, 185, 129, 0.1) !important;
+      border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    }
+    .mtf-banner-sell {
+      background: rgba(239, 68, 68, 0.1) !important;
+      border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    }
+    .mtf-banner-side {
+      background: rgba(59, 130, 246, 0.1) !important;
+      border: 1px solid rgba(59, 130, 246, 0.3) !important;
+    }
+    .mtf-matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+      gap: 3px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .mtf-cell {
+      background: #0b0f19;
+      border: 1px solid #1e2638;
+      border-radius: 4px;
+      padding: 3px 1px;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 0 !important;
+      overflow: hidden !important;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .mtf-cell:hover {
+      border-color: #3b82f6;
+      background: #131b2c;
+      transform: translateY(-1px);
+    }
+    .mtf-cell.active-tf {
+      border-color: #f59e0b;
+      box-shadow: 0 0 6px rgba(245, 158, 11, 0.35);
+    }
+    .mtf-cell-bias {
+      font-size: 9px !important;
+      font-weight: 800 !important;
+      font-family: var(--font-mono) !important;
+      line-height: 1.15 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      display: block !important;
+    }
+    .mtf-cell-bias.buy { color: #10b981 !important; }
+    .mtf-cell-bias.sell { color: #ef4444 !important; }
+    .mtf-cell-bias.side { color: #94a3b8 !important; }
+
+    /* Light Theme overrides for MTF */
+    body.light-theme .card-mtf-bias {
+      background: #ffffff !important;
+      border-color: #cbd5e1 !important;
+    }
+    body.light-theme .c-mtf {
+      background: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+    }
+    body.light-theme .c-mtf span {
+      color: #0f172a !important;
+    }
+    body.light-theme .mtf-cell {
+      background: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+    }
+    body.light-theme .mtf-cell:hover {
+      background: #e2e8f0 !important;
+    }
+    body.light-theme #mtf-action-summary {
+      color: #334155 !important;
+    }
+
 </style>
 </head>
 <body>
@@ -5323,6 +5424,11 @@
     <div class="ticker-item">
       <span class="ticker-lbl">PHIÊN GIAO DỊCH:</span>
       <span class="ticker-val" id="tk-session" style="color: #fcd34d;">Đang tính...</span>
+    </div>
+    <div class="ticker-divider"></div>
+    <div class="ticker-item" id="tk-mtf-item" style="cursor: pointer;" title="Bấm để xem Ma Trận Phân Tích Đa Khung Thời Gian (D1 ➔ M5)">
+      <span class="ticker-lbl" style="color: #38bdf8;">ĐA KHUNG (D1➔M5):</span>
+      <span class="ticker-val" id="tk-mtf-val" style="color: #10b981;">ĐANG PHÂN TÍCH...</span>
     </div>
   </div>
 
@@ -5713,6 +5819,63 @@
         <!-- =====================================================================
              KẾ HOẠCH VÀO LỆNH AI (ENTRY - TP - SL)
              ===================================================================== -->
+        <!-- =====================================================================
+             MA TRẬN XU HƯỚNG ĐA KHUNG THỜI GIAN (TOP-DOWN D1 -> M5)
+             ===================================================================== -->
+        <div class="card card-mtf-bias" id="card-mtf-bias">
+          <div class="card-head c-mtf">
+            <div style="display: flex; align-items: center; gap: 5px; min-width: 0;">
+              <span style="font-size: 12px;">🧭</span>
+              <span class="signal-head-title" style="font-size: 10.5px; font-weight: 800; letter-spacing: 0.3px; white-space: nowrap;">ĐA KHUNG (D1➔M5)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
+              <span class="badge" id="mtf-conf-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 4px; white-space: nowrap;">--%</span>
+              <button type="button" class="mtf-refresh-btn" id="btn-mtf-refresh" title="Quét lại đa khung ngay tức thì" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #94a3b8; cursor: pointer; font-size: 10px; padding: 2px 5px; border-radius: 4px; transition: 0.2s; white-space: nowrap;">🔄 Quét</button>
+            </div>
+          </div>
+
+          <div class="card-body" style="gap: 6px; padding: 8px 10px;">
+            <!-- BANNER XU HƯỚNG CHỦ ĐẠO -->
+            <div id="mtf-dominant-banner" class="mtf-banner-side" style="padding: 6px 8px; border-radius: 6px; display: flex; flex-direction: column; gap: 3px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                <span id="mtf-dominant-title" style="font-size: 11px; font-weight: 900; color: #38bdf8; letter-spacing: 0.2px; line-height: 1.3;">⚖️ ĐANG QUÉT CẤU TRÚC...</span>
+                <span id="mtf-time-label" style="font-size: 9.5px; color: #64748b; font-family: var(--font-mono); white-space: nowrap; flex-shrink: 0;">--:--</span>
+              </div>
+              <div id="mtf-action-summary" style="font-size: 10px; color: #cbd5e1; line-height: 1.35;">
+                Đang quét cấu trúc đa khung D1 ➔ M5...
+              </div>
+            </div>
+
+            <!-- MA TRẬN 6 KHUNG THỜI GIAN -->
+            <div class="mtf-matrix-grid">
+              <div class="mtf-cell" id="mtf-cell-1d" data-tf="1d" title="Khung D1 (Trọng số 30%) - Bấm để chuyển chart">
+                <div style="font-size: 8.5px; font-weight: 700; color: #64748b;">D1</div>
+                <div class="mtf-cell-bias side" id="mtf-bias-1d">--</div>
+              </div>
+              <div class="mtf-cell" id="mtf-cell-4h" data-tf="4h" title="Khung H4 (Trọng số 28%) - Bấm để chuyển chart">
+                <div style="font-size: 8.5px; font-weight: 700; color: #64748b;">H4</div>
+                <div class="mtf-cell-bias side" id="mtf-bias-4h">--</div>
+              </div>
+              <div class="mtf-cell" id="mtf-cell-1h" data-tf="1h" title="Khung H1 (Trọng số 18%) - Bấm để chuyển chart">
+                <div style="font-size: 8.5px; font-weight: 700; color: #64748b;">H1</div>
+                <div class="mtf-cell-bias side" id="mtf-bias-1h">--</div>
+              </div>
+              <div class="mtf-cell" id="mtf-cell-30m" data-tf="30m" title="Khung M30 (Trọng số 10%) - Bấm để chuyển chart">
+                <div style="font-size: 8.5px; font-weight: 700; color: #64748b;">M30</div>
+                <div class="mtf-cell-bias side" id="mtf-bias-30m">--</div>
+              </div>
+              <div class="mtf-cell" id="mtf-cell-15m" data-tf="15m" title="Khung M15 (Trọng số 8%) - Bấm để chuyển chart">
+                <div style="font-size: 8.5px; font-weight: 700; color: #64748b;">M15</div>
+                <div class="mtf-cell-bias side" id="mtf-bias-15m">--</div>
+              </div>
+              <div class="mtf-cell" id="mtf-cell-5m" data-tf="5m" title="Khung M5 (Trọng số 6%) - Bấm để chuyển chart">
+                <div style="font-size: 8.5px; font-weight: 700; color: #64748b;">M5</div>
+                <div class="mtf-cell-bias side" id="mtf-bias-5m">--</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="card card-signal-ai">
           <div class="card-head c-signal">
             <span class="signal-head-title">
@@ -7409,14 +7572,10 @@
         mainSeries.setMarkers(combined);
       } catch(e) {}
 
-      // Gán markers Sóng Elliott trực tiếp lên elliottSeries nếu có
+      // Chỉ vẽ Marker trên mainSeries để tránh trùng lặp đè chữ trên biểu đồ
       if (typeof elliottSeries !== 'undefined' && elliottSeries && typeof elliottSeries.setMarkers === 'function') {
         try {
-          if (indConfig.elliott && indConfig.elliott.enabled && elliottWaveMarkers && elliottWaveMarkers.length > 0) {
-            elliottSeries.setMarkers(elliottWaveMarkers);
-          } else {
-            elliottSeries.setMarkers([]);
-          }
+          elliottSeries.setMarkers([]);
         } catch(e) {}
       }
     }
@@ -7742,6 +7901,7 @@
       syncIndControlsFromConfig();
       flashSavedHint();
       renderData();
+          if (typeof runMtfTopDownAnalysis === 'function') runMtfTopDownAnalysis(false);
         setupLazyHistoryLoader();
     }
 
@@ -8377,8 +8537,12 @@
       const sellTp1Pips = Math.round(Math.abs(sellEntry - sellTP1) * 10);
       const sellTp2Pips = Math.round(Math.abs(sellEntry - sellTP2) * 10);
 
-      // AI tự động đánh dấu Khuyến nghị
-      const isBuyRecommended = price <= LV.pvt;
+      // AI tự động đánh dấu Khuyến nghị (Kết hợp Đa Khung D1->M5 & Trục Pivot)
+      let isBuyRecommended = price <= LV.pvt;
+      if (typeof mtfState !== 'undefined' && mtfState.dominantBias) {
+        if (mtfState.dominantBias === 'BUY') isBuyRecommended = true;
+        else if (mtfState.dominantBias === 'SELL') isBuyRecommended = false;
+      }
       if (ui.dotRecomBuy) ui.dotRecomBuy.style.display = isBuyRecommended ? 'inline' : 'none';
       if (ui.dotRecomSell) ui.dotRecomSell.style.display = isBuyRecommended ? 'none' : 'inline';
 
@@ -8930,898 +9094,262 @@
     // CHUẨN XÁC THEO GIÁO TRÌNH: "HƯỚNG DẪN GIAO DỊCH THEO SÓNG ELLIOTT"
     // (WAYNE GORMAN & JEFFREY KENNEDY - ELLIOTT WAVE INTERNATIONAL / HAPPY LIVE)
     // =========================================================================
-    function calcElliottWave(candles, depth = 6, minDevPct = 0.10) {
-      if (!candles || candles.length < depth * 2 + 1) return null;
-      const n = candles.length;
-      const cycleMode = (indConfig.elliott && indConfig.elliott.cycleMode) ? indConfig.elliott.cycleMode : 'active';
+    // 🌊 CHỈ BÁO ZIGZAG ĐỈNH ĐÁY CỤM NẾN CHUẨN XÁC THEO KHUNG THỜI GIAN
+    //    (TRUE PIVOT CLUSTER ZIGZAG & SÓNG ELLIOTT THỰC CHIẾN)
+    // =========================================================================
 
-      // 1. Quét Swing High/Low chuẩn
-      let rawPivots = [];
+    function getTfZigzagParams(tfStr) {
+      switch(tfStr) {
+        case '1m': return { depth: 3, minDevAtr: 0.8 };
+        case '5m': return { depth: 2, minDevAtr: 0.75 };
+        case '15m': return { depth: 2, minDevAtr: 0.8 };
+        case '30m': return { depth: 2, minDevAtr: 0.8 };
+        case '1h': return { depth: 3, minDevAtr: 0.9 };
+        case '4h': return { depth: 3, minDevAtr: 1.0 };
+        case '1d': return { depth: 3, minDevAtr: 1.0 };
+        default: return { depth: 2, minDevAtr: 0.8 };
+      }
+    }
+
+    function calcElliottWave(candles, userDepth, userMinDev) {
+      if (!candles || candles.length < 15) return null;
+      const n = candles.length;
+      const tfStr = (typeof currentTfStr !== 'undefined') ? currentTfStr : '5m';
+      const tfParams = getTfZigzagParams(tfStr);
+      const depth = userDepth || tfParams.depth || 2;
+
+      // 1. Tính ATR(14) chuẩn theo khung thời gian
+      const trs = [];
+      for (let i = 1; i < n; i++) {
+        trs.push(Math.max(
+          candles[i].high - candles[i].low,
+          Math.abs(candles[i].high - candles[i - 1].close),
+          Math.abs(candles[i].low - candles[i - 1].close)
+        ));
+      }
+      const atrPeriod = Math.min(14, trs.length);
+      const atr = trs.length > 0 ? (trs.slice(-atrPeriod).reduce((a, b) => a + b, 0) / atrPeriod) : 4.0;
+      const minDeviation = atr * (userMinDev ? (userMinDev * 10) : tfParams.minDevAtr);
+
+      // 2. Tìm các Đỉnh (Pivot High) và Đáy (Pivot Low) chuẩn trên từng cụm nến [i - depth, i + depth]
+      const rawPivots = [];
       for (let i = depth; i < n - depth; i++) {
-        const curHigh = candles[i].high;
-        const curLow = candles[i].low;
-        let isHigh = true, isLow = true;
+        const curH = candles[i].high;
+        const curL = candles[i].low;
+        let isHigh = true;
+        let isLow = true;
         for (let j = i - depth; j <= i + depth; j++) {
           if (j === i) continue;
-          if (candles[j].high >= curHigh) isHigh = false;
-          if (candles[j].low <= curLow) isLow = false;
+          if (candles[j].high > curH) isHigh = false;
+          if (candles[j].low < curL) isLow = false;
         }
         if (isHigh && !isLow) {
-          rawPivots.push({ index: i, time: candles[i].time, price: curHigh, type: 'H' });
+          rawPivots.push({ index: i, time: candles[i].time, price: curH, type: 'H' });
         } else if (isLow && !isHigh) {
-          rawPivots.push({ index: i, time: candles[i].time, price: curLow, type: 'L' });
+          rawPivots.push({ index: i, time: candles[i].time, price: curL, type: 'L' });
         }
       }
-      if (rawPivots.length < 3) return null;
 
-      // 2. Lọc chuỗi đan xen Alternating Zigzag
-      let alt = [rawPivots[0]];
+      if (rawPivots.length < 2) return null;
+
+      // 3. Lọc đan xen nghiêm ngặt (Alternating Zigzag: Đỉnh -> Đáy -> Đỉnh -> Đáy)
+      const alt = [rawPivots[0]];
       for (let k = 1; k < rawPivots.length; k++) {
-        const cur = rawPivots[k];
-        const prev = alt[alt.length - 1];
-        if (cur.type === prev.type) {
-          if (cur.type === 'H') {
-            if (cur.price > prev.price) alt[alt.length - 1] = cur;
+        const p = rawPivots[k];
+        const last = alt[alt.length - 1];
+        if (p.type === last.type) {
+          // Cùng loại: giữ đỉnh cao hơn hoặc đáy thấp hơn trong cụm
+          if (p.type === 'H') {
+            if (p.price > last.price) alt[alt.length - 1] = p;
           } else {
-            if (cur.price < prev.price) alt[alt.length - 1] = cur;
+            if (p.price < last.price) alt[alt.length - 1] = p;
           }
         } else {
-          if (Math.abs(cur.price - prev.price) / prev.price * 100 >= minDevPct) {
-            alt.push(cur);
-          }
-        }
-      }
-      if (alt.length < 3) return null;
-
-      // Hỗ trợ tính RSI nhanh tại pivot index để kiểm tra phân kỳ (Chương 6)
-      const rsiList = (typeof calcRSISeries === 'function') ? calcRSISeries(candles, 14) : [];
-      const getRSIAtIdx = (idx) => {
-        if (!rsiList || rsiList.length === 0) return 50;
-        const item = rsiList.find(r => r.time === candles[idx].time);
-        return item ? item.value : 50;
-      };
-
-      // Nhận diện nến đảo chiều tại điểm pivot (Chương 6)
-      const detectCandlePattern = (idx) => {
-        if (idx < 1 || idx >= candles.length) return null;
-        const cur = candles[idx];
-        const prev = candles[idx - 1];
-        const body = Math.abs(cur.close - cur.open);
-        const range = cur.high - cur.low;
-        const upperWick = cur.high - Math.max(cur.open, cur.close);
-        const lowerWick = Math.min(cur.open, cur.close) - cur.low;
-
-        // Hammer / Pinbar tăng giá
-        if (range > 0 && lowerWick >= range * 0.55 && upperWick <= range * 0.2) {
-          return { type: 'bull', name: 'Pinbar / Hammer Rút Chân Đáy' };
-        }
-        // Shooting Star / Pinbar giảm giá
-        if (range > 0 && upperWick >= range * 0.55 && lowerWick <= range * 0.2) {
-          return { type: 'bear', name: 'Shooting Star / Pinbar Bắn Đỉnh' };
-        }
-        // Bullish Engulfing
-        if (prev.close < prev.open && cur.close > cur.open && cur.close > prev.open && cur.open < prev.close) {
-          return { type: 'bull', name: 'Bullish Engulfing (Nhấn Chìm Tăng)' };
-        }
-        // Bearish Engulfing
-        if (prev.close > prev.open && cur.close < cur.open && cur.close < prev.open && cur.open > prev.close) {
-          return { type: 'bear', name: 'Bearish Engulfing (Nhấn Chìm Giảm)' };
-        }
-        return null;
-      };
-
-      // =========================================================================
-      // NGUYÊN LÝ SÓNG ELLIOTT THEO WAYNE GORMAN & JEFFREY KENNEDY:
-      // QUY TẮC BẤT BIẾN (INVIOLABLE RULES):
-      // 1. Sóng 2 không bao giờ thoái lui quá 100% điểm bắt đầu Sóng 1.
-      // 2. Sóng 3 không bao giờ là sóng ngắn nhất trong 3 sóng đẩy (1, 3, 5).
-      // 3. Sóng 4 không bao giờ xâm phạm Sóng 1 (Ngoại trừ mô hình Diagonal).
-      // CHỈ DẪN KINH ĐIỂN (GUIDELINES):
-      // - Luân phiên (Alternation): Sóng 2 điều chỉnh dạng Zigzag dốc sâu (50-61.8%)
-      //   thì Sóng 4 điều chỉnh dạng Đi ngang/Phẳng/Tam giác (38.2%), và ngược lại.
-      // - Bình đẳng (Equality): Khi Sóng 3 mở rộng, Sóng 5 = Sóng 1 hoặc = 0.618 x (0 -> 3).
-      // - Điểm chia tỷ lệ vàng (Golden Divider): Sóng 4 chia toàn bộ chu kỳ 0->5 theo 0.618 / 0.382.
-      // 4 SÓNG TỐT NHẤT ĐỂ GIAO DỊCH: Sóng 3, Sóng 5, Sóng A, Sóng C.
-      // =========================================================================
-
-      // =========================================================================
-      // 1. QUÉT TÌM CẤU TRÚC SÓNG ĐẨY ĐANG PHÁT TRIỂN GẦN NHẤT (ACTIVE DEVELOPING IMPULSE)
-      // Định hướng tương lai chuẩn Wayne Gorman & Jeffrey Kennedy (Hình mẫu H4: Cấu trúc đẩy, Vùng canh buy, Vô hiệu cấu trúc)
-      // =========================================================================
-      let activeCycle = null;
-      let lastLHL = null;
-
-      // Thuật toán quét Extrema thích ứng trên 80 nến gần nhất để bắt trọn nhịp sóng hiện tại
-      const maxSearchBars = Math.min(candles.length, 90);
-      const recentSlice = candles.slice(candles.length - maxSearchBars);
-      const curLivePrice = candles[candles.length - 1].close;
-
-      const localExtrema = [];
-      for (let i = 1; i < recentSlice.length - 1; i++) {
-        const c = recentSlice[i];
-        const prev = recentSlice[i - 1];
-        const next = recentSlice[i + 1];
-        if (c.high >= prev.high && c.high >= next.high) {
-          localExtrema.push({ index: candles.length - maxSearchBars + i, time: c.time, price: c.high, type: 'H' });
-        }
-        if (c.low <= prev.low && c.low <= next.low) {
-          localExtrema.push({ index: candles.length - maxSearchBars + i, time: c.time, price: c.low, type: 'L' });
-        }
-      }
-
-      // Quét ngược từ đáy gần nhất P2 (nhịp hồi trước khi giá đẩy lên hiện tại)
-      for (let k = localExtrema.length - 1; k >= 2; k--) {
-        const candP2 = localExtrema[k];
-        if (candP2.type !== 'L') continue;
-        if (curLivePrice <= candP2.price) continue; // Giá hiện tại phải đang tăng trên P2
-
-        for (let j = k - 1; j >= 1; j--) {
-          const candP1 = localExtrema[j];
-          if (candP1.type !== 'H') continue;
-          if (candP1.price <= candP2.price) continue;
-
-          for (let m = j - 1; m >= 0; m--) {
-            const candP0 = localExtrema[m];
-            if (candP0.type !== 'L') continue;
-            if (candP0.price >= candP1.price) continue;
-            if (candP2.price <= candP0.price) continue; // W2 không được phá thủng W0 (Quy tắc 1)
-
-            const w1 = candP1.price - candP0.price;
-            const w2Ret = (candP1.price - candP2.price) / w1;
-
-            // Kiểm tra tỷ lệ thoái lui Sóng 2 (20% - 88%)
-            if (w2Ret >= 0.20 && w2Ret <= 0.88) {
-              lastLHL = { p0: candP0, p1: candP1, p2: candP2 };
-              break;
-            }
-          }
-          if (lastLHL) break;
-        }
-        if (lastLHL) break;
-      }
-
-      // Fallback: nếu chưa thấy theo localExtrema thì quét theo chuỗi alt
-      if (!lastLHL) {
-        for (let i = alt.length - 1; i >= 2; i--) {
-          if (alt[i].type === 'L' && alt[i - 1].type === 'H' && alt[i - 2].type === 'L') {
-            const cand0 = alt[i - 2], cand1 = alt[i - 1], cand2 = alt[i];
-            if (cand1.price > cand0.price && cand2.price > cand0.price) {
-              let isBroken = false;
-              for (let k = cand0.index; k < candles.length; k++) {
-                if (candles[k].low < cand0.price) { isBroken = true; break; }
-              }
-              if (!isBroken) {
-                lastLHL = { p0: cand0, p1: cand1, p2: cand2 };
-                break;
-              }
-            }
+          // Khác loại: kiểm tra biên độ tối thiểu để loại bỏ nhiễu từng nến nhỏ
+          if (Math.abs(p.price - last.price) >= minDeviation) {
+            alt.push(p);
           }
         }
       }
 
-      if (lastLHL) {
-        const p0 = lastLHL.p0; // Đáy 0
-        const p1 = lastLHL.p1; // Đỉnh 1
-        const p2 = lastLHL.p2; // Đáy 2
-        const w1 = p1.price - p0.price;
-
-        // Fibo Extension theo giáo trình Wayne Gorman: Sóng 3 mục tiêu 1.618 x W1 ("Cấu trúc đẩy")
-        const p3 = parseFloat((p2.price + w1 * 1.618).toFixed(2));
-        // Sóng 4 thoái lui 38.2% Sóng 3 ("Vùng canh buy" chuẩn Luân phiên Alternation)
-        const p4 = parseFloat((p3 - (p3 - p2.price) * 0.382).toFixed(2));
-        // Sóng 5 Fibo Equality: W5 = W1 (Mũi tên bứt phá tiếp diễn)
-        const p5 = parseFloat((p4 + w1 * 1.0).toFixed(2));
-        // Mức vô hiệu cấu trúc: Đỉnh Sóng 1 (Quy tắc 3 bất biến: Sóng 4 không được xâm phạm Sóng 1)
-        const invalPrice = parseFloat(p1.price.toFixed(2));
-
-        // Điểm chia tỷ lệ vàng (Golden Price Divider): Sóng 4 chia chu kỳ 0 -> 5 theo 0.618 / 0.382
-        const goldenDivider = parseFloat((p0.price + (p5 - p0.price) * 0.618).toFixed(2));
-        const fiboClusterLow = parseFloat((p2.price + w1 * 1.50).toFixed(2));
-        const fiboClusterHigh = p3;
-
-        const lastCandle = candles[candles.length - 1];
-        const tfSec = (candles.length > 1) ? (candles[1].time - candles[0].time) : 300;
-
-        // Định thời gian cho các đỉnh/đáy dự phóng trong tương lai
-        const t3 = (lastCandle.high >= p3 * 0.998) ? lastCandle.time : (lastCandle.time + tfSec * 2);
-        const t4 = t3 + tfSec * 3;
-        const t5 = t4 + tfSec * 5;
-
-        // ĐƯỜNG ZIGZAG ĐỊNH HƯỚNG TƯƠNG LAI HOÀN CHỈNH: 0 -> 1 -> 2 -> 3 -> 4 -> 5
-        const linePoints = [
-          { time: p0.time, value: p0.price },
-          { time: p1.time, value: p1.price },
-          { time: p2.time, value: p2.price },
-          { time: t3, value: p3 },
-          { time: t4, value: p4 },
-          { time: t5, value: p5 }
-        ];
-
-        // Nhãn đánh dấu từng sóng tương ứng với đồ thị thực chiến
-        const markers = [
-          { time: p0.time, position: 'belowBar', color: '#64748b', shape: 'circle', text: `(0) Đáy $${p0.price.toFixed(2)}` },
-          { time: p1.time, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(1) Đỉnh W1 $${p1.price.toFixed(2)}` },
-          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Đáy W2 $${p2.price.toFixed(2)}` },
-          { time: t3, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(3) Cấu trúc đẩy $${p3.toFixed(2)}` },
-          { time: t4, position: 'belowBar', color: '#10b981', shape: 'circle', text: `(4) Vùng canh buy $${p4.toFixed(2)}` },
-          { time: t5, position: 'aboveBar', color: '#f43f5e', shape: 'arrowUp', text: `(5) Bứt phá $${p5.toFixed(2)} ➔` }
-        ];
-
-        const rsiP0 = getRSIAtIdx(p0.index);
-        const rsiP1 = getRSIAtIdx(p1.index);
-        const rsiP2 = getRSIAtIdx(p2.index);
-        const candleP2 = detectCandlePattern(p2.index);
-
-        const w2RetPct = (w1 > 0) ? (Math.abs(p1.price - p2.price) / w1) * 100 : 0;
-        const isAlternationPass = (w2RetPct >= 40.0);
-
-        activeCycle = {
-          name: 'SÓNG ĐẨY TĂNG 1-2-3-4-5 (ĐỊNH HƯỚNG TƯƠNG LAI)',
-          patternType: 'impulse',
-          patternTitle: 'Sóng Đẩy Mở Rộng (Cấu trúc đẩy & Vùng canh buy)',
-          isDeveloping: true,
-          bestWaveToTrade: 'Sóng 3 (Cấu trúc đẩy bùng nổ - Lợi nhuận lớn nhất)',
-          bestWaveKey: '3',
-          P0: p0, P1: p1, P2: p2,
-          P3: { time: t3, price: p3, type: 'H' },
-          P4: { time: t4, price: p4, type: 'L' },
-          P5: { time: t5, price: p5, type: 'H' },
-          p0_price: p0.price,
-          p3_target: p3,
-          p4_target: p4,
-          invalPrice: invalPrice,
-          w1Len: w1,
-          w2Ret: w2RetPct,
-          w3Len: p3 - p2.price,
-          w3Ext: 161.8,
-          w4Ret: 38.2,
-          w5Len: p5 - p4,
-          goldenDivider: goldenDivider,
-          fiboCluster: `$${fiboClusterLow.toFixed(2)} - $${fiboClusterHigh.toFixed(2)}`,
-          guidelines: {
-            alternation: isAlternationPass,
-            alternationText: isAlternationPass ? 'Đạt chuẩn: Sóng 2 hồi sâu ' + w2RetPct.toFixed(1) + '% (Zigzag), Sóng 4 dự báo đi ngang 38.2%' : 'Sóng 2 hồi nhẹ, chú ý Sóng 4 có thể hồi sâu hơn',
-            equality: true,
-            equalityText: 'Đạt chuẩn: Sóng 3 mở rộng 161.8% -> Sóng 5 có biên độ bằng Sóng 1 (~$' + w1.toFixed(2) + ')',
-            dividerText: 'Sóng 4 là điểm chia tỷ lệ vàng (Golden Divider 0.618) tại $' + goldenDivider.toFixed(2)
-          },
-          techIndicators: {
-            rsiDivergence: (rsiP2 > rsiP0 && p2.price > p0.price) ? 'Xác nhận đáy nâng vững chắc (RSI: ' + rsiP2.toFixed(1) + ')' : 'RSI bình thường (' + rsiP2.toFixed(1) + ')',
-            rsiType: 'bull',
-            candlePattern: candleP2 ? candleP2.name : 'Nến tích lũy giữ vững đáy Sóng 2',
-            macdConfirm: 'Động lượng đang mở rộng mạnh ủng hộ đà bứt phá Sóng 3'
-          },
-          tradePlan: {
-            conservativeEntry: 'Chờ giá bứt phá vượt hẳn đỉnh Sóng 1 ($' + p1.price.toFixed(2) + ') kèm nến Marubozu/Engulfing xác nhận.',
-            aggressiveEntry: 'Mua sớm tại Cụm Fibo chân Sóng 2 ($' + p2.price.toFixed(2) + ') với Stop Loss chặt tại $' + p0.price.toFixed(2) + ' (R:R > 5:1).',
-            riskStep1: 'Bước 1 (Giảm thiểu rủi ro): Tỷ lệ R:R đạt ~' + ((p3 - p2.price) / (p2.price - p0.price)).toFixed(1) + ':1. Dừng lỗ tại $' + p0.price.toFixed(2) + '.',
-            riskStep2: 'Bước 2 (Triệt tiêu rủi ro): Khi giá chạm đỉnh Sóng 1 ($' + p1.price.toFixed(2) + ') hoặc Fibo 100%, dời Stop Loss về HÒA VỐN (Breakeven).',
-            riskStep3: 'Bước 3 (Khóa lợi nhuận): Dời Trailing Stop theo đáy các nến swing con hoặc đáy nến ngày trước đó.'
-          },
-          nextTarget: p3,
-          nextTargetDesc: `Cấu trúc đẩy Sóng 3 Fibo 161.8% ($${p3.toFixed(2)})`,
-          peakTarget: p5,
-          invalDesc: `Thủng Đỉnh W1 ($${invalPrice.toFixed(2)}) vô hiệu cấu trúc sóng (Quy tắc 3)`,
-          strategyText: `Theo Wayne Gorman & Jeffrey Kennedy: Hiện tại đang trong cơ hội SÓNG 3 - cấu trúc đẩy bùng nổ. Mục tiêu đỉnh sóng 3 tại $${p3.toFixed(2)}. Sau đó dự kiến sóng 4 thoái lui 38.2% về vùng canh buy $${p4.toFixed(2)}. Mốc vô hiệu cấu trúc sóng tại $${invalPrice.toFixed(2)}.`,
-          linePoints,
-          markers
-        };
+      // Nối với nến hiện tại nếu giá đang mở rộng biên độ đáng kể
+      const lastCandle = candles[n - 1];
+      const lastPivot = alt[alt.length - 1];
+      if (lastPivot) {
+        if (lastPivot.type === 'H' && (lastPivot.price - lastCandle.low) >= minDeviation) {
+          alt.push({ index: n - 1, time: lastCandle.time, price: lastCandle.low, type: 'L' });
+        } else if (lastPivot.type === 'L' && (lastCandle.high - lastPivot.price) >= minDeviation) {
+          alt.push({ index: n - 1, time: lastCandle.time, price: lastCandle.high, type: 'H' });
+        }
       }
 
-      // Quét tìm mô hình Sóng Lớn Lịch Sử (Major Cycle) & Nhận diện Tam Giác Chéo (Ending/Leading Diagonal)
-      let majorCycle = null;
-      let bestMajor = null;
-      let detectedDiagonal = null;
+      if (alt.length < 2) return null;
 
-      for (let i = 0; i <= alt.length - 6; i++) {
-        const p0 = alt[i], p1 = alt[i + 1], p2 = alt[i + 2], p3 = alt[i + 3], p4 = alt[i + 4], p5 = alt[i + 5];
+      // 4. Tạo đường Zigzag chuẩn: Nối THẲNG từ Đỉnh nến thật sang Đáy nến thật
+      const linePoints = alt.map(p => ({
+        time: p.time,
+        value: parseFloat(p.price.toFixed(2))
+      }));
+
+      // 5. Nhận diện cấu trúc Sóng Elliott chuẩn xác theo đúng quy tắc kỹ thuật
+      const waveMarkerMap = {}; // time -> { text, color, shape, position }
+      const numP = alt.length;
+      let latestPattern = null;
+
+      // Quét tìm tất cả các chu kỳ 5 sóng (0-1-2-3-4-5) và nhịp chỉnh (A-B-C)
+      for (let s = 0; s <= numP - 6; s++) {
+        const p0 = alt[s], p1 = alt[s + 1], p2 = alt[s + 2], p3 = alt[s + 3], p4 = alt[s + 4], p5 = alt[s + 5];
+
+        // SÓNG ĐẨY TĂNG (Bullish Impulse): L0 -> H1 -> L2 -> H3 -> L4 -> H5
+        // Quy tắc:
+        // - Đáy 0 lên Đỉnh 1 là đỉnh thấp nhất (H1 < H3 < H5)
+        // - Hồi về Đáy 2 (L2 > L0)
+        // - Lên Đỉnh 3 cao hơn Đỉnh 1 (H3 > H1)
+        // - Hồi về Đáy 4 cao hơn Đáy 2 (L4 > L2)
+        // - Tiếp tục sóng đẩy lên Đỉnh 5 cao hơn Đỉnh 3 và là đỉnh cao nhất (H5 > H3)
+        // - Sóng 3 không phải ngắn nhất: (H3 - L2) >= min(H1 - L0, H5 - L4)
         if (p0.type === 'L' && p1.type === 'H' && p2.type === 'L' && p3.type === 'H' && p4.type === 'L' && p5.type === 'H') {
-          const w1 = p1.price - p0.price;
-          const w3 = p3.price - p2.price;
-          const w5 = p5.price - p4.price;
+          const h1 = p1.price, h3 = p3.price, h5 = p5.price;
+          const l0 = p0.price, l2 = p2.price, l4 = p4.price;
+          if (h1 < h3 && h3 < h5 && l0 < l2 && l2 < l4) {
+            const w1 = h1 - l0;
+            const w3 = h3 - l2;
+            const w5 = h5 - l4;
+            if (w3 >= Math.min(w1, w5)) {
+              const pat = {
+                type: 'BULLISH_IMPULSE',
+                p0: p0, p1: p1, p2: p2, p3: p3, p4: p4, p5: p5,
+                has_abc: false
+              };
 
-          // 1. Kiểm tra mô hình sóng Đẩy Chuẩn (Impulse)
-          if (p1.price < p3.price && p3.price < p5.price &&
-              p0.price < p2.price && p2.price < p4.price &&
-              p4.price > p1.price && w3 >= Math.min(w1, w5)) {
-            const span = p5.price - p0.price;
-            if (!bestMajor || span > (bestMajor.p5.price - bestMajor.p0.price)) {
-              bestMajor = { p0, p1, p2, p3, p4, p5, w1, w3, w5 };
+              waveMarkerMap[p0.time] = { text: `(0) Đáy $${l0.toFixed(1)}`, color: '#10b981', shape: 'arrowUp', position: 'belowBar' };
+              waveMarkerMap[p1.time] = { text: `(1) Đỉnh W1 $${h1.toFixed(1)}`, color: '#10b981', shape: 'arrowDown', position: 'aboveBar' };
+              waveMarkerMap[p2.time] = { text: `(2) Đáy W2 $${l2.toFixed(1)}`, color: '#10b981', shape: 'arrowUp', position: 'belowBar' };
+              waveMarkerMap[p3.time] = { text: `(3) Đỉnh W3 $${h3.toFixed(1)}`, color: '#10b981', shape: 'arrowDown', position: 'aboveBar' };
+              waveMarkerMap[p4.time] = { text: `(4) Đáy W4 $${l4.toFixed(1)}`, color: '#10b981', shape: 'arrowUp', position: 'belowBar' };
+              waveMarkerMap[p5.time] = { text: `(5) Đỉnh W5 $${h5.toFixed(1)}`, color: '#f59e0b', shape: 'arrowDown', position: 'aboveBar' };
+
+              // Kiểm tra tiếp đoạn sóng giảm A-B-C sau Đỉnh 5:
+              // H5 -> LA -> HB -> LC (LA < H5, LA < HB < H5, LC < LA)
+              if (s + 8 < numP) {
+                const pa = alt[s + 6], pb = alt[s + 7], pc = alt[s + 8];
+                if (pa.type === 'L' && pb.type === 'H' && pc.type === 'L') {
+                  if (pa.price < h5 && pa.price < pb.price && pb.price < h5 && pc.price < pa.price) {
+                    pat.has_abc = true;
+                    pat.pa = pa; pat.pb = pb; pat.pc = pc;
+                    waveMarkerMap[pa.time] = { text: `(A) Đáy A $${pa.price.toFixed(1)}`, color: '#f97316', shape: 'arrowDown', position: 'belowBar' };
+                    waveMarkerMap[pb.time] = { text: `(B) Đỉnh B $${pb.price.toFixed(1)}`, color: '#fb923c', shape: 'arrowUp', position: 'aboveBar' };
+                    waveMarkerMap[pc.time] = { text: `(C) Đáy C $${pc.price.toFixed(1)}`, color: '#ef4444', shape: 'arrowDown', position: 'belowBar' };
+                  }
+                }
+              }
+              latestPattern = pat;
             }
           }
-          // 2. Kiểm tra mô hình Tam Giác Chéo Kết Thúc (Ending Diagonal - Gorman & Kennedy Ch. 1)
-          // Đặc điểm: Sóng 4 xâm phạm Sóng 1 (p4 < p1), hai đường xu hướng 1-3 và 2-4 hội tụ (wedge),
-          // Sóng 5 là nhịp kiệt sức cuối cùng trước khi đảo chiều cực mạnh về xuất phát điểm tam giác chéo!
-          else if (p1.price < p3.price && p3.price < p5.price &&
-                   p0.price < p2.price && p2.price < p4.price &&
-                   p4.price <= p1.price) { // W4 overlap W1!
-            // Kiểm tra độ hội tụ: (p3 - p1) / (t3 - t1) và (p4 - p2) / (t4 - t2)
-            detectedDiagonal = {
-              p0, p1, p2, p3, p4, p5, w1, w3, w5,
-              reversalTarget: p0.price // Mục tiêu đảo chiều sắc nét: Đáy sóng 1 (xuất phát điểm của diagonal)
-            };
+        }
+
+        // SÓNG ĐẨY GIẢM (Bearish Impulse): H0 -> L1 -> H2 -> L3 -> H4 -> L5
+        // Quy tắc: Chiều đi xuống
+        // - Đỉnh 0 xuống Đáy 1 là đáy cao nhất (L1 > L3 > L5)
+        // - Hồi về Đỉnh 2 (H2 < H0)
+        // - Xuống Đáy 3 sâu hơn Đáy 1 (L3 < L1)
+        // - Hồi về Đỉnh 4 thấp hơn Đỉnh 2 (H4 < H2)
+        // - Tiếp tục sóng đẩy xuống Đáy 5 sâu hơn Đáy 3 và là đáy thấp nhất (L5 < L3)
+        // - Sóng 3 không phải ngắn nhất
+        else if (p0.type === 'H' && p1.type === 'L' && p2.type === 'H' && p3.type === 'L' && p4.type === 'H' && p5.type === 'L') {
+          const l1 = p1.price, l3 = p3.price, l5 = p5.price;
+          const h0 = p0.price, h2 = p2.price, h4 = p4.price;
+          if (l1 > l3 && l3 > l5 && h0 > h2 && h2 > h4) {
+            const w1 = h0 - l1;
+            const w3 = h2 - l3;
+            const w5 = h4 - l5;
+            if (w3 >= Math.min(w1, w5)) {
+              const pat = {
+                type: 'BEARISH_IMPULSE',
+                p0: p0, p1: p1, p2: p2, p3: p3, p4: p4, p5: p5,
+                has_abc: false
+              };
+
+              waveMarkerMap[p0.time] = { text: `(0) Đỉnh $${h0.toFixed(1)}`, color: '#ef4444', shape: 'arrowDown', position: 'aboveBar' };
+              waveMarkerMap[p1.time] = { text: `(1) Đáy W1 $${l1.toFixed(1)}`, color: '#ef4444', shape: 'arrowUp', position: 'belowBar' };
+              waveMarkerMap[p2.time] = { text: `(2) Đỉnh W2 $${h2.toFixed(1)}`, color: '#ef4444', shape: 'arrowDown', position: 'aboveBar' };
+              waveMarkerMap[p3.time] = { text: `(3) Đáy W3 $${l3.toFixed(1)}`, color: '#ef4444', shape: 'arrowUp', position: 'belowBar' };
+              waveMarkerMap[p4.time] = { text: `(4) Đỉnh W4 $${h4.toFixed(1)}`, color: '#ef4444', shape: 'arrowDown', position: 'aboveBar' };
+              waveMarkerMap[p5.time] = { text: `(5) Đáy W5 $${l5.toFixed(1)}`, color: '#f59e0b', shape: 'arrowUp', position: 'belowBar' };
+
+              // Kiểm tra tiếp đoạn sóng hồi phục A-B-C sau Đáy 5:
+              if (s + 8 < numP) {
+                const pa = alt[s + 6], pb = alt[s + 7], pc = alt[s + 8];
+                if (pa.type === 'H' && pb.type === 'L' && pc.type === 'H') {
+                  if (pa.price > l5 && pa.price > pb.price && pb.price > l5 && pc.price > pa.price) {
+                    pat.has_abc = true;
+                    pat.pa = pa; pat.pb = pb; pat.pc = pc;
+                    waveMarkerMap[pa.time] = { text: `(A) Đỉnh A $${pa.price.toFixed(1)}`, color: '#06b6d4', shape: 'arrowUp', position: 'aboveBar' };
+                    waveMarkerMap[pb.time] = { text: `(B) Đáy B $${pb.price.toFixed(1)}`, color: '#38bdf8', shape: 'arrowDown', position: 'belowBar' };
+                    waveMarkerMap[pc.time] = { text: `(C) Đỉnh C $${pc.price.toFixed(1)}`, color: '#10b981', shape: 'arrowUp', position: 'aboveBar' };
+                  }
+                }
+              }
+              latestPattern = pat;
+            }
           }
         }
       }
 
-      if (detectedDiagonal) {
-        const { p0, p1, p2, p3, p4, p5, w1, w3, w5, reversalTarget } = detectedDiagonal;
-        const linePoints = [
-          { time: p0.time, value: p0.price },
-          { time: p1.time, value: p1.price },
-          { time: p2.time, value: p2.price },
-          { time: p3.time, value: p3.price },
-          { time: p4.time, value: p4.price },
-          { time: p5.time, value: p5.price }
-        ];
-        const markers = [
-          { time: p0.time, position: 'belowBar', color: '#64748b', shape: 'circle', text: `(0) Chân Wedge $${p0.price.toFixed(2)}` },
-          { time: p1.time, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(1) Sóng 1 $${p1.price.toFixed(2)}` },
-          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Sóng 2 $${p2.price.toFixed(2)}` },
-          { time: p3.time, position: 'aboveBar', color: '#10b981', shape: 'circle', text: `(3) Sóng 3 $${p3.price.toFixed(2)}` },
-          { time: p4.time, position: 'belowBar', color: '#ef4444', shape: 'circle', text: `(4) Chồng lấn W1 $${p4.price.toFixed(2)} (Wedge)` },
-          { time: p5.time, position: 'aboveBar', color: '#dc2626', shape: 'arrowDown', text: `(5) Đỉnh Ending Diagonal $${p5.price.toFixed(2)}` }
-        ];
+      // Kiểm tra thêm sóng đang hình thành dở dang ở cuối biểu đồ (Developing Wave)
+      if (numP >= 5 && !waveMarkerMap[alt[numP - 1].time]) {
+        const p0 = alt[numP - 5], p1 = alt[numP - 4], p2 = alt[numP - 3], p3 = alt[numP - 2], p4 = alt[numP - 1];
+        if (p0.type === 'L' && p1.type === 'H' && p2.type === 'L' && p3.type === 'H' && p4.type === 'L') {
+          if (p1.price < p3.price && p0.price < p2.price && p2.price < p4.price) {
+            if (!waveMarkerMap[p0.time]) waveMarkerMap[p0.time] = { text: `(0) Đáy $${p0.price.toFixed(1)}`, color: '#10b981', shape: 'arrowUp', position: 'belowBar' };
+            if (!waveMarkerMap[p1.time]) waveMarkerMap[p1.time] = { text: `(1) Đỉnh W1 $${p1.price.toFixed(1)}`, color: '#10b981', shape: 'arrowDown', position: 'aboveBar' };
+            if (!waveMarkerMap[p2.time]) waveMarkerMap[p2.time] = { text: `(2) Đáy W2 $${p2.price.toFixed(1)}`, color: '#10b981', shape: 'arrowUp', position: 'belowBar' };
+            if (!waveMarkerMap[p3.time]) waveMarkerMap[p3.time] = { text: `(3) Đỉnh W3 $${p3.price.toFixed(1)}`, color: '#10b981', shape: 'arrowDown', position: 'aboveBar' };
+            if (!waveMarkerMap[p4.time]) waveMarkerMap[p4.time] = { text: `(4) Đáy W4 $${p4.price.toFixed(1)}`, color: '#10b981', shape: 'arrowUp', position: 'belowBar' };
+          }
+        } else if (p0.type === 'H' && p1.type === 'L' && p2.type === 'H' && p3.type === 'L' && p4.type === 'H') {
+          if (p1.price > p3.price && p0.price > p2.price && p2.price > p4.price) {
+            if (!waveMarkerMap[p0.time]) waveMarkerMap[p0.time] = { text: `(0) Đỉnh $${p0.price.toFixed(1)}`, color: '#ef4444', shape: 'arrowDown', position: 'aboveBar' };
+            if (!waveMarkerMap[p1.time]) waveMarkerMap[p1.time] = { text: `(1) Đáy W1 $${p1.price.toFixed(1)}`, color: '#ef4444', shape: 'arrowUp', position: 'belowBar' };
+            if (!waveMarkerMap[p2.time]) waveMarkerMap[p2.time] = { text: `(2) Đỉnh W2 $${p2.price.toFixed(1)}`, color: '#ef4444', shape: 'arrowDown', position: 'aboveBar' };
+            if (!waveMarkerMap[p3.time]) waveMarkerMap[p3.time] = { text: `(3) Đáy W3 $${p3.price.toFixed(1)}`, color: '#ef4444', shape: 'arrowUp', position: 'belowBar' };
+            if (!waveMarkerMap[p4.time]) waveMarkerMap[p4.time] = { text: `(4) Đỉnh W4 $${p4.price.toFixed(1)}`, color: '#ef4444', shape: 'arrowDown', position: 'aboveBar' };
+          }
+        }
+      }
 
-        // Phân kỳ RSI tại đỉnh sóng 5 của Ending Diagonal (đặc trưng kinh điển)
-        const rsi3 = getRSIAtIdx(p3.index);
-        const rsi5 = getRSIAtIdx(p5.index);
-        const hasBearRsiDiv = (rsi5 < rsi3);
-
-        majorCycle = {
-          name: 'TAM GIÁC CHÉO KẾT THÚC (ENDING DIAGONAL WEDGE)',
-          patternType: 'ending_diagonal',
-          patternTitle: 'Tam Giác Chéo Kết Thúc (Ending Diagonal - Sóng 5 / C)',
-          isDeveloping: false,
-          bestWaveToTrade: 'Sóng 5 kết thúc -> Cơ hội đón đầu Sóng Điều Chỉnh A sắc nét',
-          bestWaveKey: '5',
-          P0: p0, P1: p1, P2: p2, P3: p3, P4: p4, P5: p5,
-          w1Len: w1, w2Ret: (w1 > 0) ? (Math.abs(p1.price - p2.price) / w1) * 100 : 0,
-          w3Len: w3, w3Ext: (w1 > 0) ? (w3 / w1) * 100 : 0,
-          w4Ret: (w3 > 0) ? (Math.abs(p3.price - p4.price) / w3) * 100 : 0,
-          w5Len: w5,
-          goldenDivider: parseFloat((p0.price + (p5.price - p0.price) * 0.618).toFixed(2)),
-          fiboCluster: `$${p1.price.toFixed(2)} - $${p0.price.toFixed(2)}`,
-          guidelines: {
-            alternation: false,
-            alternationText: 'Đặc trưng Tam giác chéo: Cả 5 sóng đều có cấu trúc sóng con 3-3-3-3-3',
-            equality: true,
-            equalityText: 'Hai đường xu hướng 1-3 và 2-4 hội tụ tạo hình nêm (Contracting Wedge)',
-            dividerText: 'Ngoại lệ hợp lệ: Sóng 4 được phép xâm phạm Sóng 1 trong mô hình Diagonal!'
-          },
-          techIndicators: {
-            rsiDivergence: hasBearRsiDiv ? '🔥 Phân kỳ âm cực mạnh RSI (Đỉnh 5 giá cao hơn nhưng RSI thấp hơn: ' + rsi5.toFixed(1) + ' < ' + rsi3.toFixed(1) + ')' : 'RSI suy yếu tại đỉnh nêm',
-            rsiType: 'bear',
-            candlePattern: 'Cảnh báo nến suy kiệt / Shooting Star tại đỉnh Sóng 5',
-            macdConfirm: 'Động lượng phân kỳ âm xác nhận sự kiệt sức của phe Mua'
-          },
-          tradePlan: {
-            conservativeEntry: 'Chờ giá phá vỡ dứt khoát đường xu hướng 2-4 của nêm kèm nến xác nhận giảm.',
-            aggressiveEntry: 'Bán (Sell) ngay khi giá chạm biên trên 1-3 của nêm, Stop Loss đặt phía trên đỉnh Sóng 5 ($' + p5.price.toFixed(2) + ').',
-            riskStep1: 'Bước 1: R:R đạt ~4:1 hướng về đáy Sóng 1 ($' + p0.price.toFixed(2) + '). Dừng lỗ tại $' + (p5.price + 2.0).toFixed(2) + '.',
-            riskStep2: 'Bước 2: Khi giá phá thủng đáy Sóng 4 ($' + p4.price.toFixed(2) + '), dời Stop Loss về Hòa vốn ngay.',
-            riskStep3: 'Bước 3: Khóa lợi nhuận khi giá lao dốc về điểm xuất phát của Tam giác chéo ($' + p0.price.toFixed(2) + ').'
-          },
-          nextTarget: reversalTarget,
-          nextTargetDesc: `Mục tiêu Đảo Chiều Sắc Nét về Đáy Nêm ($${reversalTarget.toFixed(2)})`,
-          peakTarget: p5.price,
-          invalPrice: p5.price,
-          invalDesc: `Vượt đỉnh Sóng (5) ($${p5.price.toFixed(2)}) huỷ bỏ mô hình Ending Diagonal`,
-          strategyText: `Theo Wayne Gorman: Ending Diagonal xuất hiện ở vị trí Sóng 5 báo hiệu toàn bộ xu hướng tăng lớn đã kiệt sức. Theo quy luật "Cú đảo chiều sắc nét" (Sharp Reversal), ngay sau khi bẻ gãy đường 2-4, giá sẽ lao dốc cực nhanh quay về xuất phát điểm của Tam giác chéo tại $${reversalTarget.toFixed(2)} chỉ trong 1/3 đến 1/2 thời gian hình thành mô hình!`,
-          linePoints,
-          markers,
-          timeRange: { from: p0.time - 3600 * 4, to: p5.time + 3600 * 4 }
+      // 6. Tạo Marker gọn gàng, thanh thoát trên đúng vị trí đỉnh đáy
+      const markers = alt.map(p => {
+        const isHigh = (p.type === 'H');
+        const custom = waveMarkerMap[p.time];
+        if (custom) {
+          return {
+            time: p.time,
+            position: custom.position,
+            color: custom.color,
+            shape: custom.shape,
+            text: custom.text
+          };
+        }
+        return {
+          time: p.time,
+          position: isHigh ? 'aboveBar' : 'belowBar',
+          color: isHigh ? '#f43f5e' : '#10b981',
+          shape: isHigh ? 'arrowDown' : 'arrowUp',
+          text: isHigh ? `🔺 $${p.price.toFixed(1)}` : `🔻 $${p.price.toFixed(1)}`
         };
-      } else if (bestMajor) {
-        const { p0, p1, p2, p3, p4, p5, w1, w3, w5 } = bestMajor;
-        const linePoints = [
-          { time: p0.time, value: p0.price },
-          { time: p1.time, value: p1.price },
-          { time: p2.time, value: p2.price },
-          { time: p3.time, value: p3.price },
-          { time: p4.time, value: p4.price },
-          { time: p5.time, value: p5.price }
-        ];
-        const markers = [
-          { time: p0.time, position: 'belowBar', color: '#64748b', shape: 'circle', text: `(0) Đáy $${p0.price.toFixed(2)}` },
-          { time: p1.time, position: 'aboveBar', color: '#3b82f6', shape: 'circle', text: `(1) Đỉnh $${p1.price.toFixed(2)}` },
-          { time: p2.time, position: 'belowBar', color: '#f59e0b', shape: 'circle', text: `(2) Đáy W2 $${p2.price.toFixed(2)}` },
-          { time: p3.time, position: 'aboveBar', color: '#10b981', shape: 'circle', text: `(3) Đỉnh W3 $${p3.price.toFixed(2)}` },
-          { time: p4.time, position: 'belowBar', color: '#eab308', shape: 'circle', text: `(4) Đáy W4 $${p4.price.toFixed(2)}` },
-          { time: p5.time, position: 'aboveBar', color: '#06b6d4', shape: 'arrowDown', text: `(5) Đỉnh W5 $${p5.price.toFixed(2)}` }
-        ];
-
-        const goldenDivider = parseFloat((p0.price + (p5.price - p0.price) * 0.618).toFixed(2));
-        const rsi3 = getRSIAtIdx(p3.index);
-        const rsi5 = getRSIAtIdx(p5.index);
-        const hasBearRsiDiv = (rsi5 < rsi3);
-
-        majorCycle = {
-          name: 'CHU KỲ SÓNG LỚN LỊCH SỬ (1-2-3-4-5)',
-          patternType: 'impulse',
-          patternTitle: 'Chu Kỳ Sóng Đẩy Hoàn Chỉnh (Completed Impulse 1-2-3-4-5)',
-          isDeveloping: false,
-          bestWaveToTrade: 'Sóng 5 hoàn tất -> Cơ hội đón đầu Sóng Điều Chỉnh A hoặc C',
-          bestWaveKey: 'A',
-          P0: p0, P1: p1, P2: p2, P3: p3, P4: p4, P5: p5,
-          w1Len: w1, w2Ret: (w1 > 0) ? (Math.abs(p1.price - p2.price) / w1) * 100 : 0,
-          w3Len: w3, w3Ext: (w1 > 0) ? (w3 / w1) * 100 : 0,
-          w4Ret: (w3 > 0) ? (Math.abs(p3.price - p4.price) / w3) * 100 : 0,
-          w5Len: w5,
-          goldenDivider: goldenDivider,
-          fiboCluster: `$${goldenDivider.toFixed(2)} (Fibo 61.8%)`,
-          guidelines: {
-            alternation: true,
-            alternationText: 'Đạt chuẩn Luân phiên: Sóng 2 và Sóng 4 có thời gian và độ sâu điều chỉnh khác biệt',
-            equality: true,
-            equalityText: 'Đạt chuẩn: Sóng 3 mở rộng mạnh nhất, Sóng 5 có độ dài tương đương Sóng 1',
-            dividerText: 'Sóng 4 đóng vai trò điểm chia tỷ lệ vàng (Golden Divider) tại $' + goldenDivider.toFixed(2)
-          },
-          techIndicators: {
-            rsiDivergence: hasBearRsiDiv ? 'Phân kỳ âm RSI tại đỉnh Sóng 5 (' + rsi5.toFixed(1) + ' < ' + rsi3.toFixed(1) + ')' : 'RSI duy trì ổn định (' + rsi5.toFixed(1) + ')',
-            rsiType: hasBearRsiDiv ? 'bear' : 'neutral',
-            candlePattern: 'Mô hình nến hoàn tất chu kỳ sóng đẩy',
-            macdConfirm: 'Đỉnh động lượng cao nhất rơi vào Sóng 3, Sóng 5 suy giảm chuẩn giáo trình'
-          },
-          tradePlan: {
-            conservativeEntry: 'Chờ giá phá thủng đáy Sóng 4 ($' + p4.price.toFixed(2) + ') để xác nhận bước vào pha điều chỉnh A-B-C.',
-            aggressiveEntry: 'Bán thăm dò khi Sóng 5 tạo phân kỳ âm RSI tại $' + p5.price.toFixed(2) + ' với Stop Loss trên đỉnh 5.',
-            riskStep1: 'Bước 1: Quản lý vốn nghiêm ngặt, rủi ro tối đa 1.5% tài khoản.',
-            riskStep2: 'Bước 2: Khi giá xuyên qua đáy sóng con [iv], kéo Stop Loss về Hòa vốn.',
-            riskStep3: 'Bước 3: Khóa lợi nhuận tại các mốc Fibo thoái lui 38.2% và 61.8% của toàn chu kỳ.'
-          },
-          nextTarget: p5.price,
-          nextTargetDesc: `Đỉnh Sóng (5) Cao Nhất Toàn Chu Kỳ ($${p5.price.toFixed(2)})`,
-          peakTarget: p5.price,
-          invalPrice: p0.price,
-          invalDesc: `Thủng Đáy (0) ($${p0.price.toFixed(2)}) vi phạm chu kỳ sóng`,
-          strategyText: `Chu kỳ sóng đẩy 5 nhịp kinh điển theo Wayne Gorman & Jeffrey Kennedy: Sóng 1, 3, 5 là 3 đỉnh tăng dần (Đỉnh 1: $${p1.price.toFixed(2)} < Đỉnh 3: $${p3.price.toFixed(2)} < Đỉnh 5: $${p5.price.toFixed(2)}). Sóng 3 đạt bùng nổ xung lượng lớn nhất. Đỉnh (5) tại $${p5.price.toFixed(2)} là đỉnh cao nhất chu kỳ. Khi Sóng 5 hoàn tất, thị trường chuẩn bị bước vào pha điều chỉnh A-B-C.`,
-          linePoints,
-          markers,
-          timeRange: { from: p0.time - 3600 * 4, to: p5.time + 3600 * 4 }
-        };
-      }
-
-      // CẤU TRÚC ĐẶC BIỆT KHUNG LỚN D1 (DAILY MACRO: 1-2-3-4-5 + A-B-C)
-      let d1MacroCycle = null;
-      if (currentTF >= 86400 || (typeof currentTfStr !== 'undefined' && currentTfStr === '1d')) {
-        let maxH = -1, p5Idx = -1;
-        for (let i = 0; i < candles.length; i++) {
-          if (candles[i].high > maxH) { maxH = candles[i].high; p5Idx = i; }
-        }
-
-        if (p5Idx > 50 && p5Idx < candles.length - 20) {
-          let p0 = (candles[1390]) ? { index: 1390, time: candles[1390].time, price: candles[1390].low, type: 'L' } : null;
-          let p1 = (candles[1495]) ? { index: 1495, time: candles[1495].time, price: candles[1495].high, type: 'H' } : null;
-          let p2 = (candles[1542]) ? { index: 1542, time: candles[1542].time, price: candles[1542].low, type: 'L' } : null;
-          let p3 = (candles[1620]) ? { index: 1620, time: candles[1620].time, price: candles[1620].high, type: 'H' } : null;
-          let p4 = (candles[1632]) ? { index: 1632, time: candles[1632].time, price: candles[1632].low, type: 'L' } : null;
-          let p5 = { index: p5Idx, time: candles[p5Idx].time, price: candles[p5Idx].high, type: 'H' };
-          let pA = (candles[1778]) ? { index: 1778, time: candles[1778].time, price: candles[1778].low, type: 'L' } : null;
-          let pB = (candles[1803]) ? { index: 1803, time: candles[1803].time, price: candles[1803].high, type: 'H' } : null;
-          let pC = { index: candles.length - 1, time: candles[candles.length - 1].time, price: candles[candles.length - 1].close, type: 'L' };
-
-          if (p0 && p1 && p2 && p3 && p4 && p5 && pA && pB && pC) {
-            let linePoints = [
-              { time: p0.time, value: p0.price },
-              { time: p1.time, value: p1.price },
-              { time: p2.time, value: p2.price },
-              { time: p3.time, value: p3.price },
-              { time: p4.time, value: p4.price },
-              { time: p5.time, value: p5.price },
-              { time: pA.time, value: pA.price },
-              { time: pB.time, value: pB.price },
-              { time: pC.time, value: pC.price }
-            ];
-
-            let markers = [
-              { time: p0.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(0) Đáy Macro $' + p0.price.toFixed(2) },
-              { time: p1.time, position: 'aboveBar', color: '#a855f7', shape: 'circle', text: '(1) Đỉnh W1 $' + p1.price.toFixed(2) },
-              { time: p2.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(2) Đáy W2 $' + p2.price.toFixed(2) },
-              { time: p3.time, position: 'aboveBar', color: '#a855f7', shape: 'circle', text: '(3) Đỉnh W3 $' + p3.price.toFixed(2) },
-              { time: p4.time, position: 'belowBar', color: '#a855f7', shape: 'circle', text: '(4) Đáy W4 $' + p4.price.toFixed(2) },
-              { time: p5.time, position: 'aboveBar', color: '#10b981', shape: 'arrowDown', text: '(5) ĐỈNH ATH CHU KỲ $' + p5.price.toFixed(2) },
-              { time: pA.time, position: 'belowBar', color: '#f43f5e', shape: 'circle', text: '(A) Đáy Sóng A $' + pA.price.toFixed(2) },
-              { time: pB.time, position: 'aboveBar', color: '#fb923c', shape: 'circle', text: '(B) Đỉnh Sóng B $' + pB.price.toFixed(2) },
-              { time: pC.time, position: 'belowBar', color: '#06b6d4', shape: 'arrowUp', text: '(C) Đáy Sóng C $' + pC.price.toFixed(2) }
-            ];
-
-            const w1 = p1.price - p0.price;
-            const w3 = p3.price - p2.price;
-            const w5 = p5.price - p4.price;
-            const goldenDivider = parseFloat((p0.price + (p5.price - p0.price) * 0.618).toFixed(2));
-
-            // Sóng C là sóng kiếm tiền tốt nhất trong pha điều chỉnh theo Wayne Gorman
-            d1MacroCycle = {
-              name: 'CHU KỲ MACRO D1 (1-2-3-4-5 + A-B-C ZIGZAG)',
-              patternType: 'macro_abc',
-              patternTitle: 'Chu Kỳ Lớn Đa Khung D1: 5 Sóng Đẩy + 3 Sóng Điều Chỉnh A-B-C',
-              isDeveloping: false,
-              bestWaveToTrade: 'Sóng C (Sóng kiếm tiền lớn nhất trong pha điều chỉnh A-B-C)',
-              bestWaveKey: 'C',
-              P0: p0, P1: p1, P2: p2, P3: p3, P4: p4, P5: p5,
-              PA: pA, PB: pB, PC: pC,
-              w1Len: w1, w2Ret: (w1 > 0) ? ((p1.price - p2.price) / w1) * 100 : 0,
-              w3Len: w3, w3Ext: (w1 > 0) ? ((p3.price - p2.price) / w1) * 100 : 0,
-              w4Ret: (w3 > 0) ? ((p3.price - p4.price) / w3) * 100 : 0,
-              w5Len: w5,
-              goldenDivider: goldenDivider,
-              fiboCluster: `$${pC.price.toFixed(2)} (Fibo C = A 100%)`,
-              guidelines: {
-                alternation: true,
-                alternationText: 'Đạt chuẩn Alternation: Sóng 2 điều chỉnh dạng Zigzag sắc nét, Sóng 4 đi ngang tích lũy',
-                equality: true,
-                equalityText: 'Đạt chuẩn: Sóng C có độ dài tương đương Sóng A (C = A = $' + (pB.price - pC.price).toFixed(2) + ')',
-                dividerText: 'Golden Price Divider: Mốc chia 0.618 tại $' + goldenDivider.toFixed(2)
-              },
-              techIndicators: {
-                rsiDivergence: 'Phân kỳ dương RSI tại đáy Sóng C báo hiệu vùng gom hàng lớn',
-                rsiType: 'bull',
-                candlePattern: 'Mô hình nến phản ứng mạnh tại vùng đáy Sóng C',
-                macdConfirm: 'Động lượng bán tại Sóng C thu hẹp dần mở đường cho chu kỳ mới'
-              },
-              tradePlan: {
-                conservativeEntry: 'Chờ giá bứt phá vượt qua đỉnh Sóng B ($' + pB.price.toFixed(2) + ') để xác nhận chu kỳ tăng mới.',
-                aggressiveEntry: 'Mua gom quanh vùng đáy Sóng C ($' + pC.price.toFixed(2) + ') với Stop Loss đặt dưới đáy C ($' + (pC.price - 8.0).toFixed(2) + ').',
-                riskStep1: 'Bước 1: R:R tiềm năng đạt 4:1 hướng về đỉnh cũ. Quản trị rủi ro 2% tài khoản.',
-                riskStep2: 'Bước 2: Khi giá vượt qua đỉnh sóng con đầu tiên, dời Stop Loss về Hòa vốn.',
-                riskStep3: 'Bước 3: Trailing Stop khóa lợi nhuận theo đáy nến ngày (D1 Swing Lows).'
-              },
-              nextTarget: pC.price,
-              nextTargetDesc: 'Hoàn tất Đáy Sóng Điều Chỉnh (C) ($' + pC.price.toFixed(2) + ')',
-              peakTarget: p5.price,
-              invalPrice: p0.price,
-              invalDesc: 'Thủng Đáy Macro ($' + p0.price.toFixed(2) + ') vi phạm cấu trúc sóng lớn',
-              strategyText: 'Chu kỳ lớn D1 chuẩn mực theo Wayne Gorman & Jeffrey Kennedy: Sóng đẩy tăng (1)-(2)-(3)-(4)-(5) đưa giá lên Đỉnh cao nhất chu kỳ $' + p5.price.toFixed(2) + '. Sau đó thị trường bước vào pha điều chỉnh (A)-(B)-(C) chuẩn Zigzag 5-3-5, với Sóng C hoàn tất quanh $' + pC.price.toFixed(2) + ' (đạt tỷ lệ cân bằng C = A). Đây là vùng tích luỹ chiến lược để chuẩn bị cho chu kỳ sóng đẩy mới!',
-              linePoints,
-              markers,
-              timeRange: { from: p0.time - 86400 * 30, to: pC.time + 86400 * 15 }
-            };
-          }
-        }
-      }
-
-      // Lựa chọn chu kỳ hiển thị
-      let chosen = null;
-      if (d1MacroCycle && (currentTF >= 86400 || (typeof currentTfStr !== 'undefined' && currentTfStr === '1d'))) {
-        chosen = d1MacroCycle;
-      } else {
-        chosen = (cycleMode === 'major') ? (majorCycle || activeCycle) : (activeCycle || majorCycle);
-      }
-      if (!chosen) return null;
-
-      // 3 Quy tắc bất biến Elliott
-      const rule1Pass = chosen.P2 ? (chosen.P2.price > chosen.P0.price) : true;
-      let rule2Pass = true;
-      if (chosen.P3 && chosen.P5) {
-        rule2Pass = !(chosen.w3Len < chosen.w1Len && chosen.w3Len < chosen.w5Len);
-      }
-      // Quy tắc 3: W4 không chồng lấn W1 (Ngoại trừ mô hình Ending Diagonal)
-      const isDiagonal = (chosen.patternType === 'ending_diagonal' || chosen.patternType === 'leading_diagonal');
-      const rule3Pass = isDiagonal ? true : (chosen.P4 ? (chosen.P4.price > chosen.P1.price) : true);
-
-      // =========================================================================
-      // KẺ ĐƯỜNG TRENDLINE TAM GIÁC (NỐI ĐỈNH & ĐÁY TĂNG/GIẢM DẦN - TL SÓNG TRANG 1 & 2)
-      // =========================================================================
-      let trendlinePoints = [];
-      let channelPoints = [];
-      let entryPlan = null;
-      let isTruncatedRisk = false;
-      let goldenDividerRatio = 0.618;
-      let trendlineCurVal = null;
-      let channelCurVal = null;
-      let trianglePattern = null;
-
-      const p0 = chosen.P0;
-      const p1 = chosen.P1;
-      const p2 = chosen.P2;
-      const p3 = chosen.P3;
-      const p4 = chosen.P4;
-      const p5 = chosen.P5;
-
-      // =========================================================================
-      // HỆ THỐNG KẺ ĐƯỜNG TRENDLINE TAM GIÁC / NÊM THEO KHUNG THỜI GIAN MỞ (TL SÓNG TRANG 1 & 2)
-      // TIA THẲNG TUYỆT ĐỐI (KHÔNG GÃY KHÚC), BÁM SÁT THEO NẾN TRONG LOOKBACK
-      // =========================================================================
-      const ewLookback = (indConfig.elliott && indConfig.elliott.lookback) ? indConfig.elliott.lookback : 60;
-      const startIdx = Math.max(0, candles.length - ewLookback);
-      const slice = candles.slice(startIdx);
-      const tfSec = (candles.length > 1) ? (candles[1].time - candles[0].time) : 300;
-      const tfLabel = currentTF === 60 ? 'M1' : (currentTF === 180 ? 'M3' : (currentTF === 300 ? 'M5' : (currentTF === 900 ? 'M15' : (currentTF === 1800 ? 'M30' : (currentTF === 3600 ? 'H1' : (currentTF === 14400 ? 'H4' : (currentTF === 86400 ? 'D1' : 'TF')))))));
-
-      let innerUpperPoints = [];
-      let innerLowerPoints = [];
-
-      if (slice.length >= 10) {
-        const tlDepth = 3;
-        let swingHighs = [];
-        let swingLows = [];
-
-        for (let i = tlDepth; i < slice.length - tlDepth; i++) {
-          const c = slice[i];
-          let isH = true, isL = true;
-          for (let j = i - tlDepth; j <= i + tlDepth; j++) {
-            if (j === i) continue;
-            if (slice[j].high >= c.high) isH = false;
-            if (slice[j].low <= c.low) isL = false;
-          }
-          if (isH) swingHighs.push({ idx: i, time: c.time, price: c.high });
-          if (isL) swingLows.push({ idx: i, time: c.time, price: c.low });
-        }
-
-        const mid = Math.floor(slice.length / 2);
-        let outH1 = swingHighs.filter(h => h.idx < mid).sort((a,b) => b.price - a.price)[0];
-        let outH2 = swingHighs.filter(h => h.idx >= mid).sort((a,b) => b.price - a.price)[0];
-        if (!outH1 || !outH2) {
-          outH1 = swingHighs[0] || { idx: 0, time: slice[0].time, price: slice[0].high };
-          outH2 = swingHighs[swingHighs.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].high };
-        }
-
-        let outL1 = swingLows.filter(l => l.idx < mid).sort((a,b) => a.price - b.price)[0];
-        let outL2 = swingLows.filter(l => l.idx >= mid).sort((a,b) => a.price - b.price)[0];
-        if (!outL1 || !outL2) {
-          outL1 = swingLows[0] || { idx: 0, time: slice[0].time, price: slice[0].low };
-          outL2 = swingLows[swingLows.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].low };
-        }
-
-        const inH1 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 2] : outH1;
-        const inH2 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 1] : outH2;
-        const inL1 = swingLows.length >= 2 ? swingLows[swingLows.length - 2] : outL1;
-        const inL2 = swingLows.length >= 2 ? swingLows[swingLows.length - 1] : outL2;
-
-        const makeStraightRay = (p1, p2) => {
-          const dt = p2.time - p1.time;
-          const slope = dt !== 0 ? (p2.price - p1.price) / dt : 0;
-          const points = [];
-          for (let i = p1.idx; i < slice.length; i++) {
-            const t = slice[i].time;
-            points.push({
-              time: t,
-              value: parseFloat((p1.price + slope * (t - p1.time)).toFixed(2))
-            });
-          }
-          const lastT = slice[slice.length - 1].time;
-          for (let f = 1; f <= 25; f++) {
-            const futT = lastT + f * tfSec;
-            points.push({
-              time: futT,
-              value: parseFloat((p1.price + slope * (futT - p1.time)).toFixed(2))
-            });
-          }
-          return { slope, points, p1, p2 };
-        };
-
-        const outerUpper = makeStraightRay(outH1, outH2);
-        const outerLower = makeStraightRay(outL1, outL2);
-        const innerUpper = makeStraightRay(inH1, inH2);
-        const innerLower = makeStraightRay(inL1, inL2);
-
-        channelPoints = outerUpper.points;
-        trendlinePoints = outerLower.points;
-        innerUpperPoints = innerUpper.points;
-        innerLowerPoints = innerLower.points;
-
-        const lastCandle = slice[slice.length - 1];
-        channelCurVal = parseFloat((outH1.price + outerUpper.slope * (lastCandle.time - outH1.time)).toFixed(2));
-        trendlineCurVal = parseFloat((outL1.price + outerLower.slope * (lastCandle.time - outL1.time)).toFixed(2));
-
-        const dpH = outH2.price - outH1.price;
-        const dpL = outL2.price - outL1.price;
-
-        let patternType = 'converging_triangle';
-        let patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
-        let desc = `Đỉnh giảm ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)}) & Đáy tăng ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)})`;
-
-        if (dpH < -0.5 && dpL > 0.5) {
-          patternType = 'converging_triangle';
-          patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
-          desc = `Đỉnh giảm dần ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)}) & Đáy tăng dần ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)}) (TL Sóng Trang 2)`;
-        } else if (Math.abs(dpH) <= 0.8 && dpL > 0.5) {
-          patternType = 'ascending_triangle';
-          patternName = `📐 TAM GIÁC TĂNG ${tfLabel}`;
-          desc = `Kháng cự đỉnh ngang (~$${outH2.price.toFixed(2)}) & Đáy tăng dốc lên ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)}) (TL Sóng Trang 2)`;
-        } else if (dpH < -0.5 && Math.abs(dpL) <= 0.8) {
-          patternType = 'descending_triangle';
-          patternName = `📐 TAM GIÁC GIẢM ${tfLabel}`;
-          desc = `Đỉnh giảm dốc xuống ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)}) & Hỗ trợ đáy phẳng (~$${outL2.price.toFixed(2)}) (TL Sóng Trang 2)`;
-        } else if (dpH > 0.5 && dpL < -0.5) {
-          patternType = 'expanding_triangle';
-          patternName = `📐 TAM GIÁC MỞ RỘNG ${tfLabel}`;
-          desc = `Đỉnh tăng dần ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)}) & Đáy giảm dần ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)}) (TL Sóng Trang 1 & 2)`;
-        } else if (dpH > 0 && dpL > 0) {
-          patternType = 'rising_wedge';
-          patternName = `📐 NÊM TĂNG HỘI TỤ ${tfLabel}`;
-          desc = `Cả đỉnh & đáy cùng tăng nhưng biên độ thu hẹp (Sóng chéo hội tụ Trang 1)`;
-        } else if (dpH < 0 && dpL < 0) {
-          patternType = 'falling_wedge';
-          patternName = `📐 NÊM GIẢM HỘI TỤ ${tfLabel}`;
-          desc = `Cả đỉnh & đáy cùng giảm nhưng biên độ thu hẹp (Sóng chéo hội tụ Trang 1)`;
-        }
-
-        const touchpoints = [];
-        const usedTimes = new Set();
-        slice.forEach(c => {
-          const upPt = outerUpper.points.find(p => p.time === c.time);
-          if (upPt && Math.abs(c.high - upPt.value) <= 0.8) {
-            touchpoints.push({ time: c.time, position: 'aboveBar', color: '#06b6d4', shape: 'circle', text: '○' });
-            usedTimes.add(c.time);
-          }
-          const lowPt = outerLower.points.find(p => p.time === c.time);
-          if (lowPt && Math.abs(c.low - lowPt.value) <= 0.8 && !usedTimes.has(c.time)) {
-            touchpoints.push({ time: c.time, position: 'belowBar', color: '#06b6d4', shape: 'circle', text: '○' });
-            usedTimes.add(c.time);
-          }
-        });
-
-        const lastSliceBar = slice[slice.length - 1];
-        if (lastSliceBar) {
-          touchpoints.push({
-            time: lastSliceBar.time,
-            position: 'aboveBar',
-            color: '#06b6d4',
-            shape: 'arrowDown',
-            text: patternName
-          });
-        }
-
-        trianglePattern = {
-          patternType,
-          patternName,
-          desc,
-          curUpper: channelCurVal,
-          curLower: trendlineCurVal,
-          upperDesc: dpH < 0 ? `Đỉnh giảm dần ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)})` : `Đỉnh tăng dần ($${outH1.price.toFixed(2)} ➔ $${outH2.price.toFixed(2)})`,
-          lowerDesc: dpL > 0 ? `Đáy tăng dần ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)})` : `Đáy giảm dần ($${outL1.price.toFixed(2)} ➔ $${outL2.price.toFixed(2)})`,
-          upperPoints: channelPoints,
-          lowerPoints: trendlinePoints,
-          innerUpperPoints,
-          innerLowerPoints,
-          touchpoints,
-          h1: outH1, h2: outH2, l1: outL1, l2: outL2
-        };
-      }
-
-      // Kiểm tra rủi ro Sóng cụt (TL Sóng Trang 1: W3 > 2.618 W1)
-      if (chosen.w1Len > 0 && chosen.w3Len > 0) {
-        if (chosen.w3Len > 2.618 * chosen.w1Len) {
-          isTruncatedRisk = true;
-        }
-      }
-
-      // Bộ chia Fibonacci h14 (TL Sóng Trang 1: h14 = 0.5 hoặc 0.618 h)
-      if (p0 && p5 && (p5.price - p0.price) > 0 && p4) {
-        goldenDividerRatio = (p4.price - p0.price) / (p5.price - p0.price);
-      }
-
-      // 3 Điểm vào lệnh Entry 1-2-3 (TL Sóng Trang 5)
-      const lastClose = (candles.length > 0) ? candles[candles.length - 1].close : 0;
-      if (p5 && p4 && p5.price > p4.price) {
-        const w5Span = p5.price - p4.price;
-        const e1Price = parseFloat((p5.price - w5Span * 0.236).toFixed(2));
-        const e2Price = parseFloat((p5.price - w5Span * 0.50).toFixed(2));
-        const e3Price = parseFloat(p4.price.toFixed(2));
-        const slPrice = parseFloat((p5.price + 1.5).toFixed(2));
-
-        entryPlan = {
-          mode: 'BEAR_REVERSAL',
-          sl: slPrice,
-          slDesc: `Đỉnh Sóng 5 ($${p5.price.toFixed(2)})`,
-          entry1: {
-            price: e1Price,
-            title: 'Entry 1 (Mạo hiểm)',
-            desc: 'Phá vỡ cấu trúc sóng cấp 4 (Fibo 23.6% từ đỉnh 5)',
-            status: (lastClose && lastClose <= e1Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
-          },
-          entry2: {
-            price: e2Price,
-            title: 'Entry 2 (An toàn)',
-            desc: 'Phá vỡ cấu trúc sóng cấp 3 (Fibo 50% nhịp sóng 5)',
-            status: (lastClose && lastClose <= e2Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
-          },
-          entry3: {
-            price: e3Price,
-            title: 'Entry 3 (Rất an toàn)',
-            desc: 'Phá vỡ cấu trúc sóng cấp 2 (Thủng Trendline 2-4 / Đáy W4)',
-            status: (lastClose && lastClose <= e3Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
-          }
-        };
-      } else if (chosen.PC && chosen.PB && chosen.PB.price > chosen.PC.price) {
-        // Chu kỳ hoàn tất sóng C điều chỉnh (Mua lên)
-        const cSpan = chosen.PB.price - chosen.PC.price;
-        const e1Price = parseFloat((chosen.PC.price + cSpan * 0.236).toFixed(2));
-        const e2Price = parseFloat((chosen.PC.price + cSpan * 0.50).toFixed(2));
-        const e3Price = parseFloat(chosen.PB.price.toFixed(2));
-        const slPrice = parseFloat((chosen.PC.price - 1.5).toFixed(2));
-
-        entryPlan = {
-          mode: 'BULL_REVERSAL',
-          sl: slPrice,
-          slDesc: `Đáy Sóng C ($${chosen.PC.price.toFixed(2)})`,
-          entry1: {
-            price: e1Price,
-            title: 'Entry 1 (Mạo hiểm)',
-            desc: 'Phá vỡ cấu trúc sóng cấp 4 của nhịp giảm C',
-            status: (lastClose && lastClose >= e1Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
-          },
-          entry2: {
-            price: e2Price,
-            title: 'Entry 2 (An toàn)',
-            desc: 'Phá vỡ cấu trúc sóng cấp 3 (Hồi 50% Sóng C)',
-            status: (lastClose && lastClose >= e2Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
-          },
-          entry3: {
-            price: e3Price,
-            title: 'Entry 3 (Rất an toàn)',
-            desc: 'Phá vỡ sóng cấp 2 (Vượt đỉnh Sóng B)',
-            status: (lastClose && lastClose >= e3Price) ? 'ĐÃ KÍCH HOẠT' : 'CHỜ TÍN HIỆU'
-          }
-        };
-      }
+      });
 
       return {
-        isBull: true,
-        patternType: chosen.patternType,
-        patternTitle: chosen.patternTitle,
-        cycleTitle: chosen.name,
-        cycleBadge: isDiagonal ? 'ENDING DIAGONAL WEDGE' : (chosen.isDeveloping ? 'SÓNG 3 BÙNG NỔ' : 'CHU KỲ HOÀN CHỈNH'),
-        phaseName: chosen.isDeveloping ? 'SÓNG (3) - BÙNG NỔ BỨT PHÁ' : (isDiagonal ? 'TAM GIÁC CHÉO KẾT THÚC' : '5 SÓNG TĂNG CHUẨN MỰC'),
-        currentWaveNum: chosen.isDeveloping ? 3 : (chosen.PC ? 'C' : 5),
-        bestWaveToTrade: chosen.bestWaveToTrade,
-        bestWaveKey: chosen.bestWaveKey,
-        rule1Pass,
-        rule2Pass,
-        rule3Pass,
-        isDiagonal,
-        guidelines: chosen.guidelines,
-        techIndicators: chosen.techIndicators,
-        tradePlan: chosen.tradePlan,
-        goldenDivider: chosen.goldenDivider,
-        fiboCluster: chosen.fiboCluster,
-        nextTarget: chosen.nextTarget,
-        nextTargetDesc: chosen.nextTargetDesc,
-        peakTarget: chosen.peakTarget,
-        invalPrice: chosen.invalPrice,
-        invalDesc: chosen.invalDesc,
-        strategyText: chosen.strategyText,
-        P0: chosen.P0,
-        P1: chosen.P1,
-        P2: chosen.P2,
-        P3: chosen.P3,
-        P4: chosen.P4,
-        P5: chosen.P5,
-        PA: chosen.PA,
-        PB: chosen.PB,
-        PC: chosen.PC,
-        projectedW3: chosen.P3 ? chosen.P3.price : null,
-        projectedW5: chosen.P5 ? chosen.P5.price : null,
-        p3_target: chosen.p3_target || (chosen.P3 ? chosen.P3.price : null),
-        p4_target: chosen.p4_target || (chosen.P4 ? chosen.P4.price : null),
-        p0_price: chosen.p0_price || (chosen.P0 ? chosen.P0.price : null),
-        w1Len: chosen.w1Len,
-        w2Ret: chosen.w2Ret,
-        w3Len: chosen.w3Len,
-        w3Ext: chosen.w3Ext,
-        w4Ret: chosen.w4Ret,
-        w5Len: chosen.w5Len,
-        linePoints: chosen.linePoints,
-        markers: chosen.markers,
-        timeRange: chosen.timeRange,
-        trendlinePoints,
-        channelPoints,
-        innerUpperPoints,
-        innerLowerPoints,
-        trendlineCurVal,
-        channelCurVal,
-        trianglePattern,
-        entryPlan,
-        isTruncatedRisk,
-        goldenDividerRatio
+        linePoints,
+        markers,
+        pivots: alt,
+        atr: Number(atr.toFixed(2)),
+        latestPattern: latestPattern
       };
     }
 
-    // =========================================================================
-    // 1. CHỈ BÁO SÓNG ELLIOTT & TP SÓNG (GỘP CHUNG 1 NÚT DUY NHẤT)
-    // =========================================================================
+    // Cập nhật hiển thị Sóng Zigzag trên đồ thị chính
     function updateElliottWave(candles, curPrice) {
       const isEwOn = !!(indConfig.elliott && indConfig.elliott.enabled);
       const btnEwModal = document.getElementById('btn-elliott-modal');
@@ -9829,498 +9357,164 @@
         btnEwModal.style.display = isEwOn ? 'flex' : 'none';
       }
 
-      if (!candles || candles.length < 20 || !isEwOn) {
-        if (elliottSeries) elliottSeries.setData([]);
-        elliottWaveMarkers = [];
-        syncAllChartMarkers();
-        elliottPriceLines.forEach(l => { try { mainSeries.removePriceLine(l); } catch(e) {} });
+      // Luôn dọn sạch các đường PriceLine ngang đè chữ của bản cũ
+      if (Array.isArray(elliottPriceLines)) {
+        elliottPriceLines.forEach(l => {
+          try { mainSeries.removePriceLine(l); } catch(e) {}
+        });
         elliottPriceLines = [];
-        return;
       }
 
-      const depth = (indConfig.elliott && indConfig.elliott.depth) ? indConfig.elliott.depth : 6;
-      const minDev = (indConfig.elliott && indConfig.elliott.minDev) ? indConfig.elliott.minDev : 0.12;
-      const ew = calcElliottWave(candles, depth, minDev);
-
-      if (!ew) {
+      if (!candles || candles.length < 15 || !isEwOn) {
         if (elliottSeries) elliottSeries.setData([]);
         elliottWaveMarkers = [];
         syncAllChartMarkers();
         return;
       }
 
-      // Vẽ đường sóng Zigzag (Nét đỏ/hồng định hướng tương lai hoàn chỉnh như ảnh thực chiến)
+      const ew = calcElliottWave(candles);
+      if (!ew || !ew.linePoints || ew.linePoints.length === 0) {
+        if (elliottSeries) elliottSeries.setData([]);
+        elliottWaveMarkers = [];
+        syncAllChartMarkers();
+        return;
+      }
+
+      // Vẽ đường Zigzag sắc nét nối trực tiếp giữa các đỉnh đáy thật
       if (elliottSeries) {
         elliottSeries.applyOptions({
           color: '#f43f5e',
-          lineWidth: 2.2,
+          lineWidth: 2,
           lineStyle: 0
         });
-        elliottSeries.setData(ew.linePoints || []);
+        elliottSeries.setData(ew.linePoints);
       }
 
-      // Nhãn đếm sóng
+      // Đặt nhãn giá đỉnh đáy chính xác tại râu nến (không đè lặp)
       elliottWaveMarkers = (ew.markers || []).slice();
       syncAllChartMarkers();
 
-      // Đường cấu trúc & Định hướng tương lai (Cấu trúc đẩy, Vùng canh buy, Vô hiệu cấu trúc)
-      elliottPriceLines.forEach(l => {
-        try { mainSeries.removePriceLine(l); } catch(e) {}
-      });
-      elliottPriceLines = [];
+      // Đồng bộ thông tin sang bảng chi tiết nếu modal tồn tại
+      if (ew.latestPattern) {
+        const lp = ew.latestPattern;
+        const badgePhase = document.getElementById('ew-modal-phase-badge');
+        const titleCycle = document.getElementById('ew-modal-cycle-title');
+        const badgeBias = document.getElementById('ew-modal-bias-badge');
+        const valW1 = document.getElementById('ew-modal-val-w1');
+        const valW2 = document.getElementById('ew-modal-val-w2');
+        const valW3 = document.getElementById('ew-modal-val-w3');
+        const valW4 = document.getElementById('ew-modal-val-w4');
+        const valW5 = document.getElementById('ew-modal-val-w5');
+        const valWabc = document.getElementById('ew-modal-val-wabc');
 
-      if (ew.p3_target) {
-        // 1. Cấu trúc đẩy (Đỉnh Sóng 3 dự phóng)
-        try {
-          const lP3 = mainSeries.createPriceLine({
-            price: ew.p3_target,
-            color: '#3b82f6',
-            lineWidth: 1.5,
-            lineStyle: 0,
-            axisLabelVisible: true,
-            title: `cấu trúc đẩy ($${ew.p3_target.toFixed(2)})`
-          });
-          elliottPriceLines.push(lP3);
-        } catch(e) {}
-
-        // 2. Vùng canh buy (Sóng 4 thoái lui 38.2% Fibo)
-        if (ew.p4_target) {
-          try {
-            const lP4 = mainSeries.createPriceLine({
-              price: ew.p4_target,
-              color: '#10b981',
-              lineWidth: 1.5,
-              lineStyle: 0,
-              axisLabelVisible: true,
-              title: `vùng canh buy ($${ew.p4_target.toFixed(2)})`
-            });
-            elliottPriceLines.push(lP4);
-          } catch(e) {}
+        if (badgePhase) badgePhase.textContent = lp.type === 'BULLISH_IMPULSE' ? 'SÓNG TĂNG 1-2-3-4-5' : 'SÓNG GIẢM 1-2-3-4-5';
+        if (titleCycle) titleCycle.textContent = `CHU KỲ SÓNG: ${lp.type === 'BULLISH_IMPULSE' ? 'SÓNG ĐẨY TĂNG' : 'SÓNG ĐẨY GIẢM'}`;
+        if (badgeBias) {
+          badgeBias.textContent = lp.type === 'BULLISH_IMPULSE' ? 'BULLISH IMPULSE' : 'BEARISH IMPULSE';
+          badgeBias.style.color = lp.type === 'BULLISH_IMPULSE' ? '#10b981' : '#ef4444';
         }
-
-        // 3. Vô hiệu cấu trúc (Đỉnh Sóng 1 - Quy tắc 3)
-        if (ew.invalPrice) {
-          try {
-            const lP1 = mainSeries.createPriceLine({
-              price: ew.invalPrice,
-              color: '#f59e0b',
-              lineWidth: 1.5,
-              lineStyle: 0,
-              axisLabelVisible: true,
-              title: `vô hiệu cấu trúc ($${ew.invalPrice.toFixed(2)})`
-            });
-            elliottPriceLines.push(lP1);
-          } catch(e) {}
-        }
-
-        // 4. Đáy cấu trúc (Xuất phát điểm Sóng 0)
-        if (ew.p0_price) {
-          try {
-            const lP0 = mainSeries.createPriceLine({
-              price: ew.p0_price,
-              color: '#64748b',
-              lineWidth: 1.5,
-              lineStyle: 0,
-              axisLabelVisible: true,
-              title: `đáy cấu trúc ($${ew.p0_price.toFixed(2)})`
-            });
-            elliottPriceLines.push(lP0);
-          } catch(e) {}
-        }
-      } else if (ew.nextTarget && !isNaN(ew.nextTarget)) {
-        try {
-          const tLine = mainSeries.createPriceLine({
-            price: ew.nextTarget,
-            color: '#10b981',
-            lineWidth: 1.5,
-            lineStyle: 2,
-            axisLabelVisible: true,
-            title: `🎯 TP Sóng Elliott ($${ew.nextTarget.toFixed(2)})`
-          });
-          elliottPriceLines.push(tLine);
-        } catch(e) {}
-      }
-
-      // 3. Cập nhật giao diện các nút tab chu kỳ sóng
-      const curMode = (indConfig.elliott && indConfig.elliott.cycleMode) ? indConfig.elliott.cycleMode : 'active';
-      const btnBull = document.getElementById('btn-ew-mode-bull');
-      const btnBear = document.getElementById('btn-ew-mode-bear');
-      if (btnBull && btnBear) {
-        btnBull.style.borderColor = (curMode !== 'major') ? '#10b981' : 'rgba(255,255,255,0.1)';
-        btnBull.style.background = (curMode !== 'major') ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.04)';
-        btnBull.style.color = (curMode !== 'major') ? '#10b981' : '#94a3b8';
-
-        btnBear.style.borderColor = (curMode === 'major') ? '#3b82f6' : 'rgba(255,255,255,0.1)';
-        btnBear.style.background = (curMode === 'major') ? 'rgba(59,130,246,0.18)' : 'rgba(255,255,255,0.04)';
-        btnBear.style.color = (curMode === 'major') ? '#3b82f6' : '#94a3b8';
-      }
-
-      // 4. Cập nhật nội dung Modal Phân Tích Chuẩn Wayne Gorman & Jeffrey Kennedy
-      const phaseBadge = document.getElementById('ew-modal-phase-badge');
-      if (phaseBadge) phaseBadge.textContent = ew.phaseName;
-
-      const cycleTitle = document.getElementById('ew-modal-cycle-title');
-      if (cycleTitle) cycleTitle.textContent = ew.cycleTitle;
-
-      const patternTitle = document.getElementById('ew-modal-pattern-title');
-      if (patternTitle) patternTitle.textContent = `Mô hình: ${ew.patternTitle || ew.cycleTitle}`;
-
-      const biasBadge = document.getElementById('ew-modal-bias-badge');
-      if (biasBadge) {
-        biasBadge.textContent = ew.cycleBadge;
-        biasBadge.className = ew.isDiagonal ? 'ew-hero-bias bear' : 'ew-hero-bias bull';
-      }
-
-      const statusDesc = document.getElementById('ew-modal-status-desc');
-      if (statusDesc) {
-        const p5Price = ew.P5 ? `$${ew.P5.price.toFixed(2)}` : (ew.projectedW5 ? `~$${ew.projectedW5.toFixed(2)}` : '---');
-        statusDesc.textContent = `Cấu trúc: ${ew.patternTitle || ew.phaseName}. Mốc tham chiếu Sóng 5: ${p5Price}. Mục tiêu: ${ew.nextTargetDesc}.`;
-      }
-
-      // 3 quy tắc bất biến
-      const r1 = document.getElementById('ew-modal-rule-1');
-      if (r1) {
-        r1.className = `ew-rule-pill ${ew.rule1Pass ? 'pass' : 'fail'}`;
-        r1.innerHTML = `<span class="ew-rule-dot"></span> <span>Quy tắc 1: Đáy W2 (${ew.rule1Pass ? '✓ ĐẠT' : '✕ PHẠM'})</span>`;
-      }
-      const r2 = document.getElementById('ew-modal-rule-2');
-      if (r2) {
-        r2.className = `ew-rule-pill ${ew.rule2Pass ? 'pass' : 'fail'}`;
-        r2.innerHTML = `<span class="ew-rule-dot"></span> <span>Quy tắc 2: Sóng W3 (${ew.rule2Pass ? '✓ ĐẠT' : '✕ PHẠM'})</span>`;
-      }
-      const r3 = document.getElementById('ew-modal-rule-3');
-      if (r3) {
-        if (ew.isDiagonal) {
-          r3.className = 'ew-rule-pill pass';
-          r3.innerHTML = `<span class="ew-rule-dot"></span> <span>Quy tắc 3: W4-W1 (✓ ĐẠT - Ngoại lệ Diagonal hội tụ)</span>`;
-        } else {
-          r3.className = `ew-rule-pill ${ew.rule3Pass ? 'pass' : 'fail'}`;
-          r3.innerHTML = `<span class="ew-rule-dot"></span> <span>Quy tắc 3: W4-W1 (${ew.rule3Pass ? '✓ ĐẠT' : '✕ PHẠM'})</span>`;
-        }
-      }
-
-      // Guidelines (Chỉ dẫn Frost & Prechter / Kennedy)
-      if (ew.guidelines) {
-        const altTextEl = document.getElementById('ew-modal-alt-text');
-        if (altTextEl) altTextEl.textContent = ew.guidelines.alternationText;
-
-        const eqTextEl = document.getElementById('ew-modal-eq-text');
-        if (eqTextEl) eqTextEl.textContent = ew.guidelines.equalityText;
-
-        const divTextEl = document.getElementById('ew-modal-div-text');
-        if (divTextEl) divTextEl.textContent = ew.guidelines.dividerText;
-      }
-
-      // Thanh tiến trình các bước sóng
-      const stepElements = document.querySelectorAll('#ew-modal-timeline-steps .ew-step');
-      stepElements.forEach(st => {
-        const wKey = st.getAttribute('data-wave');
-        st.classList.remove('active', 'passed');
-        if (String(wKey).toUpperCase() === String(ew.currentWaveNum).toUpperCase()) {
-          st.classList.add('active');
-        } else {
-          const numKey = parseInt(wKey);
-          const curNum = typeof ew.currentWaveNum === 'number' ? ew.currentWaveNum : (ew.currentWaveNum === 'C' ? 8 : 6);
-          if (!isNaN(numKey) && numKey < curNum) {
-            st.classList.add('passed');
-          }
-        }
-      });
-
-      // Bảng thông số từng sóng
-      const setVal = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
-      setVal('ew-modal-val-w1', ew.P1 ? `$${ew.P1.price.toFixed(2)} (${(ew.w1Len * 10).toFixed(0)} pips)` : 'Đang quét...');
-      setVal('ew-modal-val-w2', ew.P2 ? `$${ew.P2.price.toFixed(2)} (${ew.w2Ret.toFixed(1)}% Fibo)` : 'Chờ tạo đáy...');
-      setVal('ew-modal-val-w3', ew.P3 ? `$${ew.P3.price.toFixed(2)} (${ew.w3Ext.toFixed(1)}% Ext)` : (ew.projectedW3 ? `~$${ew.projectedW3.toFixed(2)}` : 'Đang mở rộng...'));
-      setVal('ew-modal-val-w4', ew.P4 ? `$${ew.P4.price.toFixed(2)} (${ew.w4Ret.toFixed(1)}% Fibo)` : 'Chờ tích luỹ...');
-      setVal('ew-modal-val-w5', ew.P5 ? `$${ew.P5.price.toFixed(2)} (ĐỈNH CAO NHẤT)` : (ew.projectedW5 ? `~$${ew.projectedW5.toFixed(2)}` : 'Tiềm năng...'));
-
-      let abcText = 'Sóng mới đang hình thành';
-      if (ew.PC) abcText = `Đáy C: $${ew.PC.price.toFixed(2)}`;
-      else if (ew.PB) abcText = `Đỉnh B: $${ew.PB.price.toFixed(2)} (Hồi Fibo)`;
-      else if (ew.PA) abcText = `Đáy A: $${ew.PA.price.toFixed(2)}`;
-      setVal('ew-modal-val-wabc', abcText);
-
-      // Mục tiêu & vi phạm
-      const targetPriceEl = document.getElementById('ew-modal-target-price');
-      if (targetPriceEl) targetPriceEl.textContent = ew.nextTarget ? `$${ew.nextTarget.toFixed(2)}` : '---.--';
-
-      const targetDescEl = document.getElementById('ew-modal-target-desc');
-      if (targetDescEl) {
-        const diffPip = ew.nextTarget && curPrice ? (Math.abs(ew.nextTarget - curPrice) * 10).toFixed(0) : 0;
-        targetDescEl.textContent = `${ew.nextTargetDesc} (Cách ~${diffPip} pips)`;
-      }
-
-      const invalPriceEl = document.getElementById('ew-modal-inval-price');
-      if (invalPriceEl) invalPriceEl.textContent = ew.invalPrice ? `$${ew.invalPrice.toFixed(2)}` : '---.--';
-
-      const invalDescEl = document.getElementById('ew-modal-inval-desc');
-      if (invalDescEl) invalDescEl.textContent = ew.invalDesc;
-
-      const clusterValEl = document.getElementById('ew-modal-cluster-val');
-      if (clusterValEl) clusterValEl.textContent = ew.fiboCluster || '---';
-
-      const dividerValEl = document.getElementById('ew-modal-divider-val');
-      if (dividerValEl) dividerValEl.textContent = ew.goldenDivider ? `$${ew.goldenDivider.toFixed(2)}` : '---';
-
-      // Cập nhật thẻ Trendline Tam Giác & Hệ thống 3 Entry (TL Sóng Trang 1, 2 & 5)
-      const tlCurValEl = document.getElementById('ew-modal-tl24-val');
-      if (tlCurValEl) {
-        tlCurValEl.textContent = (ew.trendlineCurVal !== null) ? `$${ew.trendlineCurVal.toFixed(2)}` : 'Đang quét...';
-      }
-
-      const chCurValEl = document.getElementById('ew-modal-channel-val');
-      if (chCurValEl) {
-        chCurValEl.textContent = (ew.channelCurVal !== null) ? `$${ew.channelCurVal.toFixed(2)}` : 'Đang quét...';
-      }
-
-      const tlStatusBadge = document.getElementById('ew-modal-tl24-status');
-      if (tlStatusBadge) {
-        if (ew.trianglePattern) {
-          tlStatusBadge.textContent = ew.trianglePattern.patternName;
-          tlStatusBadge.style.background = 'rgba(245, 158, 11, 0.2)';
-          tlStatusBadge.style.color = '#fbbf24';
-          tlStatusBadge.style.borderColor = 'rgba(245, 158, 11, 0.4)';
-        } else if (ew.trendlineCurVal !== null && curPrice) {
-          if (curPrice < ew.trendlineCurVal) {
-            tlStatusBadge.textContent = 'ĐÃ THỦNG TRENDLINE (ĐẠT ENTRY 3)';
-            tlStatusBadge.style.background = 'rgba(239, 68, 68, 0.2)';
-            tlStatusBadge.style.color = '#f87171';
-            tlStatusBadge.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+        if (valW1) valW1.textContent = `$${lp.p1.price.toFixed(1)}`;
+        if (valW2) valW2.textContent = `$${lp.p2.price.toFixed(1)}`;
+        if (valW3) valW3.textContent = `$${lp.p3.price.toFixed(1)}`;
+        if (valW4) valW4.textContent = `$${lp.p4.price.toFixed(1)}`;
+        if (valW5) valW5.textContent = `$${lp.p5.price.toFixed(1)}`;
+        if (valWabc) {
+          if (lp.has_abc) {
+            valWabc.textContent = `A:$${lp.pa.price.toFixed(1)} | B:$${lp.pb.price.toFixed(1)} | C:$${lp.pc.price.toFixed(1)}`;
           } else {
-            tlStatusBadge.textContent = 'ĐANG NÂNG ĐỠ TỐT (TRÊN TRENDLINE)';
-            tlStatusBadge.style.background = 'rgba(16, 185, 129, 0.2)';
-            tlStatusBadge.style.color = '#34d399';
-            tlStatusBadge.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+            valWabc.textContent = '---.--';
           }
-        } else {
-          tlStatusBadge.textContent = 'CHỜ TÍN HIỆU';
         }
       }
-
-      const triDescEl = document.getElementById('ew-modal-triangle-desc');
-      if (triDescEl && ew.trianglePattern) {
-        triDescEl.textContent = ew.trianglePattern.desc;
-      }
-      const upDescEl = document.getElementById('ew-modal-upper-desc');
-      if (upDescEl && ew.trianglePattern) {
-        upDescEl.textContent = ew.trianglePattern.upperDesc;
-      }
-      const lowDescEl = document.getElementById('ew-modal-lower-desc');
-      if (lowDescEl && ew.trianglePattern) {
-        lowDescEl.textContent = ew.trianglePattern.lowerDesc;
-      }
-
-      if (ew.entryPlan) {
-        const ep = ew.entryPlan;
-        const setEl = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
-        setEl('ew-modal-e1-price', `$${ep.entry1.price.toFixed(2)}`);
-        setEl('ew-modal-e1-status', ep.entry1.status);
-        setEl('ew-modal-e2-price', `$${ep.entry2.price.toFixed(2)}`);
-        setEl('ew-modal-e2-status', ep.entry2.status);
-        setEl('ew-modal-e3-price', `$${ep.entry3.price.toFixed(2)}`);
-        setEl('ew-modal-e3-status', ep.entry3.status);
-        setEl('ew-modal-entries-sl', `$${ep.sl.toFixed(2)} (${ep.slDesc})`);
-      }
-
-      // Cảnh báo Sóng cụt & Expanded Flat
-      const warnTruncEl = document.getElementById('ew-modal-warn-trunc');
-      if (warnTruncEl) {
-        warnTruncEl.style.display = ew.isTruncatedRisk ? 'flex' : 'none';
-      }
-
-      const divRatioEl = document.getElementById('ew-modal-divider-ratio');
-      if (divRatioEl) {
-        divRatioEl.textContent = `${(ew.goldenDividerRatio * 100).toFixed(1)}% (Chuẩn: 50% hoặc 61.8%)`;
-      }
-
-      // Chỉ báo xác nhận (Chương 6)
-      if (ew.techIndicators) {
-        const rsiEl = document.getElementById('ew-modal-ind-rsi');
-        const rsiTxt = document.getElementById('ew-modal-ind-rsi-txt');
-        if (rsiEl && rsiTxt) {
-          rsiTxt.textContent = `RSI: ${ew.techIndicators.rsiDivergence}`;
-          rsiEl.className = `ew-ind-pill ${ew.techIndicators.rsiType || 'neutral'}`;
-        }
-
-        const candleEl = document.getElementById('ew-modal-ind-candle');
-        const candleTxt = document.getElementById('ew-modal-ind-candle-txt');
-        if (candleEl && candleTxt) {
-          candleTxt.textContent = `Nến: ${ew.techIndicators.candlePattern}`;
-        }
-
-        const macdEl = document.getElementById('ew-modal-ind-macd');
-        const macdTxt = document.getElementById('ew-modal-ind-macd-txt');
-        if (macdEl && macdTxt) {
-          macdTxt.textContent = `MACD: ${ew.techIndicators.macdConfirm}`;
-        }
-      }
-
-      // Kế hoạch giao dịch Wayne Gorman & Jeffrey Kennedy
-      const bestWaveEl = document.getElementById('ew-modal-best-wave');
-      if (bestWaveEl) bestWaveEl.textContent = ew.bestWaveToTrade || 'Sóng 3 (Bùng nổ xung lượng)';
-
-      if (ew.tradePlan) {
-        const consEl = document.getElementById('ew-modal-entry-cons');
-        if (consEl) consEl.textContent = ew.tradePlan.conservativeEntry;
-
-        const aggrEl = document.getElementById('ew-modal-entry-aggr');
-        if (aggrEl) aggrEl.textContent = ew.tradePlan.aggressiveEntry;
-
-        const s1El = document.getElementById('ew-modal-risk-step1');
-        if (s1El) s1El.innerHTML = `<b>1. Giảm thiểu rủi ro:</b> ${ew.tradePlan.riskStep1}`;
-
-        const s2El = document.getElementById('ew-modal-risk-step2');
-        if (s2El) s2El.innerHTML = `<b>2. Triệt tiêu rủi ro:</b> ${ew.tradePlan.riskStep2}`;
-
-        const s3El = document.getElementById('ew-modal-risk-step3');
-        if (s3El) s3El.innerHTML = `<b>3. Khóa lợi nhuận:</b> ${ew.tradePlan.riskStep3}`;
-      }
-
-      const stratTextEl = document.getElementById('ew-modal-strategy-text');
-      if (stratTextEl) stratTextEl.textContent = ew.strategyText;
     }
-    window.updateElliottWave = updateElliottWave;
 
     // =========================================================================
-    // 2. CHỈ BÁO KẺ ĐƯỜNG TRENDLINE TAM GIÁC / NÊM (ĐỘC LẬP HOÀN TOÀN)
+    // 2. CHỈ BÁO KẺ ĐƯỜNG TRENDLINE KHÁNG CỰ & HỖ TRỢ CHUẨN XÁC
     // =========================================================================
     function updateTrendlines(candles) {
       const isTlOn = !!(indConfig.trendline && indConfig.trendline.enabled);
 
+      // Xóa sạch các đường phụ cũ
+      if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) trendlineInnerUpperSeries.setData([]);
+      if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) trendlineInnerLowerSeries.setData([]);
+
       if (!candles || candles.length < 15 || !isTlOn) {
         if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) elliottChannelSeries.setData([]);
         if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) elliottTrendline24Series.setData([]);
-        if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) trendlineInnerUpperSeries.setData([]);
-        if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) trendlineInnerLowerSeries.setData([]);
         trendlineMarkers = [];
         syncAllChartMarkers();
         return;
       }
 
-      const lookback = (indConfig.trendline && indConfig.trendline.lookback) ? indConfig.trendline.lookback : 60;
-      const startIdx = Math.max(0, candles.length - lookback);
-      const slice = candles.slice(startIdx);
-      const tfSec = (candles.length > 1) ? (candles[1].time - candles[0].time) : 300;
-      const tfLabel = currentTF === 60 ? 'M1' : (currentTF === 180 ? 'M3' : (currentTF === 300 ? 'M5' : (currentTF === 900 ? 'M15' : (currentTF === 1800 ? 'M30' : (currentTF === 3600 ? 'H1' : (currentTF === 14400 ? 'H4' : (currentTF === 86400 ? 'D1' : 'TF')))))));
-
-      const tlDepth = 3;
-      let swingHighs = [];
-      let swingLows = [];
-
-      for (let i = tlDepth; i < slice.length - tlDepth; i++) {
-        const c = slice[i];
-        let isH = true, isL = true;
-        for (let j = i - tlDepth; j <= i + tlDepth; j++) {
-          if (j === i) continue;
-          if (slice[j].high >= c.high) isH = false;
-          if (slice[j].low <= c.low) isL = false;
-        }
-        if (isH) swingHighs.push({ idx: i, time: c.time, price: c.high });
-        if (isL) swingLows.push({ idx: i, time: c.time, price: c.low });
+      // Dùng trực tiếp các đỉnh đáy Zigzag để nối đường Kháng Cự và Hỗ Trợ tự nhiên
+      const ew = calcElliottWave(candles);
+      if (!ew || !ew.pivots || ew.pivots.length < 4) {
+        if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) elliottChannelSeries.setData([]);
+        if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) elliottTrendline24Series.setData([]);
+        trendlineMarkers = [];
+        syncAllChartMarkers();
+        return;
       }
 
-      const mid = Math.floor(slice.length / 2);
-      let outH1 = swingHighs.filter(h => h.idx < mid).sort((a,b) => b.price - a.price)[0];
-      let outH2 = swingHighs.filter(h => h.idx >= mid).sort((a,b) => b.price - a.price)[0];
-      if (!outH1 || !outH2) {
-        outH1 = swingHighs[0] || { idx: 0, time: slice[0].time, price: slice[0].high };
-        outH2 = swingHighs[swingHighs.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].high };
-      }
+      const highs = ew.pivots.filter(p => p.type === 'H');
+      const lows = ew.pivots.filter(p => p.type === 'L');
 
-      let outL1 = swingLows.filter(l => l.idx < mid).sort((a,b) => a.price - b.price)[0];
-      let outL2 = swingLows.filter(l => l.idx >= mid).sort((a,b) => a.price - b.price)[0];
-      if (!outL1 || !outL2) {
-        outL1 = swingLows[0] || { idx: 0, time: slice[0].time, price: slice[0].low };
-        outL2 = swingLows[swingLows.length - 1] || { idx: slice.length - 1, time: slice[slice.length - 1].time, price: slice[slice.length - 1].low };
-      }
-
-      const inH1 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 2] : outH1;
-      const inH2 = swingHighs.length >= 2 ? swingHighs[swingHighs.length - 1] : outH2;
-      const inL1 = swingLows.length >= 2 ? swingLows[swingLows.length - 2] : outL1;
-      const inL2 = swingLows.length >= 2 ? swingLows[swingLows.length - 1] : outL2;
-
-      const makeStraightRay = (p1, p2) => {
-        const dt = p2.time - p1.time;
-        const slope = dt !== 0 ? (p2.price - p1.price) / dt : 0;
-        const points = [];
-        for (let i = p1.idx; i < slice.length; i++) {
-          const t = slice[i].time;
-          points.push({
-            time: t,
-            value: parseFloat((p1.price + slope * (t - p1.time)).toFixed(2))
+      // 1. Đường Kháng Cự (Resistance Line): Nối 2 đỉnh gần nhất
+      if (highs.length >= 2 && typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) {
+        const h1 = highs[highs.length - 2];
+        const h2 = highs[highs.length - 1];
+        const dt = h2.time - h1.time;
+        if (dt > 0) {
+          const slope = (h2.price - h1.price) / dt;
+          const upperPoints = [];
+          candles.forEach(c => {
+            if (c.time >= h1.time) {
+              upperPoints.push({
+                time: c.time,
+                value: parseFloat((h1.price + slope * (c.time - h1.time)).toFixed(2))
+              });
+            }
           });
-        }
-        const lastT = slice[slice.length - 1].time;
-        for (let f = 1; f <= 25; f++) {
-          const futT = lastT + f * tfSec;
-          points.push({
-            time: futT,
-            value: parseFloat((p1.price + slope * (futT - p1.time)).toFixed(2))
+          elliottChannelSeries.applyOptions({
+            color: 'rgba(244, 63, 94, 0.75)',
+            lineWidth: 1.5,
+            lineStyle: 2
           });
+          elliottChannelSeries.setData(upperPoints);
         }
-        return { slope, points, p1, p2 };
-      };
-
-      const outerUpper = makeStraightRay(outH1, outH2);
-      const outerLower = makeStraightRay(outL1, outL2);
-      const innerUpper = makeStraightRay(inH1, inH2);
-      const innerLower = makeStraightRay(inL1, inL2);
-
-      if (typeof elliottChannelSeries !== 'undefined' && elliottChannelSeries) {
-        elliottChannelSeries.setData(outerUpper.points);
-      }
-      if (typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) {
-        elliottTrendline24Series.setData(outerLower.points);
-      }
-      if (typeof trendlineInnerUpperSeries !== 'undefined' && trendlineInnerUpperSeries) {
-        trendlineInnerUpperSeries.setData(innerUpper.points);
-      }
-      if (typeof trendlineInnerLowerSeries !== 'undefined' && trendlineInnerLowerSeries) {
-        trendlineInnerLowerSeries.setData(innerLower.points);
       }
 
-      const dpH = outH2.price - outH1.price;
-      const dpL = outL2.price - outL1.price;
-
-      let patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
-      if (dpH < -0.5 && dpL > 0.5) patternName = `📐 TAM GIÁC HỘI TỤ ${tfLabel}`;
-      else if (Math.abs(dpH) <= 0.8 && dpL > 0.5) patternName = `📐 TAM GIÁC TĂNG ${tfLabel}`;
-      else if (dpH < -0.5 && Math.abs(dpL) <= 0.8) patternName = `📐 TAM GIÁC GIẢM ${tfLabel}`;
-      else if (dpH > 0.5 && dpL < -0.5) patternName = `📐 TAM GIÁC MỞ RỘNG ${tfLabel}`;
-      else if (dpH > 0 && dpL > 0) patternName = `📐 NÊM TĂNG HỘI TỤ ${tfLabel}`;
-      else if (dpH < 0 && dpL < 0) patternName = `📐 NÊM GIẢM HỘI TỤ ${tfLabel}`;
-
-      const touchpoints = [];
-      const usedTimes = new Set();
-      slice.forEach(c => {
-        const upPt = outerUpper.points.find(p => p.time === c.time);
-        if (upPt && Math.abs(c.high - upPt.value) <= 0.8) {
-          touchpoints.push({ time: c.time, position: 'aboveBar', color: '#06b6d4', shape: 'circle', text: '○' });
-          usedTimes.add(c.time);
+      // 2. Đường Hỗ Trợ (Support Line): Nối 2 đáy gần nhất
+      if (lows.length >= 2 && typeof elliottTrendline24Series !== 'undefined' && elliottTrendline24Series) {
+        const l1 = lows[lows.length - 2];
+        const l2 = lows[lows.length - 1];
+        const dt = l2.time - l1.time;
+        if (dt > 0) {
+          const slope = (l2.price - l1.price) / dt;
+          const lowerPoints = [];
+          candles.forEach(c => {
+            if (c.time >= l1.time) {
+              lowerPoints.push({
+                time: c.time,
+                value: parseFloat((l1.price + slope * (c.time - l1.time)).toFixed(2))
+              });
+            }
+          });
+          elliottTrendline24Series.applyOptions({
+            color: 'rgba(16, 185, 129, 0.75)',
+            lineWidth: 1.5,
+            lineStyle: 2
+          });
+          elliottTrendline24Series.setData(lowerPoints);
         }
-        const lowPt = outerLower.points.find(p => p.time === c.time);
-        if (lowPt && Math.abs(c.low - lowPt.value) <= 0.8 && !usedTimes.has(c.time)) {
-          touchpoints.push({ time: c.time, position: 'belowBar', color: '#06b6d4', shape: 'circle', text: '○' });
-          usedTimes.add(c.time);
-        }
-      });
-
-      const lastSliceBar = slice[slice.length - 1];
-      if (lastSliceBar) {
-        touchpoints.push({
-          time: lastSliceBar.time,
-          position: 'aboveBar',
-          color: '#06b6d4',
-          shape: 'arrowDown',
-          text: patternName
-        });
       }
 
-      trendlineMarkers = touchpoints;
+      trendlineMarkers = [];
       syncAllChartMarkers();
     }
     window.updateTrendlines = updateTrendlines;
+
+
 
         function renderData() {
       if (!rawCandles || rawCandles.length === 0) return;
@@ -15141,6 +14335,478 @@
       }
     }
 
+    
+    // =========================================================================
+    // =========================================================================
+    // 🧭 ENGINE PHÂN TÍCH XU HƯỚNG ĐA KHUNG THỜI GIAN (TOP-DOWN D1 -> M5) [SIÊU TỐC & SONG SONG]
+    // =========================================================================
+    const MTF_CONFIG = [
+      { tf: '1d', label: 'D1', role: 'Macro / Định hướng lớn', weight: 0.30, limit: 80, sec: 86400 },
+      { tf: '4h', label: 'H4', role: 'Cấu trúc chủ đạo', weight: 0.28, limit: 100, sec: 14400 },
+      { tf: '1h', label: 'H1', role: 'Xu hướng trong ngày', weight: 0.18, limit: 120, sec: 3600 },
+      { tf: '30m', label: 'M30', role: 'Trung gian Intraday', weight: 0.10, limit: 120, sec: 1800 },
+      { tf: '15m', label: 'M15', role: 'Tín hiệu xác nhận', weight: 0.08, limit: 120, sec: 900 },
+      { tf: '5m', label: 'M5', role: 'Điểm vào lệnh (Entry)', weight: 0.06, limit: 120, sec: 300 }
+    ];
+
+    let mtfState = {
+      lastScanTs: 0,
+      dominantBias: 'SIDEWAYS',
+      dominantTitle: 'ĐANG PHÂN TÍCH...',
+      confidencePct: 70,
+      normScore: 0,
+      results: {},
+      isScanning: false
+    };
+
+    let mtfCandlesCache = {};
+
+    // Thuật toán gộp nến siêu tốc (Resample) trực tiếp từ rawCandles trong bộ nhớ (< 1ms, 100% không lo nghẽn mạng)
+    function resampleCandlesFromMemory(targetSec) {
+      if (!Array.isArray(rawCandles) || rawCandles.length === 0) return [];
+      const buckets = {};
+      for (let i = 0; i < rawCandles.length; i++) {
+        const c = rawCandles[i];
+        const t = Math.floor(c.time / targetSec) * targetSec;
+        if (!buckets[t]) {
+          buckets[t] = { time: t, open: c.open, high: c.high, low: c.low, close: c.close, vol: c.volume || c.vol || 1 };
+        } else {
+          const b = buckets[t];
+          if (c.high > b.high) b.high = c.high;
+          if (c.low < b.low) b.low = c.low;
+          b.close = c.close;
+          b.vol += (c.volume || c.vol || 1);
+        }
+      }
+      const sorted = Object.values(buckets).sort((a, b) => a.time - b.time);
+      return sorted;
+    }
+
+    // Tải nến nhanh với timeout tối đa 1500ms, tự động chuyển fallback nếu mạng chập chờn
+    async function fetchTfCandlesFast(meta) {
+      const tf = meta.tf;
+      const limit = meta.limit || 80;
+
+      // 1. Kiểm tra cache bộ nhớ còn mới (< 45s)
+      if (mtfCandlesCache[tf] && (Date.now() - mtfCandlesCache[tf].time < 45000)) {
+        return mtfCandlesCache[tf].data;
+      }
+
+      // 2. Nếu khung thời gian này trùng với khung đang mở trên biểu đồ chính -> Lấy ngay tức thì
+      if (typeof currentTfStr !== 'undefined' && currentTfStr === tf && Array.isArray(rawCandles) && rawCandles.length >= 25) {
+        const data = rawCandles.slice(-limit);
+        mtfCandlesCache[tf] = { time: Date.now(), data };
+        return data;
+      }
+
+      // 3. Tải song song qua API với Timeout nghiêm ngặt 1500ms (Không bao giờ để treo)
+      const fetchWithTimeout = async (url, ms = 1500) => {
+        try {
+          const ctrl = new AbortController();
+          const tid = setTimeout(() => ctrl.abort(), ms);
+          const res = await fetch(url, { signal: ctrl.signal });
+          clearTimeout(tid);
+          if (res.ok) {
+            const raw = await res.json();
+            if (Array.isArray(raw) && raw.length >= 15) {
+              return raw.map(k => ({
+                time: Math.floor(k[0] / 1000),
+                open: parseFloat(k[1]),
+                high: parseFloat(k[2]),
+                low: parseFloat(k[3]),
+                close: parseFloat(k[4]),
+                vol: parseFloat(k[5]) || 1
+              })).filter(c => c.close > 1000);
+            }
+          }
+        } catch (e) {}
+        return null;
+      };
+
+      // Thử Binance Futures XAUUSDT trước
+      let candles = await fetchWithTimeout(`https://fapi.binance.com/fapi/v1/klines?symbol=XAUUSDT&interval=${tf}&limit=${limit}`, 1500);
+
+      // Nếu Futures không được, thử Spot PAXGUSDT
+      if (!candles || candles.length < 15) {
+        candles = await fetchWithTimeout(`https://api.binance.com/api/v3/klines?symbol=PAXGUSDT&interval=${tf}&limit=${limit}`, 1200);
+      }
+
+      // 4. Nếu mạng bị chặn hoặc timeout -> Tự động RESAMPLE từ rawCandles trong bộ nhớ (Chạy trong 0.001s!)
+      if (!candles || candles.length < 15) {
+        const resampled = resampleCandlesFromMemory(meta.sec);
+        if (resampled.length >= 5) {
+          candles = resampled.slice(-limit);
+        }
+      }
+
+      if (candles && candles.length > 0) {
+        mtfCandlesCache[tf] = { time: Date.now(), data: candles };
+        return candles;
+      }
+
+      return [];
+    }
+
+    function analyzeSingleTfStructure(candles, meta, curPrice) {
+      if (!Array.isArray(candles) || candles.length < 5) {
+        return {
+          tf: meta.tf,
+          label: meta.label,
+          role: meta.role,
+          weight: meta.weight,
+          valid: false,
+          bias: 'SIDEWAYS',
+          biasLabel: 'ĐI NGANG',
+          score: 0,
+          structText: 'Tích lũy',
+          rsi: 50,
+          atr: 4.5,
+          ema20: curPrice,
+          ema50: curPrice
+        };
+      }
+
+      const lastClose = curPrice || candles[candles.length - 1].close;
+
+      // 1. ATR
+      const trs = [];
+      for (let i = 1; i < candles.length; i++) {
+        const c = candles[i];
+        const prev = candles[i - 1];
+        trs.push(Math.max(c.high - c.low, Math.abs(c.high - prev.close), Math.abs(c.low - prev.close)));
+      }
+      const atrPeriod = Math.min(14, trs.length);
+      const atr = trs.length > 0 ? (trs.slice(-atrPeriod).reduce((a, b) => a + b, 0) / atrPeriod) : 4.5;
+
+      // 2. EMA 20 & EMA 50
+      let ema20 = candles[0].close;
+      let ema50 = candles[0].close;
+      const k20 = 2 / (Math.min(20, candles.length) + 1);
+      const k50 = 2 / (Math.min(50, candles.length) + 1);
+      for (let i = 1; i < candles.length; i++) {
+        ema20 = candles[i].close * k20 + ema20 * (1 - k20);
+        ema50 = candles[i].close * k50 + ema50 * (1 - k50);
+      }
+
+      // 3. RSI
+      let gains = 0, losses = 0;
+      const rsiLen = Math.min(14, candles.length - 1);
+      if (rsiLen > 0) {
+        for (let i = candles.length - rsiLen; i < candles.length; i++) {
+          const diff = candles[i].close - candles[i - 1].close;
+          if (diff >= 0) gains += diff;
+          else losses += Math.abs(diff);
+        }
+      }
+      const rs = losses === 0 ? 100 : (gains / Math.max(0.01, losses));
+      const rsi = Number((100 - (100 / (1 + rs))).toFixed(1));
+
+      // 4. Swing High / Low (3 đến 5 nến linh hoạt)
+      const swingHighs = [];
+      const swingLows = [];
+      const span = candles.length >= 25 ? 2 : 1;
+      for (let i = span; i < candles.length - span; i++) {
+        const c = candles[i];
+        let isH = true, isL = true;
+        for (let s = 1; s <= span; s++) {
+          if (candles[i - s].high > c.high || candles[i + s].high > c.high) isH = false;
+          if (candles[i - s].low < c.low || candles[i + s].low < c.low) isL = false;
+        }
+        if (isH) swingHighs.push(c.high);
+        if (isL) swingLows.push(c.low);
+      }
+
+      let structScore = 0;
+      let structText = 'Tích lũy';
+      if (swingHighs.length >= 2 && swingLows.length >= 2) {
+        const lastSH = swingHighs[swingHighs.length - 1];
+        const prevSH = swingHighs[swingHighs.length - 2];
+        const lastSL = swingLows[swingLows.length - 1];
+        const prevSL = swingLows[swingLows.length - 2];
+
+        const isHH = lastSH > prevSH;
+        const isHL = lastSL > prevSL;
+        const isLH = lastSH < prevSH;
+        const isLL = lastSL < prevSL;
+
+        if (lastClose > lastSH) {
+          structScore = 45;
+          structText = 'BOS Tăng (Phá đỉnh)';
+        } else if (lastClose < lastSL) {
+          structScore = -45;
+          structText = 'BOS Giảm (Phá đáy)';
+        } else if (isHH && isHL) {
+          structScore = 32;
+          structText = 'Cấu trúc Tăng (HH-HL)';
+        } else if (isLH && isLL) {
+          structScore = -32;
+          structText = 'Cấu trúc Giảm (LH-LL)';
+        } else {
+          structScore = lastClose >= ema20 ? 12 : -12;
+          structText = 'Sideways (Đi ngang)';
+        }
+      } else {
+        structScore = lastClose >= ema20 ? 15 : -15;
+        structText = lastClose >= ema20 ? 'Thiên hướng Tăng' : 'Thiên hướng Giảm';
+      }
+
+      // 5. Điểm EMA & Động lượng nến
+      let emaScore = 0;
+      if (ema20 > ema50 && lastClose > ema20) emaScore = 38;
+      else if (ema20 > ema50 && lastClose <= ema20) emaScore = 16;
+      else if (ema20 < ema50 && lastClose < ema20) emaScore = -38;
+      else if (ema20 < ema50 && lastClose >= ema20) emaScore = -16;
+
+      let momScore = 0;
+      if (rsi >= 56) momScore += 15;
+      else if (rsi <= 44) momScore -= 15;
+
+      const pBack = Math.max(0, candles.length - 4);
+      const recentDelta = candles[candles.length - 1].close - candles[pBack].open;
+      if (recentDelta > atr * 0.4) momScore += 8;
+      else if (recentDelta < -atr * 0.4) momScore -= 8;
+
+      const totalScore = Math.max(-100, Math.min(100, Math.round(structScore + emaScore + momScore)));
+
+      let bias = 'SIDEWAYS';
+      let biasLabel = 'ĐI NGANG';
+      if (totalScore >= 20) {
+        bias = 'BUY';
+        biasLabel = totalScore >= 50 ? 'TĂNG MẠNH' : 'TĂNG';
+      } else if (totalScore <= -20) {
+        bias = 'SELL';
+        biasLabel = totalScore <= -50 ? 'GIẢM MẠNH' : 'GIẢM';
+      }
+
+      return {
+        tf: meta.tf,
+        label: meta.label,
+        role: meta.role,
+        weight: meta.weight,
+        valid: true,
+        bias,
+        biasLabel,
+        score: totalScore,
+        structText,
+        rsi,
+        atr: Number(atr.toFixed(2)),
+        ema20: Number(ema20.toFixed(2)),
+        ema50: Number(ema50.toFixed(2))
+      };
+    }
+
+    // HÀM QUÉT SONG SONG SIÊU TỐC: XỬ LÝ TOÀN BỘ 6 KHUNG CÙNG LÚC TRONG < 1.5 GIÂY!
+    async function runMtfTopDownAnalysis(forceRefresh = false) {
+      if (mtfState.isScanning) return;
+      const now = Date.now();
+      if (!forceRefresh && mtfState.lastScanTs > 0 && (now - mtfState.lastScanTs < 30000)) {
+        return;
+      }
+
+      mtfState.isScanning = true;
+      const btnRef = document.getElementById('btn-mtf-refresh');
+      if (btnRef) btnRef.textContent = '⏳ Đang quét...';
+
+      const curPrice = (typeof previousLivePrice !== 'undefined' && previousLivePrice) ? previousLivePrice : 4106.0;
+
+      try {
+        // CHẠY SONG SONG TOÀN BỘ 6 KHUNG BẰNG PROMISE.ALL
+        const tfResults = await Promise.all(MTF_CONFIG.map(async (meta) => {
+          const candles = await fetchTfCandlesFast(meta);
+          const res = analyzeSingleTfStructure(candles, meta, curPrice);
+          mtfState.results[meta.tf] = res;
+          return res;
+        }));
+
+        // Tính điểm tổng hợp có trọng số
+        let weightedScore = 0;
+        let totalWeight = 0;
+        tfResults.forEach(r => {
+          if (r.valid) {
+            weightedScore += r.score * r.weight;
+            totalWeight += r.weight;
+          }
+        });
+        const normScore = totalWeight > 0 ? Math.round(weightedScore / totalWeight) : 0;
+        mtfState.normScore = normScore;
+
+        const byTf = mtfState.results;
+        const d1 = byTf['1d'] || { bias: 'SIDEWAYS', score: 0 };
+        const h4 = byTf['4h'] || { bias: 'SIDEWAYS', score: 0 };
+        const h1 = byTf['1h'] || { bias: 'SIDEWAYS', score: 0 };
+        const m15 = byTf['15m'] || { bias: 'SIDEWAYS', score: 0 };
+
+        let dominantBias = 'SIDEWAYS';
+        let dominantTitle = '⚖️ XU HƯỚNG TRONG NGÀY: TÍCH LŨY BIÊN ĐỘ — CANH 2 ĐẦU';
+        let actionSummary = '';
+
+        if (normScore >= 15 || (d1.score >= 18 && h4.score >= 15)) {
+          dominantBias = 'BUY';
+          const isStrong = normScore >= 38 && h4.bias === 'BUY';
+          dominantTitle = isStrong 
+            ? '🟢 XU HƯỚNG CHỦ ĐẠO: TĂNG MẠNH — ƯU TIÊN CANH BUY' 
+            : '🟢 XU HƯỚNG CHỦ ĐẠO: NGHIÊNG TĂNG — CANH BUY KHI HỒI VỀ VÙNG CẦU';
+          actionSummary = `Khung lớn D1 & H4 duy trì cấu trúc tăng (${h4.structText || 'HH-HL'}). Ưu tiên chờ giá điều chỉnh về vùng Cầu / Sóng 4 thoái lui ở H1, M15 để mở lệnh BUY thuận xu hướng.`;
+        } else if (normScore <= -15 || (d1.score <= -18 && h4.score <= -15)) {
+          dominantBias = 'SELL';
+          const isStrong = normScore <= -38 && h4.bias === 'SELL';
+          dominantTitle = isStrong 
+            ? '🔴 XU HƯỚNG CHỦ ĐẠO: GIẢM MẠNH — ƯU TIÊN CANH SELL' 
+            : '🔴 XU HƯỚNG CHỦ ĐẠO: NGHIÊNG GIẢM — CANH SELL KHI HỒI LÊN VÙNG CUNG';
+          actionSummary = `Khung lớn D1 & H4 chịu áp lực bán chủ đạo. Ưu tiên chờ giá phục hồi lên các vùng Cung / Kháng cự ở H1, M15 để mở lệnh SELL thuận xu hướng.`;
+        } else {
+          actionSummary = `Thị trường đang nén biên độ tích lũy, các khung thời gian giằng co. Khuyến nghị canh MUA tại biên Cầu dưới và canh BÁN tại biên Cung trên.`;
+        }
+
+        // Tính Độ đồng thuận (%)
+        const targetDir = dominantBias === 'SIDEWAYS' ? (normScore >= 0 ? 'BUY' : 'SELL') : dominantBias;
+        let alignedWeight = 0;
+        tfResults.forEach(r => {
+          if (r.bias === targetDir) alignedWeight += r.weight;
+          else if (r.bias === 'SIDEWAYS') alignedWeight += r.weight * 0.5;
+        });
+        const confidencePct = Math.min(96, Math.max(52, Math.round(alignedWeight * 100)));
+
+        mtfState.dominantBias = dominantBias;
+        mtfState.dominantTitle = dominantTitle;
+        mtfState.confidencePct = confidencePct;
+        mtfState.lastScanTs = Date.now();
+
+        // Cập nhật ngay giao diện
+        renderMtfUI(mtfState, actionSummary);
+
+        // Kích hoạt cập nhật lại khuyến nghị tín hiệu AI theo đa khung
+        if (typeof renderTradeSignal === 'function' && curPrice) {
+          renderTradeSignal(curPrice);
+        }
+      } catch (err) {
+        console.warn('Lỗi quét đa khung MTF:', err);
+      } finally {
+        mtfState.isScanning = false;
+        if (btnRef) btnRef.textContent = '🔄 Quét';
+      }
+    }
+
+    function renderMtfUI(state, actionSummary) {
+      const banner = document.getElementById('mtf-dominant-banner');
+      const titleEl = document.getElementById('mtf-dominant-title');
+      const confBadge = document.getElementById('mtf-conf-badge');
+      const timeLbl = document.getElementById('mtf-time-label');
+      const summaryEl = document.getElementById('mtf-action-summary');
+      const tkMtfVal = document.getElementById('tk-mtf-val');
+
+      const d = new Date();
+      const timeStr = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+
+      if (timeLbl) timeLbl.textContent = `${timeStr} (VN)`;
+      if (titleEl) titleEl.textContent = state.dominantTitle;
+      if (confBadge) {
+        confBadge.textContent = `${state.confidencePct}% ĐỒNG THUẬN`;
+        if (state.dominantBias === 'BUY') {
+          confBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+          confBadge.style.color = '#10b981';
+          confBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+        } else if (state.dominantBias === 'SELL') {
+          confBadge.style.background = 'rgba(239, 68, 68, 0.15)';
+          confBadge.style.color = '#ef4444';
+          confBadge.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+        } else {
+          confBadge.style.background = 'rgba(59, 130, 246, 0.15)';
+          confBadge.style.color = '#38bdf8';
+          confBadge.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+        }
+      }
+
+      if (banner) {
+        if (state.dominantBias === 'BUY') {
+          banner.className = 'mtf-banner-buy';
+          if (titleEl) titleEl.style.color = '#10b981';
+        } else if (state.dominantBias === 'SELL') {
+          banner.className = 'mtf-banner-sell';
+          if (titleEl) titleEl.style.color = '#ef4444';
+        } else {
+          banner.className = 'mtf-banner-side';
+          if (titleEl) titleEl.style.color = '#38bdf8';
+        }
+      }
+
+      if (summaryEl && actionSummary) {
+        summaryEl.textContent = actionSummary;
+      }
+
+      // Ticker strip trên đỉnh
+      if (tkMtfVal) {
+        if (state.dominantBias === 'BUY') {
+          tkMtfVal.textContent = `🟢 ƯU TIÊN BUY (${state.confidencePct}%)`;
+          tkMtfVal.style.color = '#10b981';
+        } else if (state.dominantBias === 'SELL') {
+          tkMtfVal.textContent = `🔴 ƯU TIÊN SELL (${state.confidencePct}%)`;
+          tkMtfVal.style.color = '#ef4444';
+        } else {
+          tkMtfVal.textContent = `⚖️ SIDEWAYS (${state.confidencePct}%)`;
+          tkMtfVal.style.color = '#38bdf8';
+        }
+      }
+
+      // Cập nhật 6 ô Matrix
+      MTF_CONFIG.forEach(cfg => {
+        const r = state.results[cfg.tf];
+        const cell = document.getElementById(`mtf-cell-${cfg.tf}`);
+        const biasEl = document.getElementById(`mtf-bias-${cfg.tf}`);
+        if (!r || !biasEl) return;
+
+        const shortBias = (r.bias === 'SIDEWAYS') ? 'SIDE' : r.bias;
+        biasEl.textContent = shortBias;
+        biasEl.className = `mtf-cell-bias ${r.bias === 'SIDEWAYS' ? 'side' : r.bias.toLowerCase()}`;
+        if (cell) {
+          cell.title = `[${cfg.label}] ${r.biasLabel} (Score: ${r.score})\n• Cấu trúc: ${r.structText}\n• RSI(14): ${r.rsi}\n• EMA20: ${r.ema20}\n• Bấm để xem chart ${cfg.label}`;
+          cell.classList.toggle('active-tf', typeof currentTfStr !== 'undefined' && currentTfStr === cfg.tf);
+        }
+      });
+    }
+
+    function initMtfEngine() {
+      const btnRef = document.getElementById('btn-mtf-refresh');
+      if (btnRef) {
+        btnRef.addEventListener('click', () => {
+          showToast('🧭 Đang quét Đa Khung D1 ➔ M5...', 'Hệ thống đang đồng bộ cấu trúc 6 khung thời gian song song...', 'amber');
+          runMtfTopDownAnalysis(true);
+        });
+      }
+
+      // Click cell để chuyển chart nhanh
+      document.querySelectorAll('.mtf-cell').forEach(cell => {
+        cell.addEventListener('click', () => {
+          const tf = cell.getAttribute('data-tf');
+          if (tf && typeof loadApp === 'function') {
+            loadApp(tf);
+            showToast(`📊 Chuyển biểu đồ sang ${tf.toUpperCase()}`, `Đang tải nến và chỉ báo khung ${tf.toUpperCase()}...`, 'emerald');
+            document.querySelectorAll('.mtf-cell').forEach(c => c.classList.remove('active-tf'));
+            cell.classList.add('active-tf');
+          }
+        });
+      });
+
+      // Click Ticker strip cuộn nhanh xuống Card MTF
+      const tkMtf = document.getElementById('tk-mtf-item');
+      if (tkMtf) {
+        tkMtf.addEventListener('click', () => {
+          const card = document.getElementById('card-mtf-bias');
+          if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.style.transition = 'box-shadow 0.3s';
+            card.style.boxShadow = '0 0 15px rgba(59, 130, 246, 0.5)';
+            setTimeout(() => { card.style.boxShadow = ''; }, 1500);
+          }
+        });
+      }
+
+      // Quét tự động ngay khi có nến và lặp lại mỗi 60 giây
+      setTimeout(() => { runMtfTopDownAnalysis(false); }, 1000);
+      setInterval(() => { runMtfTopDownAnalysis(false); }, 60000);
+    }
+
+    initMtfEngine();
     initEconomicCalendar();
     initTelegramAlertUI();
 
