@@ -6,6 +6,12 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
+  <meta name="theme-color" content="#0b0e14">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon-192.png">
   <title>HDPE ROBOT - Real World Gold Data</title>
   <script>
     // Tự động ép trình duyệt khách hàng tải bản mới nhất, không bao giờ kẹt cache cũ
@@ -6187,7 +6193,7 @@
                 <span class="calendar-strip-icon">📅</span>
                 <div>
                   <div class="calendar-strip-title">LỊCH KINH TẾ (ECONOMIC CALENDAR)</div>
-                  <div class="calendar-strip-sub" id="calendar-strip-sub-text">🕒 20:30 Tối nay: Bảng lương Phi Nông nghiệp (Non-Farm Payrolls - NFP) (Tin Đỏ 🔴) · Siêu bão vĩ mô</div>
+                  <div class="calendar-strip-sub" id="calendar-strip-sub-text">🕒 20:30 Tối nay: Chỉ Số Lạm Phát CPI Mỹ (Core CPI m/m &amp; CPI y/y) (Tin Đỏ 🔴) · Đang đếm ngược</div>
                 </div>
               </div>
               <button class="calendar-strip-action" id="btn-open-calendar-action">Xem lịch ↗</button>
@@ -6482,6 +6488,10 @@
               <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
                 <input type="checkbox" id="chk-tele-send-msg" checked>
                 <span style="color: #f1f5f9; font-weight: 600;">💬 Bắn tin nhắn báo động</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                <input type="checkbox" id="chk-tele-news-alert" checked>
+                <span style="color: #fb7185; font-weight: 700;">🚨 Báo bão tin Đỏ/Cam USD trước 15p</span>
               </label>
             </div>
 
@@ -6926,6 +6936,7 @@
         </div>
         <div class="econ-head-right">
           <div class="econ-view-toggle">
+            <button class="econ-vtoggle-btn" id="btn-refresh-econ-data" title="Làm mới lịch ForexFactory ngay bây giờ" style="color: #38bdf8; font-weight: 700;">🔄 Quét Live</button>
             <button class="econ-vtoggle-btn active" id="btn-econ-view-table" title="Chế độ Bảng chuẩn MT5">📊 Bảng MT5</button>
             <button class="econ-vtoggle-btn" id="btn-econ-view-tv" title="Chế độ TradingView Live toàn cầu">🌐 Live TV</button>
           </div>
@@ -11730,6 +11741,7 @@
             enabled: parsed.enabled !== false,
             enableCall: parsed.enableCall !== false,
             enableMsg: parsed.enableMsg !== false,
+            enableNewsAlert: parsed.enableNewsAlert !== false,
             repeatCount: Math.max(1, Math.min(5, parseInt(parsed.repeatCount) || 3)),
             username: parsed.username || 'Thienvu_gold',
             botToken: parsed.botToken || '',
@@ -11741,6 +11753,7 @@
         enabled: true,
         enableCall: true,
         enableMsg: true,
+        enableNewsAlert: true,
         repeatCount: 3,
         username: 'Thienvu_gold',
         botToken: '',
@@ -11842,6 +11855,84 @@
       }
     }
 
+
+    // =========================================================================
+    // HỆ THỐNG CẢNH BÁO BÃO TIN ĐỎ / CAM USD TRƯỚC 15 PHÚT VỀ TELEGRAM
+    // =========================================================================
+    let teleNewsSentKeys = new Set();
+    try {
+      const rawSent = localStorage.getItem('agy_gold_sent_news_tele');
+      if (rawSent) JSON.parse(rawSent).forEach(k => teleNewsSentKeys.add(k));
+    } catch(e) {}
+
+    async function sendNewsTelegramPreAlert(event, minLeft) {
+      const cfg = loadTelegramAlertConfig();
+      if (!cfg.enabled || cfg.enableNewsAlert === false) return;
+
+      const timeStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const impactLabel = event.stars === 3 ? '🔴 TIN ĐỎ (HIGH IMPACT)' : '🟠 TIN CAM (MEDIUM IMPACT)';
+
+      const tgHtml = 
+        `🚨 <b>[CẢNH BÁO BÃO TIN XAU/USD] SẮP RA TIN KINH TẾ MỸ!</b>\n` +
+        `━━━━━━━━━━━━━━━━━━━━\n` +
+        `📌 <b>Sự kiện:</b> <b>${event.name} (${event.currency})</b>\n` +
+        `⏰ <b>Thời gian công bố:</b> <code>${event.time} Hôm nay [GMT+7] — Còn ${minLeft} phút nữa</code>\n` +
+        `📊 <b>Mức tác động:</b> ${impactLabel}\n` +
+        `📈 <b>Dự báo (Forecast):</b> <code>${event.forecast || '--'}</code> | <b>Kỳ trước:</b> <code>${event.prev || '--'}</code>\n` +
+        `━━━━━━━━━━━━━━━━━━━━\n` +
+        `🛡️ <b>Khuyến cáo an toàn cho Trader:</b>\n` +
+        `• Vàng thế giới thường có biến động mạnh <b>15 – 45 USD</b> trong 5-10 phút đầu khi ra tin.\n` +
+        `• Tuyệt đối không treo lệnh Limit sát giá thị trường để tránh bị trượt giá (Slippage) & giãn spread.\n` +
+        `• Hãy chủ động hạ đòn bẩy hoặc bảo vệ lệnh trước khi bão tin quét 2 đầu!\n` +
+        `⏰ <i>HDPE ROBOT tự động báo trước giờ tin 15 phút · Lúc ${timeStr}</i>`;
+
+      // 1. Gửi qua Telegram Bot riêng nếu có botToken & chatId
+      const rawUser = String(cfg.username || '').trim();
+      const effectiveChatId = cfg.chatId || (/^\d+$/.test(rawUser) ? rawUser : '');
+
+      if (cfg.botToken && effectiveChatId) {
+        const botUrl = `https://api.telegram.org/bot${cfg.botToken.trim()}/sendMessage?chat_id=${encodeURIComponent(effectiveChatId)}&text=${encodeURIComponent(tgHtml)}&parse_mode=HTML`;
+        fetch(botUrl).catch(e => console.warn('Lỗi gửi Telegram bot tin tức:', e));
+      }
+
+      // 2. Gửi qua CallMeBot nếu có username
+      const userParam = formatCallMeBotUserParam(cfg.username);
+      if (userParam) {
+        const shortMsg = `🚨 [BAO TIN XAU/USD] ${event.name} (${event.currency}) se ra luc ${event.time} (con ${minLeft} phut). Can than bien dong giat manh 2 dau!`;
+        const textUrl = `https://api.callmebot.com/text.php?user=${userParam}&text=${encodeURIComponent(shortMsg)}`;
+        try {
+          const b = new Image();
+          b.src = textUrl + '&_t=' + Date.now();
+        } catch(e) {}
+        try {
+          fetch(textUrl, { mode: 'no-cors' }).catch(() => {});
+        } catch(e) {}
+
+        // Nếu là tin ĐỎ cực mạnh và bật gọi điện: Gọi điện thoại báo luôn!
+        if (cfg.enableCall && event.stars === 3) {
+          const callSpeech = `Canh bao bao tin do kinh te My. ${event.name} se cong bo sau ${minLeft} phut nua. Kiem tra va bao ve lenh Vang ngay!`;
+          const callUrl = `https://api.callmebot.com/start.php?user=${userParam}&text=${encodeURIComponent(callSpeech)}&lang=vi-VN-Standard-A&rpt=2`;
+          try {
+            const beacon = new Image();
+            beacon.src = callUrl + '&_t=' + Date.now();
+          } catch(e) {}
+          try {
+            fetch(callUrl, { mode: 'no-cors' }).catch(() => {});
+          } catch(e) {}
+        }
+      }
+
+      // 3. Hiển thị thông báo Toast trên màn hình
+      if (typeof showToast === 'function') {
+        showToast(`🚨 SẮP RA TIN ${event.stars === 3 ? 'ĐỎ' : 'CAM'} USD!`, `${event.name} sẽ ra lúc ${event.time} (còn ${minLeft} phút). Đã gửi cảnh báo về Telegram!`, 'error', 9000);
+      }
+
+      // 4. Phát tiếng chuông cảnh báo
+      if (typeof playBeep === 'function') {
+        playBeep(920, 0.25);
+      }
+    }
+
     function initTelegramAlertUI() {
       const chkTeleEnabled = document.getElementById('chk-tele-enabled');
       const inpTeleUser = document.getElementById('inp-tele-username');
@@ -11862,6 +11953,9 @@
       if (inpTeleToken) inpTeleToken.value = cfg.botToken;
       if (inpTeleChat) inpTeleChat.value = cfg.chatId;
 
+      const chkTeleNews = document.getElementById('chk-tele-news-alert');
+      if (chkTeleNews) chkTeleNews.checked = cfg.enableNewsAlert !== false;
+
       const syncFromUI = () => {
         const rawUser = inpTeleUser ? inpTeleUser.value.trim() : '';
         const isNumeric = /^\d+$/.test(rawUser);
@@ -11869,6 +11963,7 @@
           enabled: chkTeleEnabled ? chkTeleEnabled.checked : true,
           enableCall: chkTeleCall ? chkTeleCall.checked : true,
           enableMsg: chkTeleMsg ? chkTeleMsg.checked : true,
+          enableNewsAlert: chkTeleNews ? chkTeleNews.checked : true,
           repeatCount: selTeleRepeat ? (parseInt(selTeleRepeat.value) || 3) : 3,
           username: rawUser,
           botToken: inpTeleToken ? inpTeleToken.value.trim() : '',
@@ -11879,7 +11974,7 @@
         return updated;
       };
 
-      [chkTeleEnabled, chkTeleCall, chkTeleMsg, selTeleRepeat].forEach(chk => {
+      [chkTeleEnabled, chkTeleCall, chkTeleMsg, selTeleRepeat, chkTeleNews].forEach(chk => {
         if (chk) chk.addEventListener('change', syncFromUI);
       });
       [inpTeleUser, inpTeleToken, inpTeleChat].forEach(inp => {
@@ -13601,276 +13696,466 @@
       return getVietnamDateInfo(target).dateStr;
     }
 
-    const ECON_EVENTS_DATABASE = [
-      // THỨ HAI (02/11/2026) - ĐÃ CÔNG BỐ
+        // =========================================================================
+    // DỮ LIỆU LỊCH KINH TẾ FOREXFACTORY TUẦN NÀY (ĐỒNG BỘ 100% GMT+7 ASIA/HO_CHI_MINH)
+    // =========================================================================
+    let ECON_EVENTS_DATABASE = [
+      // THỨ HAI (09/11/2026)
       {
-        id: 'eur_cpi',
-        date: '2026-11-02',
+        id: 'ff_bowman_speaks_20261109',
+        date: '2026-11-09',
         dayLabel: 'Thứ Hai',
-        time: '17:00',
-        currency: 'EUR',
-        country: 'EU',
-        stars: 3,
-        impactBadge: 'high',
-        name: 'Ước tính nhanh CPI Khu vực đồng Euro (năm/năm)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '2,0%',
-        forecast: '1,9%',
-        prev: '1,7%',
-        tip: 'Lạm phát toàn diện Eurozone, chi phối lộ trình hạ lãi suất của ECB và tỷ giá EUR/USD.'
-      },
-      {
-        id: 'ism_mfg_pmi',
-        date: '2026-11-02',
-        dayLabel: 'Thứ Hai',
-        time: '22:00',
+        time: '20:40',
         currency: 'USD',
         country: 'US',
-        stars: 3,
-        impactBadge: 'high',
-        name: 'Chỉ số PMI sản xuất ISM (Kỳ T10/2026)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '54,8',
-        forecast: '54,7',
-        prev: '54,5',
-        tip: 'Thực tế công bố 54,8 (Cao hơn dự báo 54,7) -> Ngành sản xuất Mỹ tăng trưởng tốt.'
+        stars: 2,
+        impactBadge: 'medium',
+        name: 'Thành viên FOMC Bowman phát biểu (FOMC Member Bowman Speaks)',
+        reportPeriod: '',
+        actual: 'Đã phát biểu',
+        forecast: '—',
+        prev: '—',
+        tip: '🔥 <strong>QUAN TRỌNG ĐẶC BIỆT:</strong> Phát biểu từ Thống đốc Fed Michelle Bowman về triển vọng lạm phát và lộ trình cắt giảm lãi suất của Fed.',
+        timestamp: 1794231600000
       },
-
-      // THỨ BA (03/11/2026)
       {
-        id: 'jolts_openings',
-        date: '2026-11-03',
-        dayLabel: 'Thứ Ba',
+        id: 'ff_goolsbee_speaks_20261109',
+        date: '2026-11-09',
+        dayLabel: 'Thứ Hai',
         time: '22:00',
         currency: 'USD',
         country: 'US',
         stars: 2,
         impactBadge: 'medium',
-        name: 'Cơ hội việc làm JOLTS (JOLTS Job Openings)',
-        reportPeriod: 'Kỳ T9/2026',
-        actual: '7,44M',
-        forecast: '7,51M',
-        prev: '7,44M',
-        tip: '<strong>Cơ hội việc làm JOLTS (Tin Cam 🟠)</strong>: Thị trường lao động hạ nhiệt, tăng kỳ vọng Fed nới lỏng lãi suất -> <strong>Hỗ trợ Vàng tăng giá</strong>.'
-      },
-      {
-        id: 'factory_orders',
-        date: '2026-11-03',
-        dayLabel: 'Thứ Ba',
-        time: '22:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 1,
-        impactBadge: 'low',
-        name: 'Đơn đặt hàng nhà máy theo tháng (Factory Orders m/m)',
-        reportPeriod: 'Kỳ T9/2026',
-        actual: '0,2%',
-        forecast: '0,2%',
-        prev: '-0,2%',
-        tip: 'Đơn đặt hàng nhà máy đo lường giá trị các đơn đặt hàng mới của cơ sở sản xuất.'
-      },
-      {
-        id: 'rcm_tipp_optimism',
-        date: '2026-11-03',
-        dayLabel: 'Thứ Ba',
-        time: '22:10',
-        currency: 'USD',
-        country: 'US',
-        stars: 1,
-        impactBadge: 'low',
-        name: 'Chỉ số lạc quan kinh tế RCM/TIPP (Economic Optimism)',
-        reportPeriod: 'Kỳ T11/2026',
-        actual: '47,2',
-        forecast: '47,2',
-        prev: '46,9',
-        tip: 'Khảo sát tâm lý người tiêu dùng về triển vọng kinh tế 6 tháng tới.'
-      },
-      {
-        id: 'vehicle_sales',
-        date: '2026-11-03',
-        dayLabel: 'Thứ Ba',
-        time: '22:15',
-        currency: 'USD',
-        country: 'US',
-        stars: 1,
-        impactBadge: 'low',
-        name: 'Tổng doanh số bán xe (Total Vehicle Sales)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '15,8M',
-        forecast: '15,8M',
-        prev: '15,8M',
-        tip: 'Doanh số bán xe cơ giới hàng tháng tại Mỹ.'
+        name: 'Chủ tịch Fed Chicago Goolsbee phát biểu (FOMC Member Goolsbee Speaks)',
+        reportPeriod: '',
+        actual: 'Đã phát biểu',
+        forecast: '—',
+        prev: '—',
+        tip: '🔥 Phát biểu mang tính định hướng của Austan Goolsbee về tăng trưởng việc làm và áp lực giá cả thị trường Mỹ.',
+        timestamp: 1794236400000
       },
 
-      // THỨ TƯ (04/11/2026)
+      // THỨ BA (10/11/2026) - HÔM NAY (SIÊU BÃO CPI MỸ & FED WALLER)
       {
-        id: 'adp_nonfarm',
-        date: '2026-11-04',
-        dayLabel: 'Thứ Tư',
-        time: '20:15',
-        currency: 'USD',
-        country: 'US',
-        stars: 3,
-        impactBadge: 'high',
-        name: 'Báo cáo việc làm phi nông nghiệp tư nhân ADP (ADP Employment)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '143K',
-        forecast: '115K',
-        prev: '143K',
-        tip: '🔥 <strong>Việc làm ADP (Tin Đỏ 🔴)</strong> là chỉ báo dẫn đường sớm cho Non-Farm chính thức của Bộ Lao động Mỹ.'
-      },
-      {
-        id: 'final_services_pmi',
-        date: '2026-11-04',
-        dayLabel: 'Thứ Tư',
-        time: '21:45',
-        currency: 'USD',
-        country: 'US',
-        stars: 1,
-        impactBadge: 'low',
-        name: 'Chỉ số PMI Dịch vụ S&P Toàn cầu (Final Services PMI)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '55,3',
-        forecast: '55,3',
-        prev: '55,3',
-        tip: 'Đo lường hoạt động khu vực dịch vụ theo S&P Global.'
-      },
-      {
-        id: 'ism_services',
-        date: '2026-11-04',
-        dayLabel: 'Thứ Tư',
-        time: '22:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 3,
-        impactBadge: 'high',
-        name: 'Chỉ số PMI phi sản xuất / Dịch vụ ISM (ISM Services PMI)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '56,0',
-        forecast: '53,8',
-        prev: '54,9',
-        tip: '🔥 <strong>PMI Dịch vụ ISM (Tin Đỏ 🔴)</strong> đóng góp hơn 70% tổng GDP của Mỹ.'
-      },
-
-      // THỨ NĂM (05/11/2026)
-      {
-        id: 'gbp_rate',
-        date: '2026-11-05',
-        dayLabel: 'Thứ Năm',
-        time: '19:00',
+        id: 'ff_boe_bailey_speaks_20261110',
+        date: '2026-11-10',
+        dayLabel: 'Thứ Ba',
+        time: '00:25',
         currency: 'GBP',
         country: 'GB',
         stars: 3,
         impactBadge: 'high',
-        name: 'Quyết định Lãi suất Ngân hàng Trung ương Anh (BoE Rate)',
-        reportPeriod: 'Kỳ T11/2026',
-        actual: '4,75%',
-        forecast: '4,75%',
-        prev: '5,00%',
-        tip: 'Tuyên bố chính sách tiền tệ và quyết định lãi suất của BoE.'
+        name: 'Thống đốc BoE Bailey phát biểu (BOE Gov Bailey Speaks)',
+        reportPeriod: '',
+        actual: 'Đã phát biểu',
+        forecast: '—',
+        prev: '—',
+        tip: '🔥 Phát biểu chính sách tiền tệ của Thống đốc Ngân hàng Trung ương Anh Andrew Bailey tác động mạnh tới tỷ giá GBP/USD và gián tiếp ảnh hưởng DXY.',
+        timestamp: 1794245100000
       },
       {
-        id: 'jobless_claims',
-        date: '2026-11-05',
+        id: 'ff_note_auction_3y_20261110',
+        date: '2026-11-10',
+        dayLabel: 'Thứ Ba',
+        time: '01:00',
+        currency: 'USD',
+        country: 'US',
+        stars: 2,
+        impactBadge: 'medium',
+        name: 'Đấu thầu Trái phiếu Kho bạc 3 năm Mỹ (3-Year Note Auction)',
+        reportPeriod: '',
+        actual: '4,15%',
+        forecast: '—',
+        prev: '4,93%',
+        tip: 'Lợi suất trúng thầu trái phiếu kho bạc Mỹ phản ánh nhu cầu hấp thụ nợ công của nhà đầu tư quốc tế.',
+        timestamp: 1794247200000
+      },
+      {
+        id: 'ff_waller_speaks_20261110',
+        date: '2026-11-10',
+        dayLabel: 'Thứ Ba',
+        time: '16:00',
+        currency: 'USD',
+        country: 'US',
+        stars: 2,
+        impactBadge: 'medium',
+        name: 'Thống đốc Fed Christopher Waller phát biểu (FOMC Member Waller Speaks)',
+        reportPeriod: '',
+        actual: 'Đã phát biểu',
+        forecast: '—',
+        prev: '—',
+        tip: '🔥 <strong>SỰ KIỆN GÂY SẬP VÀNG CHIỀU NAY:</strong> Thống đốc Fed Christopher Waller phát biểu diều hâu về lạm phát lúc 16:00, kích hoạt làn sóng chốt lời và áp lực xả mạnh trên toàn bộ thị trường XAU/USD.',
+        timestamp: 1794301200000
+      },
+      {
+        id: 'ff_cpi_mom_20261110',
+        date: '2026-11-10',
+        dayLabel: 'Thứ Ba',
+        time: '20:30',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Chỉ số Giá Tiêu dùng CPI tổng thể theo tháng (CPI m/m)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '—',
+        forecast: '0,3%',
+        prev: '0,6%',
+        tip: '🔥 <strong>SIÊU BÃO VĨ MÔ QUAN TRỌNG NHẤT TUẦN (20:30 TỐI NAY)</strong>:<br>• <strong>CPI < 0,3%</strong>: Lạm phát hạ nhiệt nhanh -> DXY lao dốc -> Vàng bùng nổ tăng 25 - 45 USD.<br>• <strong>CPI > 0,3%</strong>: Lạm phát nóng trở lại -> Fed hoãn giảm lãi suất -> DXY tăng sốc -> Vàng chịu áp lực bán tháo lao dốc mạnh.',
+        timestamp: 1794317400000
+      },
+      {
+        id: 'ff_core_cpi_mom_20261110',
+        date: '2026-11-10',
+        dayLabel: 'Thứ Ba',
+        time: '20:30',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Chỉ số CPI lõi theo tháng loại trừ năng lượng (Core CPI m/m)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '—',
+        forecast: '0,2%',
+        prev: '0,3%',
+        tip: '🔥 Thước đo lạm phát lõi được Fed quan tâm hàng đầu để quyết định lãi suất cuộc họp tháng 12.',
+        timestamp: 1794317400001
+      },
+      {
+        id: 'ff_cpi_yoy_20261110',
+        date: '2026-11-10',
+        dayLabel: 'Thứ Ba',
+        time: '20:30',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Chỉ số Giá Tiêu dùng CPI theo năm (CPI y/y)',
+        reportPeriod: 'Kỳ T10/2026',
+        actual: '—',
+        forecast: '2,9%',
+        prev: '3,0%',
+        tip: 'Tỷ lệ lạm phát hàng năm của Mỹ. Nếu rơi xuống dưới 2,8% sẽ tạo động lực cực lớn cho Vàng lập đỉnh mới.',
+        timestamp: 1794317400002
+      },
+      {
+        id: 'ff_logan_speaks_20261110',
+        date: '2026-11-10',
+        dayLabel: 'Thứ Ba',
+        time: '22:50',
+        currency: 'USD',
+        country: 'US',
+        stars: 1,
+        impactBadge: 'low',
+        name: 'Chủ tịch Fed Dallas Lorie Logan phát biểu (FOMC Member Logan Speaks)',
+        reportPeriod: '',
+        actual: '—',
+        forecast: '—',
+        prev: '—',
+        tip: 'Bình luận của thành viên FOMC sau khi công bố số liệu CPI.',
+        timestamp: 1794325800000
+      },
+      {
+        id: 'ff_lane_speaks_20261110',
+        date: '2026-11-10',
+        dayLabel: 'Thứ Ba',
+        time: '23:45',
+        currency: 'EUR',
+        country: 'EU',
+        stars: 2,
+        impactBadge: 'medium',
+        name: 'Thành viên Ban điều hành ECB Philip Lane phát biểu',
+        reportPeriod: '',
+        actual: '—',
+        forecast: '—',
+        prev: '—',
+        tip: 'Định hướng chính sách tiền tệ và lãi suất của Ngân hàng Trung ương Châu Âu ECB.',
+        timestamp: 1794329100000
+      },
+
+      // THỨ TƯ (11/11/2026)
+      {
+        id: 'ff_steo_eia_20261111',
+        date: '2026-11-11',
+        dayLabel: 'Thứ Tư',
+        time: '00:00',
+        currency: 'USD',
+        country: 'US',
+        stars: 2,
+        impactBadge: 'medium',
+        name: 'Triển vọng Năng lượng Ngắn hạn EIA (EIA STEO Report)',
+        reportPeriod: 'Báo cáo tháng',
+        actual: '—',
+        forecast: '—',
+        prev: '—',
+        tip: 'Báo cáo cung cầu dầu thô thế giới của cơ quan thông tin năng lượng Mỹ EIA, tác động trực tiếp giá dầu và kỳ vọng lạm phát.',
+        timestamp: 1794330000000
+      },
+      {
+        id: 'ff_note_auction_10y_20261111',
+        date: '2026-11-11',
+        dayLabel: 'Thứ Tư',
+        time: '01:00',
+        currency: 'USD',
+        country: 'US',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Đấu thầu Trái phiếu Kho bạc 10 năm Mỹ (10-y Bond Auction)',
+        reportPeriod: '',
+        actual: '—',
+        forecast: '—',
+        prev: '4,45%',
+        tip: '🔥 Đấu thầu trái phiếu 10 năm quyết định trực tiếp Lợi suất US10Y và sức mạnh đồng USD.',
+        timestamp: 1794333600000
+      },
+      {
+        id: 'ff_schmid_speaks_20261111',
+        date: '2026-11-11',
+        dayLabel: 'Thứ Tư',
+        time: '01:30',
+        currency: 'USD',
+        country: 'US',
+        stars: 2,
+        impactBadge: 'medium',
+        name: 'Chủ tịch Fed Kansas City Schmid phát biểu (FOMC Member Schmid Speaks)',
+        reportPeriod: '',
+        actual: '—',
+        forecast: '—',
+        prev: '—',
+        tip: 'Nhận định của Fed về chính sách lãi suất và cân đối bảng tài sản.',
+        timestamp: 1794335400000
+      },
+      {
+        id: 'ff_bowman_speaks_20261111_a',
+        date: '2026-11-11',
+        dayLabel: 'Thứ Tư',
+        time: '03:30',
+        currency: 'USD',
+        country: 'US',
+        stars: 2,
+        impactBadge: 'medium',
+        name: 'Thống đốc Fed Bowman phát biểu phiên đêm (FOMC Member Bowman Speaks)',
+        reportPeriod: '',
+        actual: '—',
+        forecast: '—',
+        prev: '—',
+        tip: 'Phát biểu của Thống đốc Fed Michelle Bowman tại hội nghị ngân hàng.',
+        timestamp: 1794342600000
+      },
+      {
+        id: 'ff_lagarde_speaks_20261111',
+        date: '2026-11-11',
+        dayLabel: 'Thứ Tư',
+        time: '16:45',
+        currency: 'EUR',
+        country: 'EU',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Chủ tịch ECB Christine Lagarde phát biểu (ECB President Lagarde Speaks)',
+        reportPeriod: '',
+        actual: '—',
+        forecast: '—',
+        prev: '—',
+        tip: '🔥 Bài phát biểu của người đứng đầu Ngân hàng Trung ương Châu Âu ECB về triển vọng tăng trưởng và lạm phát Eurozone.',
+        timestamp: 1794390300000
+      },
+
+      // THỨ NĂM (12/11/2026)
+      {
+        id: 'ff_gbp_gdp_20261112',
+        date: '2026-11-12',
+        dayLabel: 'Thứ Năm',
+        time: '14:00',
+        currency: 'GBP',
+        country: 'GB',
+        stars: 3,
+        impactBadge: 'high',
+        name: 'Tổng sản phẩm quốc nội GDP Anh Quốc theo tháng (GDP m/m)',
+        reportPeriod: 'Kỳ T9/2026',
+        actual: '—',
+        forecast: '0,2%',
+        prev: '0,2%',
+        tip: 'Tăng trưởng kinh tế Vương quốc Anh, chi phối tỷ giá GBP và sức mạnh tương quan với USD.',
+        timestamp: 1794466800000
+      },
+      {
+        id: 'ff_unemp_claims_20261112',
+        date: '2026-11-12',
         dayLabel: 'Thứ Năm',
         time: '20:30',
         currency: 'USD',
         country: 'US',
         stars: 3,
         impactBadge: 'high',
-        name: 'Số đơn xin trợ cấp thất nghiệp lần đầu (Jobless Claims)',
+        name: 'Số đơn xin trợ cấp thất nghiệp lần đầu Mỹ (Unemployment Claims)',
         reportPeriod: 'Tuần qua',
-        actual: '221K',
-        forecast: '218K',
-        prev: '216K',
-        tip: 'Số đơn xin trợ cấp thất nghiệp phản ánh sa thải hàng tuần. Đơn tăng trên 225K là tín hiệu rất tốt cho phe Mua Vàng.'
+        actual: '—',
+        forecast: '215K',
+        prev: '221K',
+        tip: '🔥 <strong>TIN ĐỎ THẤT NGHIỆP TUẦN</strong>: Đơn trợ cấp tăng trên 225K là động lực hỗ trợ Vàng; đơn giảm mạnh dưới 210K củng cố sức mạnh USD ép Vàng giảm.',
+        timestamp: 1794490200000
       },
 
-      // THỨ SÁU (06/11/2026) - HÔM NAY - SIÊU BÃO FOMC & NON-FARM PAYROLLS!
+      // THỨ SÁU (13/11/2026) - SIÊU BÃO PPI & BÁN LẺ
       {
-        id: 'fomc_decision',
-        date: '2026-11-06',
-        dayLabel: 'Thứ Sáu',
-        time: '02:00',
-        currency: 'USD',
-        country: 'US',
-        stars: 3,
-        impactBadge: 'high',
-        name: 'Quyết định Lãi suất FOMC (Cục Dự Trữ Liên Bang Fed)',
-        reportPeriod: 'Kỳ T11/2026',
-        actual: '4,75%',
-        forecast: '4,75%',
-        prev: '5,00%',
-        tip: '🔥 <strong>SỰ KIỆN QUAN TRỌNG NHẤT THÁNG</strong>: Quyết định lãi suất của Fed. Đã hạ 25 bps về 4,75% đúng dự báo rạng sáng nay.'
-      },
-      {
-        id: 'fomc_press_conf',
-        date: '2026-11-06',
-        dayLabel: 'Thứ Sáu',
-        time: '02:30',
-        currency: 'USD',
-        country: 'US',
-        stars: 3,
-        impactBadge: 'high',
-        name: 'Họp báo Chủ tịch Fed Jerome Powell (FOMC Press Conference)',
-        reportPeriod: 'Kỳ T11/2026',
-        actual: 'Đã họp báo',
-        forecast: '—',
-        prev: '—',
-        tip: 'Bài phát biểu định hướng lãi suất tiếp theo của Jerome Powell gây rung lắc mạnh 2 chiều trên toàn bộ thị trường tiền tệ.'
-      },
-      {
-        id: 'nfp_report',
-        date: '2026-11-06',
+        id: 'ff_core_ppi_20261113',
+        date: '2026-11-13',
         dayLabel: 'Thứ Sáu',
         time: '20:30',
         currency: 'USD',
         country: 'US',
         stars: 3,
         impactBadge: 'high',
-        name: 'Bảng lương Phi Nông nghiệp (Non-Farm Payrolls - NFP)',
+        name: 'Chỉ số Giá Sản xuất Lõi Mỹ theo tháng (Core PPI m/m)',
         reportPeriod: 'Kỳ T10/2026',
         actual: '—',
-        forecast: '110K',
-        prev: '254K',
-        publishedActual: '113K',
-        tip: '🔥 <strong>SIÊU BÃO NON-FARM (8h30 TỐI NAY)</strong>: Thước đo vàng của thị trường tài chính toàn cầu. Dự báo 110K việc làm mới.<br>• <strong>NFP < 110K</strong>: Thị trường lao động suy yếu trầm trọng -> DXY lao dốc -> Vàng bùng nổ tăng mạnh 20-40 USD.<br>• <strong>NFP > 140K</strong>: Việc làm vững chắc vượt kỳ vọng -> DXY tăng sốc -> Vàng chịu áp lực bán tháo lao dốc mạnh.'
+        forecast: '0,2%',
+        prev: '0,2%',
+        tip: '🔥 <strong>SIÊU BÃO GIÁ SẢN XUẤT PPI</strong>: Thước đo lạm phát bán buôn từ nhà sản xuất, là chỉ báo sớm dẫn dắt lạm phát tiêu dùng CPI các tháng tiếp theo.',
+        timestamp: 1794576600000
       },
       {
-        id: 'unemp_rate',
-        date: '2026-11-06',
+        id: 'ff_ppi_mom_20261113',
+        date: '2026-11-13',
         dayLabel: 'Thứ Sáu',
         time: '20:30',
         currency: 'USD',
         country: 'US',
         stars: 3,
         impactBadge: 'high',
-        name: 'Tỷ lệ thất nghiệp Mỹ (Unemployment Rate)',
+        name: 'Chỉ số Giá Sản xuất Tổng thể theo tháng (PPI m/m)',
         reportPeriod: 'Kỳ T10/2026',
         actual: '—',
-        forecast: '4,1%',
-        prev: '4,1%',
-        publishedActual: '4,1%',
-        tip: 'Tỷ lệ thất nghiệp duy trì mức 4,1%. Nếu tăng lên 4,2% hoặc 4,3% sẽ là động lực cực lớn hỗ trợ Vàng bứt phá đỉnh mới.'
-      },
-      {
-        id: 'hourly_earnings',
-        date: '2026-11-06',
-        dayLabel: 'Thứ Sáu',
-        time: '20:30',
-        currency: 'USD',
-        country: 'US',
-        stars: 3,
-        impactBadge: 'high',
-        name: 'Thu nhập trung bình theo giờ theo tháng (Average Hourly Earnings)',
-        reportPeriod: 'Kỳ T10/2026',
-        actual: '—',
-        forecast: '0,3%',
-        prev: '0,4%',
-        publishedActual: '0,4%',
-        tip: 'Thước đo lạm phát tiền lương, yếu tố cốt lõi chi phối quyết định chính sách của Fed.'
+        forecast: '0,1%',
+        prev: '0,0%',
+        tip: 'Chỉ số PPI đo lường biến động giá bán trung bình của các nhà sản xuất nội địa Mỹ.',
+        timestamp: 1794576600001
       }
     ];
+
+    function generateEventTip(title, impact, currency) {
+      const t = (title || '').toLowerCase();
+      if (t.includes('fomc') || t.includes('powell') || t.includes('fed') || t.includes('speaks') || t.includes('waller') || t.includes('rate') || t.includes('monetary') || t.includes('bowman') || t.includes('goolsbee') || t.includes('barkin') || t.includes('schmid') || t.includes('logan')) {
+        return '🔥 <strong>QUAN TRỌNG ĐẶC BIỆT:</strong> Phát biểu hoặc chính sách từ lãnh đạo Cục Dự trữ Liên bang Fed / NHTW. Định hướng lãi suất và lạm phát thường kích hoạt biến động dữ dội 2 chiều trên cặp XAU/USD.';
+      } else if (t.includes('cpi') || t.includes('inflation')) {
+        return '🔥 <strong>SIÊU BÃO LẠM PHÁT (CPI):</strong> Thước đo lạm phát cốt lõi chi phối trực tiếp lãi suất Fed. CPI hạ nhiệt -> DXY giảm -> Hỗ trợ Vàng tăng tốc bứt phá; CPI nóng vượt kỳ vọng -> DXY tăng sốc -> Vàng chịu áp lực bán tháo.';
+      } else if (t.includes('non-farm') || t.includes('payrolls') || t.includes('nfp') || t.includes('unemployment')) {
+        return '🔥 <strong>SIÊU BÃO NON-FARM PAYROLLS & THẤT NGHIỆP:</strong> Báo cáo việc làm toàn diện của Mỹ. Biến động trung bình từ 25 - 45 USD ngay khi ra tin.';
+      } else if (t.includes('pmi') || t.includes('ism')) {
+        return '📊 <strong>CHỈ SỐ PMI SẢN XUẤT / DỊCH VỤ:</strong> Đo lường sức khỏe doanh nghiệp và động lực kinh tế Mỹ. PMI > 50 phản ánh mở rộng; PMI < 50 cho thấy suy thoái tiềm ẩn.';
+      } else if (t.includes('gdp')) {
+        return '🏛️ <strong>TĂNG TRƯỞNG GDP MỸ:</strong> Tổng sản phẩm quốc nội đo lường quy mô nền kinh tế số 1 thế giới. Tác động lớn tới kỳ vọng chính sách tiền tệ dài hạn.';
+      } else if (t.includes('jobless') || t.includes('claims')) {
+        return '📈 <strong>TRỢ CẤP THẤT NGHIỆP TUẦN:</strong> Phản ánh sa thải và sức khỏe thị trường lao động Mỹ. Đơn xin trợ cấp tăng là tín hiệu hỗ trợ đà tăng cho Vàng.';
+      } else if (t.includes('retail sales')) {
+        return '🛒 <strong>DOANH SỐ BÁN LẺ:</strong> Động lực tiêu dùng chiếm 70% nền kinh tế Mỹ. Chi tiêu tiêu dùng mạnh củng cố đồng USD, gây áp lực lên Vàng.';
+      }
+      return impact === 'High' 
+        ? '🔥 <strong>TIN ĐỎ CẤP 1 (HIGH IMPACT):</strong> Độ giật lớn trên toàn bộ thị trường ngoại hối và vàng. Khuyến cáo né bão hoặc quản lý chặt rủi ro.'
+        : '🟠 <strong>TIN CAM CẤP 2 (MEDIUM IMPACT):</strong> Có khả năng tạo biến động ngắn hạn 8 - 15 USD trên XAU/USD tùy theo độ chênh lệch số liệu.';
+    }
+
+    async function fetchEconomicNewsCalendar(forceRefresh = false) {
+      const now = Date.now();
+      const CACHE_KEY = 'agy_gold_news_calendar_cache_v9';
+      const CACHE_TTL = 15 * 60 * 1000; // Cache 15 phút
+
+      // Luôn đồng bộ chu kỳ và vẽ giao diện với dữ liệu có sẵn trước ngay lập tức
+      syncEventPeriods();
+      renderEconomicCalendar();
+      updateNextEventBanner();
+
+      // Kiểm tra Cache hợp lệ nếu không ép làm mới
+      if (!forceRefresh) {
+        try {
+          const cachedRaw = localStorage.getItem(CACHE_KEY);
+          if (cachedRaw) {
+            const cachedObj = JSON.parse(cachedRaw);
+            if (cachedObj && cachedObj.timestamp && (now - cachedObj.timestamp < CACHE_TTL) && Array.isArray(cachedObj.events) && cachedObj.events.length > 0) {
+              ECON_EVENTS_DATABASE = cachedObj.events;
+              syncEventPeriods();
+              renderEconomicCalendar();
+              updateNextEventBanner();
+              return;
+            }
+          }
+        } catch (e) {}
+      }
+
+      let parsed = [];
+      const dayNames = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+
+      // NGUỒN: Biquote Calendar API (Keyless, hỗ trợ CORS, chuẩn UTC)
+      try {
+        const resBiquote = await fetch('https://biquote.io/api/calendar?currency=USD');
+        if (resBiquote.ok) {
+          const rawBiquote = await resBiquote.json();
+          if (Array.isArray(rawBiquote) && rawBiquote.length > 0) {
+            parsed = rawBiquote
+              .filter(item => (item.currency === 'USD' || item.currency === 'EUR' || item.currency === 'GBP') && (item.importance === 'high' || item.importance === 'medium' || (item.currency === 'USD' && item.importance === 'low')))
+              .map(item => {
+                const d = new Date(item.time);
+                const ts = d.getTime();
+                const vnInfo = getVietnamDateInfo(d);
+                const dateStr = vnInfo.dateStr;
+                const timeStr = `${String(vnInfo.hours).padStart(2, '0')}:${String(vnInfo.minutes).padStart(2, '0')}`;
+                
+                // Day of week
+                const dUtc = new Date(ts + 7 * 3600000);
+                const dayLabel = dayNames[dUtc.getUTCDay()] || 'Hôm nay';
+                const isHigh = item.importance === 'high';
+                const isMed = item.importance === 'medium';
+                const stars = isHigh ? 3 : (isMed ? 2 : 1);
+                const impactBadge = isHigh ? 'high' : (isMed ? 'medium' : 'low');
+                const currency = item.currency || 'USD';
+                const country = item.countryCode || (currency === 'USD' ? 'US' : currency.slice(0, 2));
+                const name = item.name || 'Sự kiện kinh tế';
+                const forecast = item.forecast !== null && item.forecast !== undefined ? String(item.forecast) : '—';
+                const prev = item.previous !== null && item.previous !== undefined ? String(item.previous) : '—';
+                const actual = item.actual !== null && item.actual !== undefined ? String(item.actual) : '—';
+                const tip = generateEventTip(name, isHigh ? 'High' : 'Medium', currency);
+
+                return {
+                  id: `biq_${item.id || name.replace(/\s+/g, '_')}_${ts}`,
+                  date: dateStr,
+                  dayLabel,
+                  time: timeStr,
+                  currency,
+                  country,
+                  stars,
+                  impactBadge,
+                  name,
+                  reportPeriod: '',
+                  actual,
+                  forecast,
+                  prev,
+                  tip,
+                  timestamp: ts
+                };
+              })
+              .filter(item => !isNaN(item.timestamp));
+          }
+        }
+      } catch (e) {
+        console.warn('Lỗi gọi Biquote Calendar API:', e);
+      }
+
+      // Nếu lấy được dữ liệu động mới: Hợp nhất và cập nhật
+      if (parsed.length > 0) {
+        parsed.sort((a, b) => a.timestamp - b.timestamp);
+        ECON_EVENTS_DATABASE = parsed;
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({
+            timestamp: now,
+            events: parsed
+          }));
+        } catch (e) {}
+        syncEventPeriods();
+        renderEconomicCalendar();
+        updateNextEventBanner();
+      }
+    }
 
     function syncEventPeriods() {
       const todayStr = getVietnamDateInfo().dateStr;
@@ -14109,10 +14394,28 @@
         });
       }
 
-      // Initial render & banner loop
+      // Nút làm mới lịch kinh tế thủ công
+      const btnRefreshEcon = document.getElementById('btn-refresh-econ-data');
+      if (btnRefreshEcon) {
+        btnRefreshEcon.addEventListener('click', () => {
+          btnRefreshEcon.textContent = '⏳ Đang quét...';
+          fetchEconomicNewsCalendar(true).finally(() => {
+            btnRefreshEcon.textContent = '🔄 Quét Live';
+            if (typeof showToast === 'function') {
+              showToast('✅ Đã cập nhật ForexFactory!', 'Lịch kinh tế đã được đồng bộ mới nhất theo thời gian thực.', 'success', 3500);
+            }
+          });
+        });
+      }
+
+      // Tải dữ liệu lịch kinh tế ForexFactory realtime
+      fetchEconomicNewsCalendar(false);
+
+      // Initial render & banner loop đếm ngược mỗi 1s
       renderEconomicCalendar();
       updateNextEventBanner();
-      setInterval(updateNextEventBanner, 30000);
+      setInterval(updateNextEventBanner, 1000);
+      setInterval(() => fetchEconomicNewsCalendar(false), 20 * 60 * 1000); // Làm mới mỗi 20 phút
     }
 
     function renderEconomicCalendar() {
@@ -14244,27 +14547,54 @@
 
       const vnInfo = getVietnamDateInfo();
       const currentMinutes = vnInfo.totalMinutes;
+      const now = Date.now();
 
       // 1. Tìm các sự kiện sắp diễn ra trong HÔM NAY (ưu tiên USD hoặc tin mạnh)
       const todayEvents = ECON_EVENTS_DATABASE.filter(e => e.periodGroup === 'today');
       
       let nextEvent = null;
-      let minDiff = Infinity;
+      let minDiffMin = Infinity;
+      let minDiffMs = Infinity;
       let justPublishedEvent = null;
 
       todayEvents.forEach(e => {
-        const parts = e.time.split(':');
-        const evMinutes = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
-        const diff = evMinutes - currentMinutes;
-        if (diff > 0 && diff < minDiff) {
-          minDiff = diff;
+        let diffMs = 0;
+        let diffMin = 0;
+        if (e.timestamp) {
+          diffMs = e.timestamp - now;
+          diffMin = Math.floor(diffMs / 60000);
+        } else {
+          const parts = e.time.split(':');
+          const evMinutes = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+          diffMin = evMinutes - currentMinutes;
+          diffMs = diffMin * 60000;
+        }
+
+        if (diffMs > 0 && diffMs < minDiffMs) {
+          minDiffMs = diffMs;
+          minDiffMin = diffMin;
           nextEvent = e;
-        } else if (diff <= 0 && diff >= -45) {
-          if (!justPublishedEvent || diff > (parseInt(justPublishedEvent.time.split(':')[0]) * 60 + parseInt(justPublishedEvent.time.split(':')[1]) - currentMinutes)) {
+        } else if (diffMs <= 0 && diffMs >= -45 * 60000) {
+          if (!justPublishedEvent || diffMs > (justPublishedEvent.timestamp ? (justPublishedEvent.timestamp - now) : -999999)) {
             justPublishedEvent = e;
           }
         }
       });
+
+      // TỰ ĐỘNG BẮN CẢNH BÁO TELEGRAM TRƯỚC TIN 15 PHÚT (CHO TIN ĐỎ 🔴 VÀ TIN CAM 🟠)
+      if (nextEvent && nextEvent.stars >= 2 && minDiffMs > 0 && minDiffMs <= 15 * 60 * 1000) {
+        const cfg = loadTelegramAlertConfig();
+        if (cfg.enabled && (cfg.enableNewsAlert !== false)) {
+          const alertKey = `TELE_NEWS_ALERT_15M_${nextEvent.id}`;
+          if (!teleNewsSentKeys.has(alertKey)) {
+            teleNewsSentKeys.add(alertKey);
+            try {
+              localStorage.setItem('agy_gold_sent_news_tele', JSON.stringify(Array.from(teleNewsSentKeys).slice(-50)));
+            } catch(e) {}
+            sendNewsTelegramPreAlert(nextEvent, Math.max(1, Math.round(minDiffMs / 60000)));
+          }
+        }
+      }
 
       const elBannerTime = document.getElementById('econ-banner-time');
       const elBannerTitle = document.getElementById('econ-banner-title');
@@ -14280,9 +14610,18 @@
         if (elBannerTime) elBannerTime.textContent = timeDisplay;
         if (elBannerTitle) elBannerTitle.textContent = nextEvent.name;
 
-        const hours = Math.floor(minDiff / 60);
-        const mins = minDiff % 60;
-        const countdownStr = hours > 0 ? `⏱️ Còn ${hours} giờ ${mins} phút` : `⏱️ Còn ${mins} phút nữa công bố`;
+        const totalSec = Math.floor(minDiffMs / 1000);
+        const hours = Math.floor(totalSec / 3600);
+        const mins = Math.floor((totalSec % 3600) / 60);
+        const secs = totalSec % 60;
+        let countdownStr = '';
+        if (hours > 0) {
+          countdownStr = `⏱️ Còn ${hours}h ${mins}m ${secs}s`;
+        } else if (mins > 0) {
+          countdownStr = `⏱️ Còn ${mins}m ${secs}s nữa công bố`;
+        } else {
+          countdownStr = `🚨 Sắp ra tin sau ${secs}s!`;
+        }
         if (elBannerCountdown) {
           elBannerCountdown.textContent = countdownStr;
           elBannerCountdown.style.color = '#38bdf8';
