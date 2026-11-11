@@ -14058,7 +14058,7 @@
 
     async function fetchEconomicNewsCalendar(forceRefresh = false) {
       const now = Date.now();
-      const CACHE_KEY = 'agy_gold_news_calendar_cache_v9';
+      const CACHE_KEY = 'agy_gold_news_calendar_cache_v10';
       const CACHE_TTL = 15 * 60 * 1000; // Cache 15 phút
 
       // Luôn đồng bộ chu kỳ và vẽ giao diện với dữ liệu có sẵn trước ngay lập tức
@@ -14086,9 +14086,9 @@
       let parsed = [];
       const dayNames = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
 
-      // NGUỒN: Biquote Calendar API (Keyless, hỗ trợ CORS, chuẩn UTC)
+      // NGUỒN: Biquote Calendar API (Keyless, hỗ trợ CORS, chuẩn UTC) - Tải đủ trọn tuần limit=600
       try {
-        const resBiquote = await fetch('https://biquote.io/api/calendar?currency=USD');
+        const resBiquote = await fetch('https://biquote.io/api/calendar?limit=600');
         if (resBiquote.ok) {
           const rawBiquote = await resBiquote.json();
           if (Array.isArray(rawBiquote) && rawBiquote.length > 0) {
@@ -14141,8 +14141,17 @@
         console.warn('Lỗi gọi Biquote Calendar API:', e);
       }
 
-      // Nếu lấy được dữ liệu động mới: Hợp nhất và cập nhật
+      // Nếu lấy được dữ liệu động mới: Lọc trùng, hợp nhất và cập nhật
       if (parsed.length > 0) {
+        // Lọc trùng theo ngày + giờ + tiền tệ + tên sự kiện
+        const seenKeys = new Set();
+        parsed = parsed.filter(item => {
+          const k = `${item.date}_${item.time}_${item.currency}_${item.name}`;
+          if (seenKeys.has(k)) return false;
+          seenKeys.add(k);
+          return true;
+        });
+
         parsed.sort((a, b) => a.timestamp - b.timestamp);
         ECON_EVENTS_DATABASE = parsed;
         try {
@@ -14448,7 +14457,16 @@
       if (list.length === 0) {
         let emptyMsg = 'Không có sự kiện nào khớp với bộ lọc đã chọn.';
         if (currentEconPeriod === 'tomorrow') {
-          emptyMsg = 'Ngày mai (Thứ Bảy) thị trường tài chính quốc tế đóng cửa nghỉ cuối tuần. Không có lịch kinh tế công bố.';
+          const tomorDate = new Date(Date.now() + 86400000);
+          const dayNames = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+          const tomorVn = new Date(tomorDate.getTime() + 7 * 3600000);
+          const tomorDayName = dayNames[tomorVn.getUTCDay()] || 'Thứ Năm';
+          const isWeekend = (tomorVn.getUTCDay() === 0 || tomorVn.getUTCDay() === 6);
+          if (isWeekend) {
+            emptyMsg = `Ngày mai (${tomorDayName}) thị trường tài chính quốc tế đóng cửa nghỉ cuối tuần. Không có lịch kinh tế công bố.`;
+          } else {
+            emptyMsg = `Ngày mai (${tomorDayName}) không có sự kiện kinh tế ${currentEconCurrency === 'ALL' ? '' : currentEconCurrency} nào khớp với bộ lọc.`;
+          }
         }
         tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:32px 14px; color:#64748b; font-size:13px;">${emptyMsg}</td></tr>`;
         return;
